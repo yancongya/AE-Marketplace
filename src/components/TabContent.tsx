@@ -698,8 +698,11 @@ export function TabContent({
                 </div>
                 {(updatedAt || author) && (
                   <div className="flex items-center gap-4 p-2 rounded bg-muted/30 border border-border">
-                    {updatedAt && <span className="text-sm text-muted-foreground font-mono"><span className="text-success">$</span> 更新日期: {updatedAt}</span>}
-                    {author && <span className="text-sm text-muted-foreground font-mono"><span className="text-success">$</span> 作者: {author}</span>}
+                    <span className="text-sm text-muted-foreground font-mono">
+                      <span className="text-success">$</span>
+                      {updatedAt && ` 更新日期: ${updatedAt}`}
+                      {author && ` 作者: ${author}`}
+                    </span>
                   </div>
                 )}
               </div>
