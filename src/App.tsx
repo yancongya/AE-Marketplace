@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import { Navbar } from '@/components/Navbar';
 import { HeroSection } from '@/components/HeroSection';
 import { ExpressionsTab, ScriptsTab } from '@/components/ExpressionsTab';
@@ -111,8 +112,10 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <AppContent />
+      <Tooltip.Provider>
+        <ScrollToTop />
+        <AppContent />
+      </Tooltip.Provider>
     </BrowserRouter>
   );
 }

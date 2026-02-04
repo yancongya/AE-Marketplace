@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-
+ 
 interface TabCardProps {
   title: string;
   subtitle?: string;
@@ -11,7 +11,7 @@ interface TabCardProps {
   onClick?: () => void;
   to?: string;
 }
-
+ 
 export function TabCard({ 
   title, 
   subtitle, 
@@ -30,12 +30,13 @@ export function TabCard({
     }
     return num.toString();
   };
-
+ 
   const content = (
     <div 
-      className="terminal-window card-hover cursor-pointer group"
+      className="terminal-window card-hover cursor-pointer group h-full flex flex-col"
+      title={description}
     >
-      <div className="terminal-header">
+      <div className="terminal-header flex-shrink-0">
         <span className="terminal-dot terminal-dot-red" />
         <span className="terminal-dot terminal-dot-yellow" />
         <span className="terminal-dot terminal-dot-green" />
@@ -46,8 +47,8 @@ export function TabCard({
         )}
       </div>
       
-      <div className="p-4 space-y-3">
-        <div className="flex items-center gap-3">
+      <div className="p-4 space-y-3 flex-1 flex flex-col">
+        <div className="flex items-center gap-3 flex-shrink-0">
           {iconEmoji && (
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-lg flex-shrink-0">
               {iconEmoji}
@@ -61,30 +62,28 @@ export function TabCard({
             )}
           </div>
         </div>
-
+ 
         {description && (
-          <p className="text-xs text-muted-foreground line-clamp-2">
+          <p className="text-xs text-muted-foreground truncate">
             {description}
           </p>
         )}
-
-        {(author || updatedAt) && (
-          <div className="pt-2 border-t border-border">
-            <p className="text-xs text-muted-foreground font-mono truncate">
-              <span className="text-green-400">$</span>
-              {updatedAt && <span> 更新日期: {updatedAt}</span>}
-              {(author || updatedAt) && <span className="text-green-400 ml-2">$</span>}
-              {author && <span> 作者: {author}</span>}
-            </p>
-          </div>
-        )}
+ 
+        <div className="mt-auto pt-2 border-t border-border flex-shrink-0">
+          <p className="text-xs text-muted-font-foreground font-mono truncate">
+            <span className="text-green-400">$</span>
+            {updatedAt && <span> 更新日期: {updatedAt}</span>}
+            {(author || updatedAt) && <span className="text-green-400 ml-2">$</span>}
+            {author && <span> 作者: {author}</span>}
+          </p>
+        </div>
       </div>
     </div>
   );
-
+ 
   if (to) {
     return <Link to={to}>{content}</Link>;
   }
-
+ 
   return <div onClick={onClick}>{content}</div>;
 }

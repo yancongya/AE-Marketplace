@@ -178,32 +178,10 @@
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px hsl(var(--primary) / 0.2);
   }
   
-  .nav-button {
-    @apply px-4 py-2 rounded-md text-sm font-medium transition-all duration-200;
-    @apply border border-transparent;
-    background: hsl(var(--secondary) / 0.5);
-  }
-  
-  .nav-button:hover {
-    background: hsl(var(--secondary));
-    border-color: var(--terminal-border);
-  }
-  
-  .gradient-border {
-    position: relative;
-  }
-  
-  .gradient-border::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, hsl(var(--primary) / 0.3), hsl(var(--code-purple) / 0.3));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+  .card-h-constant {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
   
   .scrollbar-thin {
