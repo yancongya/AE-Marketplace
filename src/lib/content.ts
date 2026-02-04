@@ -18,8 +18,12 @@ export interface PresetItem {
   iconEmoji?: string;
   count: number;
   nameEn?: string;
+  author?: string;
+  tags?: string[];
+  category?: string;
   command: string;
   description: string;
+  updatedAt?: string;
   content: string;
 }
 
@@ -27,8 +31,12 @@ export interface ExtensionItem {
   slug: string;
   title: string;
   iconEmoji?: string;
+  author?: string;
+  tags?: string[];
+  category?: string;
   command: string;
   description: string;
+  updatedAt?: string;
   content: string;
 }
 
@@ -145,8 +153,12 @@ async function loadFromFetch(): Promise<ContentData> {
       iconEmoji: frontmatter.iconEmoji,
       count: parseInt(frontmatter.count) || 0,
       nameEn: frontmatter.nameEn,
+      author: frontmatter.author,
+      tags: frontmatter.tags,
+      category: frontmatter.category,
       command: frontmatter.command || '',
       description: frontmatter.description || '',
+      updatedAt: frontmatter.updatedAt,
       content: content.trim()
     });
   }
@@ -157,8 +169,12 @@ async function loadFromFetch(): Promise<ContentData> {
       slug: 'what-is-scripts',
       title: frontmatter.title || 'what-is-scripts',
       iconEmoji: frontmatter.iconEmoji,
+      author: frontmatter.author,
+      tags: frontmatter.tags,
+      category: frontmatter.category,
       command: frontmatter.command || '',
       description: frontmatter.description || '',
+      updatedAt: frontmatter.updatedAt,
       content: content.trim()
     });
   }

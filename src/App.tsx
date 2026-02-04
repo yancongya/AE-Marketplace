@@ -39,7 +39,6 @@ function AppContent() {
           <Route path="/" element={
             <>
               <HeroSection />
-              <PresetsTab />
               <AboutSection />
               <Footer />
             </>
