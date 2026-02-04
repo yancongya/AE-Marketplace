@@ -34,11 +34,10 @@ export function ExpressionsTab() {
       <TabContent
         title={selectedItem.title}
         iconEmoji={selectedItem.iconEmoji}
-        subtitle={`${selectedItem.author}/${selectedItem.slug}`}
-        command={selectedItem.command}
-        stars={selectedItem.stars}
-        downloads={selectedItem.downloads}
+        subtitle={selectedItem.description}
+        author={selectedItem.author}
         updatedAt={selectedItem.updatedAt}
+        tags={selectedItem.tags}
         content={selectedItem.content}
         onBack={() => navigate('/expressions')}
       />
@@ -61,7 +60,8 @@ export function ExpressionsTab() {
             description={item.description}
             iconEmoji={item.iconEmoji}
             count={item.stars || 0}
-            command={item.command}
+            author={item.author}
+            updatedAt={item.updatedAt}
             to={`/expressions/${item.slug}`}
           />
         ))}
@@ -98,11 +98,10 @@ export function ScriptsTab() {
       <TabContent
         title={selectedItem.title}
         iconEmoji={selectedItem.iconEmoji}
-        subtitle={`${selectedItem.author}/${selectedItem.slug}`}
-        command={selectedItem.command}
-        stars={selectedItem.stars}
-        downloads={selectedItem.downloads}
+        subtitle={selectedItem.description}
+        author={selectedItem.author}
         updatedAt={selectedItem.updatedAt}
+        tags={selectedItem.tags}
         content={selectedItem.content}
         onBack={() => navigate('/scripts')}
       />
@@ -125,7 +124,8 @@ export function ScriptsTab() {
             description={item.description}
             iconEmoji={item.iconEmoji}
             count={item.stars || 0}
-            command={item.command}
+            author={item.author}
+            updatedAt={item.updatedAt}
             to={`/scripts/${item.slug}`}
           />
         ))}

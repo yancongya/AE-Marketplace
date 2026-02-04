@@ -34,8 +34,7 @@ export function PresetsTab() {
       <TabContent
         title={selectedItem.title}
         iconEmoji={selectedItem.iconEmoji}
-        subtitle={selectedItem.nameEn}
-        command={selectedItem.command}
+        subtitle={selectedItem.description}
         content={selectedItem.content}
         onBack={() => navigate('/presets')}
       />
@@ -58,7 +57,6 @@ export function PresetsTab() {
             description={item.description}
             iconEmoji={item.iconEmoji}
             count={item.count}
-            command={item.command}
             to={`/presets/${item.slug}`}
           />
         ))}

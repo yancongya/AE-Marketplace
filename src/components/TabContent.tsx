@@ -1,4 +1,4 @@
-import { ChevronLeft, Star } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 interface TabContentProps {
@@ -7,12 +7,26 @@ interface TabContentProps {
   iconSrc?: string;
   iconEmoji?: string;
   subtitle?: string;
-  command?: string;
-  stars?: number;
-  downloads?: number;
-  updatedAt?: string;
   content: string;
   onBack: () => void;
+  author?: string;
+  updatedAt?: string;
+  tags?: string[];
+}
+
+const TAG_COLORS = [
+  'bg-blue-500/20 text-blue-400 border-blue-500/30',
+  'bg-green-500/20 text-green-400 border-green-500/30',
+  'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+  'bg-purple-500/20 text-purple-400 border-purple-500/30',
+  'bg-pink-500/20 text-pink-400 border-pink-500/30',
+  'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+  'bg-orange-500/20 text-orange-400 border-orange-500/30',
+  'bg-indigo-500/20 text-indigo-400 border-indigo-500/30',
+];
+
+function getTagColor(index: number): string {
+  return TAG_COLORS[index % TAG_COLORS.length];
 }
 
 export function TabContent({ 
@@ -21,12 +35,11 @@ export function TabContent({
   iconSrc,
   iconEmoji,
   subtitle, 
-  command,
-  stars,
-  downloads,
-  updatedAt,
   content,
-  onBack 
+  onBack,
+  author,
+  updatedAt,
+  tags
 }: TabContentProps) {
   return (
     <section className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
@@ -77,49 +90,40 @@ export function TabContent({
               </button>
             </div>
 
-            {command && (
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-black/50 border border-border">
-                <span className="text-green-400 font-mono">$</span>
-                <code className="text-sm text-foreground font-mono">{command}</code>
+            {(updatedAt || author) && (
+              <div className="flex items-center gap-4 p-2 rounded bg-black/30 border border-border">
+                {updatedAt && (
+                  <span className="text-sm text-muted-foreground font-mono">
+                    <span className="text-green-400">$</span> 更新日期: {updatedAt}
+                  </span>
+                )}
+                {author && (
+                  <span className="text-sm text-muted-foreground font-mono">
+                    <span className="text-green-400">$</span> 作者: {author}
+                  </span>
+                )}
               </div>
             )}
           </div>
         </div>
 
-        {(stars || downloads || updatedAt) && (
+        {(tags && tags.length > 0) && (
           <div className="terminal-window">
             <div className="terminal-header">
               <span className="terminal-dot terminal-dot-red" />
               <span className="terminal-dot terminal-dot-yellow" />
               <span className="terminal-dot terminal-dot-green" />
-              <span className="ml-2 text-xs text-muted-foreground font-mono">git log --oneline --stat</span>
+              <span className="ml-2 text-xs text-muted-foreground font-mono">标签</span>
             </div>
-            <div className="p-4 flex flex-wrap gap-6">
-              {stars && (
-                <div className="flex items-center gap-2">
-                  <Star className="w-4 h-4 text-yellow-500" />
-                  <span className="text-sm font-mono">
-                    <span className="text-yellow-500">stars:</span>
-                    <span className="text-foreground ml-1">{stars.toLocaleString()}</span>
-                  </span>
-                </div>
-              )}
-              {downloads && (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-mono">
-                    <span className="text-green-400">downloads:</span>
-                    <span className="text-foreground ml-1">{downloads.toLocaleString()}</span>
-                  </span>
-                </div>
-              )}
-              {updatedAt && (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-mono text-muted-foreground">
-                    <span className="text-green-400">updated:</span>
-                    <span className="text-foreground ml-1">{updatedAt}</span>
-                  </span>
-                </div>
-              )}
+            <div className="p-4 flex flex-wrap gap-2">
+              {tags.map((tag, index) => (
+                <span
+                  key={tag}
+                  className={`px-3 py-1 rounded-full text-xs font-mono border ${getTagColor(index)}`}
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
           </div>
         )}

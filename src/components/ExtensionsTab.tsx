@@ -34,8 +34,7 @@ export function ExtensionsTab() {
       <TabContent
         title={selectedItem.title}
         iconEmoji={selectedItem.iconEmoji}
-        subtitle={selectedItem.slug}
-        command={selectedItem.command}
+        subtitle={selectedItem.description}
         content={selectedItem.content}
         onBack={() => navigate('/extensions')}
       />
@@ -56,7 +55,6 @@ export function ExtensionsTab() {
             title={item.title}
             description={item.description}
             iconEmoji={item.iconEmoji}
-            command={item.command}
             to={`/extensions/${item.slug}`}
           />
         ))}

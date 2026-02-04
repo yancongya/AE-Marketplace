@@ -11,6 +11,7 @@ export interface ContentItem {
   description: string;
   updatedAt?: string;
   content: string;
+  date?: string;
 }
 
 export interface PresetItem {
@@ -118,6 +119,7 @@ async function loadFromFetch(): Promise<ContentData> {
       command: frontmatter.command || '',
       description: frontmatter.description || '',
       updatedAt: frontmatter.updatedAt,
+      date: frontmatter.date,
       content: content.trim()
     });
   }
@@ -136,6 +138,7 @@ async function loadFromFetch(): Promise<ContentData> {
       command: frontmatter.command || '',
       description: frontmatter.description || '',
       updatedAt: frontmatter.updatedAt,
+      date: frontmatter.date,
       content: content.trim()
     });
   }

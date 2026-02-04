@@ -6,7 +6,8 @@ interface TabCardProps {
   description?: string;
   iconEmoji?: string;
   count?: string | number;
-  command?: string;
+  author?: string;
+  updatedAt?: string;
   onClick?: () => void;
   to?: string;
 }
@@ -17,7 +18,8 @@ export function TabCard({
   description, 
   iconEmoji,
   count, 
-  command,
+  author,
+  updatedAt,
   onClick,
   to 
 }: TabCardProps) {
@@ -66,10 +68,13 @@ export function TabCard({
           </p>
         )}
 
-        {command && (
+        {(author || updatedAt) && (
           <div className="pt-2 border-t border-border">
             <p className="text-xs text-muted-foreground font-mono truncate">
-              <span className="text-success">$</span> {command}
+              <span className="text-green-400">$</span>
+              {updatedAt && <span> 更新日期: {updatedAt}</span>}
+              {(author || updatedAt) && <span className="text-green-400 ml-2">$</span>}
+              {author && <span> 作者: {author}</span>}
             </p>
           </div>
         )}

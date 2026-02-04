@@ -1,16 +1,14 @@
 ---
-title: Auto-Keyframe
+title: 自动关键帧
 iconEmoji: 🎯
-author: motion-cafe
+author: 烟囱鸭
 stars: 2847
 downloads: 45200
-tags: [keyframes, easing, automation]
+tags: [关键帧, 缓动, 自动化]
 category: animation
-command: import auto_keyframe
-description: Automatically create smooth keyframe animations with easing curves. Perfect for motion graphics workflows.
+description: 自动化关键帧
 updatedAt: 2026-01-28
 ---
-
 # Auto-Keyframe 脚本
 
 自动创建平滑的关键帧动画，带有缓动曲线。非常适合动态图形工作流。
