@@ -116,7 +116,8 @@ function MermaidDiagram({ code }: { code: string }) {
           </Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black/80 z-50" />
-            <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-5xl max-h-[90vh] bg-[#1a1a2e] rounded-xl z-50 overflow-auto p-4">
+            <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-5xl max-h-[90vh] bg-[#1a1a2e] rounded-xl z-50 overflow-auto p-4" aria-describedby={undefined}>
+              <Dialog.Title className="sr-only">图表全屏视图</Dialog.Title>
               <div className="flex justify-center bg-black/20 rounded-lg p-8">
                 {svg ? <div className="mermaid-svg" dangerouslySetInnerHTML={{ __html: svg }} /> : <span className="text-muted-foreground">加载中...</span>}
               </div>
@@ -277,9 +278,9 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
       <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 z-40 xl:hidden" />
-          <Dialog.Content className="fixed bottom-0 left-0 right-0 z-50 bg-[#1a1a2e] rounded-t-2xl p-4 xl:hidden max-h-[60vh] overflow-auto">
+          <Dialog.Content className="fixed bottom-0 left-0 right-0 z-50 bg-[#1a1a2e] rounded-t-2xl p-4 xl:hidden max-h-[60vh] overflow-auto" aria-describedby={undefined}>
             <div className="flex items-center justify-between mb-4">
-              <span className="font-medium">目录</span>
+              <Dialog.Title className="font-medium">目录</Dialog.Title>
               <Dialog.Close className="p-1 rounded hover:bg-white/10">
                 <X className="w-5 h-5 text-muted-foreground" />
               </Dialog.Close>
@@ -290,12 +291,12 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
                   key={heading.id}
                   onClick={() => scrollToHeading(heading.id)}
                   className={`block w-full text-left px-3 py-2 rounded text-sm transition-all ${
-                    activeId === heading.id 
-                      ? 'bg-primary/20 text-primary font-bold' 
-                      : heading.level === 1 
-                        ? 'text-foreground/90' 
-                        : heading.level === 2 
-                          ? 'text-muted-foreground/70 pl-6' 
+                    activeId === heading.id
+                      ? 'bg-primary/20 text-primary font-bold'
+                      : heading.level === 1
+                        ? 'text-foreground/90'
+                        : heading.level === 2
+                          ? 'text-muted-foreground/70 pl-6'
                           : 'text-muted-foreground/50 pl-10'
                   } hover:bg-white/5`}
                 >
@@ -367,7 +368,7 @@ export function TabContent({
     <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col xl:flex-row gap-6">
-          <div className="flex-1 min-w-0 space-y-6">
+          <div className={`${headings.length > 0 ? 'xl:flex-[3]' : 'flex-1'} min-w-0 space-y-6`}>
             <div className="flex items-center gap-2 text-sm font-mono">
               <button onClick={onBack} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
                 <span className="text-green-400">$</span> cd ..
@@ -478,7 +479,9 @@ export function TabContent({
               </div>
             </div>
           </div>
-          <TableOfContents headings={headings} />
+          <div className="hidden sm:block">
+            <TableOfContents headings={headings} />
+          </div>
         </div>
       </div>
     </section>
