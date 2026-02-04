@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Layers } from 'lucide-react';
 import { TabPanel } from './TabPanel';
 import { TabCard } from './TabCard';
@@ -7,8 +8,9 @@ import { loadContent, type PresetItem } from '@/lib/content';
 
 export function PresetsTab() {
   const [list, setList] = useState<PresetItem[]>([]);
-  const [selectedItem, setSelectedItem] = useState<PresetItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadContent().then(data => {
@@ -16,6 +18,8 @@ export function PresetsTab() {
       setLoading(false);
     });
   }, []);
+
+  const selectedItem = list.find(item => item.slug === slug);
 
   if (loading) {
     return (
@@ -33,7 +37,7 @@ export function PresetsTab() {
         subtitle={selectedItem.nameEn}
         command={selectedItem.command}
         content={selectedItem.content}
-        onBack={() => setSelectedItem(null)}
+        onBack={() => navigate('/presets')}
       />
     );
   }
@@ -55,7 +59,7 @@ export function PresetsTab() {
             iconEmoji={item.iconEmoji}
             count={item.count}
             command={item.command}
-            onClick={() => setSelectedItem(item)}
+            to={`/presets/${item.slug}`}
           />
         ))}
       </div>

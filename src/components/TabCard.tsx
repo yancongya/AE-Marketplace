@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 interface TabCardProps {
   title: string;
   subtitle?: string;
@@ -6,6 +8,7 @@ interface TabCardProps {
   count?: string | number;
   command?: string;
   onClick?: () => void;
+  to?: string;
 }
 
 export function TabCard({ 
@@ -15,7 +18,8 @@ export function TabCard({
   iconEmoji,
   count, 
   command,
-  onClick 
+  onClick,
+  to 
 }: TabCardProps) {
   const formatNumber = (num: string | number) => {
     if (typeof num === 'string') return num;
@@ -25,9 +29,8 @@ export function TabCard({
     return num.toString();
   };
 
-  return (
+  const content = (
     <div 
-      onClick={onClick}
       className="terminal-window card-hover cursor-pointer group"
     >
       <div className="terminal-header">
@@ -73,4 +76,10 @@ export function TabCard({
       </div>
     </div>
   );
+
+  if (to) {
+    return <Link to={to}>{content}</Link>;
+  }
+
+  return <div onClick={onClick}>{content}</div>;
 }

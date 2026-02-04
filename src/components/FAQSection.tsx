@@ -1,18 +1,14 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronRight, Plus, Minus } from 'lucide-react';
 import { faqItems } from '@/data/mockData';
 
-interface FAQSectionProps {
-  onViewChange?: (view: string) => void;
-}
-
-export function FAQSection({ onViewChange }: FAQSectionProps) {
+export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section className="py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto space-y-8">
-        {/* Header */}
         <div className="terminal-window">
           <div className="terminal-header">
             <span className="terminal-dot terminal-dot-red" />
@@ -31,7 +27,6 @@ export function FAQSection({ onViewChange }: FAQSectionProps) {
           </div>
         </div>
 
-        {/* FAQ items */}
         <div className="space-y-3">
           {faqItems.map((item, index) => (
             <div 
@@ -70,18 +65,17 @@ export function FAQSection({ onViewChange }: FAQSectionProps) {
           ))}
         </div>
 
-        {/* CTA */}
         <div className="text-center space-y-4">
           <p className="text-muted-foreground text-sm">
             还有关于 AE Scripts 的问题？
           </p>
-          <button 
-            onClick={() => onViewChange?.('docs')}
+          <Link 
+            to="/expressions"
             className="px-6 py-3 rounded-lg border border-gray-700 text-muted-foreground font-mono text-sm inline-flex items-center gap-2 hover:bg-secondary transition-colors"
           >
             <span className="text-green-400">$</span> open /docs && explore
             <ChevronRight className="w-4 h-4 text-blue-400" />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

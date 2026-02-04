@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Code, Code2 } from 'lucide-react';
 import { TabPanel } from './TabPanel';
 import { TabCard } from './TabCard';
@@ -7,8 +8,9 @@ import { loadContent, type ContentItem } from '@/lib/content';
 
 export function ExpressionsTab() {
   const [list, setList] = useState<ContentItem[]>([]);
-  const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadContent().then(data => {
@@ -16,6 +18,8 @@ export function ExpressionsTab() {
       setLoading(false);
     });
   }, []);
+
+  const selectedItem = list.find(item => item.slug === slug);
 
   if (loading) {
     return (
@@ -36,7 +40,7 @@ export function ExpressionsTab() {
         downloads={selectedItem.downloads}
         updatedAt={selectedItem.updatedAt}
         content={selectedItem.content}
-        onBack={() => setSelectedItem(null)}
+        onBack={() => navigate('/expressions')}
       />
     );
   }
@@ -58,7 +62,7 @@ export function ExpressionsTab() {
             iconEmoji={item.iconEmoji}
             count={item.stars || 0}
             command={item.command}
-            onClick={() => setSelectedItem(item)}
+            to={`/expressions/${item.slug}`}
           />
         ))}
       </div>
@@ -68,8 +72,9 @@ export function ExpressionsTab() {
 
 export function ScriptsTab() {
   const [list, setList] = useState<ContentItem[]>([]);
-  const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadContent().then(data => {
@@ -77,6 +82,8 @@ export function ScriptsTab() {
       setLoading(false);
     });
   }, []);
+
+  const selectedItem = list.find(item => item.slug === slug);
 
   if (loading) {
     return (
@@ -97,7 +104,7 @@ export function ScriptsTab() {
         downloads={selectedItem.downloads}
         updatedAt={selectedItem.updatedAt}
         content={selectedItem.content}
-        onBack={() => setSelectedItem(null)}
+        onBack={() => navigate('/scripts')}
       />
     );
   }
@@ -119,7 +126,7 @@ export function ScriptsTab() {
             iconEmoji={item.iconEmoji}
             count={item.stars || 0}
             command={item.command}
-            onClick={() => setSelectedItem(item)}
+            to={`/scripts/${item.slug}`}
           />
         ))}
       </div>

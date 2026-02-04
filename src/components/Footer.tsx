@@ -1,10 +1,7 @@
+import { Link } from 'react-router-dom';
 import { Twitter, Github, MessageCircle, BookOpen, FileText, Folder, ScrollText, Users, History, Lock, FileCheck } from 'lucide-react';
 
-interface FooterProps {
-  onViewChange?: (view: string) => void;
-}
-
-export function Footer({ onViewChange }: FooterProps) {
+export function Footer() {
   const footerLinks = {
     social: [
       { label: 'Twitter', icon: Twitter, href: '#' },
@@ -12,17 +9,17 @@ export function Footer({ onViewChange }: FooterProps) {
       { label: 'Reddit', icon: MessageCircle, href: '#' },
     ],
     resources: [
-      { label: 'Scripts 文档', icon: BookOpen, href: '#docs' },
-      { label: 'Script 文档', icon: FileText, href: '#' },
-      { label: '官方 Scripts', icon: Folder, href: '#' },
-      { label: 'Codex Scripts 文档', icon: BookOpen, href: '#' },
-      { label: 'AE Scripts 规范', icon: FileCheck, href: '#' },
+      { label: 'Scripts 文档', icon: BookOpen, href: '/expressions' },
+      { label: 'Script 文档', icon: FileText, href: '/scripts' },
+      { label: '官方 Scripts', icon: Folder, href: '/presets' },
+      { label: 'Codex Scripts 文档', icon: BookOpen, href: '/extensions' },
+      { label: 'AE Scripts 规范', icon: FileCheck, href: '/faq' },
     ],
     legal: [
-      { label: '关于我们', icon: Users, href: '#' },
-      { label: '更新日志', icon: History, href: '#' },
-      { label: '隐私政策', icon: Lock, href: '#' },
-      { label: '服务条款', icon: ScrollText, href: '#' },
+      { label: '关于我们', icon: Users, href: '/' },
+      { label: '更新日志', icon: History, href: '/' },
+      { label: '隐私政策', icon: Lock, href: '/' },
+      { label: '服务条款', icon: ScrollText, href: '/' },
     ],
   };
 
@@ -30,7 +27,6 @@ export function Footer({ onViewChange }: FooterProps) {
     <footer className="border-t mt-16" style={{ borderColor: '#2a2a2a' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid md:grid-cols-4 gap-8">
-          {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <span className="text-green-400 font-mono text-sm">$</span>
@@ -44,7 +40,6 @@ export function Footer({ onViewChange }: FooterProps) {
             </p>
           </div>
 
-          {/* Social */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-green-400 font-mono text-sm">$</span>
@@ -65,7 +60,6 @@ export function Footer({ onViewChange }: FooterProps) {
             </ul>
           </div>
 
-          {/* Resources */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-green-400 font-mono text-sm">$</span>
@@ -74,19 +68,18 @@ export function Footer({ onViewChange }: FooterProps) {
             <ul className="space-y-2">
               {footerLinks.resources.map((link) => (
                 <li key={link.label}>
-                  <button 
-                    onClick={() => link.href.startsWith('#') && onViewChange?.(link.href.slice(1))}
+                  <Link 
+                    to={link.href}
                     className="flex items-center gap-2 text-sm text-gray-400 hover:text-blue-400 transition-colors"
                   >
                     <link.icon className="w-4 h-4" />
                     {link.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Legal */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-green-400 font-mono text-sm">$</span>
@@ -95,20 +88,19 @@ export function Footer({ onViewChange }: FooterProps) {
             <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
-                  <button 
-                    onClick={() => {}}
+                  <Link 
+                    to={link.href}
                     className="flex items-center gap-2 text-sm text-gray-400 hover:text-blue-400 transition-colors"
                   >
                     <link.icon className="w-4 h-4" />
                     {link.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-12 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: '#2a2a2a' }}>
           <div className="flex items-center gap-4 text-xs text-gray-500 font-mono">
             <span className="flex items-center gap-1.5">

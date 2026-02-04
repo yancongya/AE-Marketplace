@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Box } from 'lucide-react';
 import { TabPanel } from './TabPanel';
 import { TabCard } from './TabCard';
@@ -7,8 +8,9 @@ import { loadContent, type ExtensionItem } from '@/lib/content';
 
 export function ExtensionsTab() {
   const [list, setList] = useState<ExtensionItem[]>([]);
-  const [selectedItem, setSelectedItem] = useState<ExtensionItem | null>(null);
   const [loading, setLoading] = useState(true);
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadContent().then(data => {
@@ -16,6 +18,8 @@ export function ExtensionsTab() {
       setLoading(false);
     });
   }, []);
+
+  const selectedItem = list.find(item => item.slug === slug);
 
   if (loading) {
     return (
@@ -33,7 +37,7 @@ export function ExtensionsTab() {
         subtitle={selectedItem.slug}
         command={selectedItem.command}
         content={selectedItem.content}
-        onBack={() => setSelectedItem(null)}
+        onBack={() => navigate('/extensions')}
       />
     );
   }
@@ -53,7 +57,7 @@ export function ExtensionsTab() {
             description={item.description}
             iconEmoji={item.iconEmoji}
             command={item.command}
-            onClick={() => setSelectedItem(item)}
+            to={`/extensions/${item.slug}`}
           />
         ))}
       </div>
