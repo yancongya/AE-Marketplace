@@ -1,6 +1,9 @@
 ---
 title: 什么是 Scripts?
 iconEmoji: 📖
+author: 烟囱鸭
+tags: [入门, 教程, 概念]
+category: getting-started
 description: 了解 AE 脚本的基本概念和工作原理
 updatedAt: 2026-01-28
 ---
