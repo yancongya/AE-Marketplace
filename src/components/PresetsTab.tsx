@@ -23,7 +23,7 @@ export function PresetsTab() {
 
   if (loading) {
     return (
-      <TabPanel title="预设分类" count={0} icon={<Layers className="w-6 h-6 text-primary" />} searchPlaceholder="加载中...">
+      <TabPanel title="预设分类" count={0} icon={<Layers className="w-6 h-6 text-primary" />}>
         <div className="text-center py-8 text-muted-foreground">加载中...</div>
       </TabPanel>
     );
@@ -46,7 +46,6 @@ export function PresetsTab() {
       title="预设分类"
       count={list.length}
       icon={<Layers className="w-6 h-6 text-primary" />}
-      searchPlaceholder="搜索分类..."
     >
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {list.map((item) => (

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Code, Code2 } from 'lucide-react';
 import { TabPanel } from './TabPanel';
@@ -9,6 +9,8 @@ import { loadContent, type ContentItem } from '@/lib/content';
 export function ExpressionsTab() {
   const [list, setList] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -21,9 +23,28 @@ export function ExpressionsTab() {
 
   const selectedItem = list.find(item => item.slug === slug);
 
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    list.forEach(item => {
+      item.tags?.forEach(tag => tags.add(tag));
+    });
+    return Array.from(tags);
+  }, [list]);
+
+  const filteredList = useMemo(() => {
+    return list.filter(item => {
+      const matchesTag = selectedTags.length === 0 || selectedTags.some(tag => item.tags?.includes(tag));
+      const matchesSearch = !searchTerm || 
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.author?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesTag && matchesSearch;
+    });
+  }, [list, selectedTags, searchTerm]);
+
   if (loading) {
     return (
-      <TabPanel title="表达式" count={0} icon={<Code2 className="w-6 h-6 text-primary" />} searchPlaceholder="加载中...">
+      <TabPanel title="表达式" count={0} icon={<Code2 className="w-6 h-6 text-primary" />}>
         <div className="text-center py-8 text-muted-foreground">加载中...</div>
       </TabPanel>
     );
@@ -47,12 +68,16 @@ export function ExpressionsTab() {
   return (
     <TabPanel
       title="表达式"
-      count={list.length}
+      count={filteredList.length}
       icon={<Code2 className="w-6 h-6 text-primary" />}
-      searchPlaceholder="搜索表达式..."
+      tags={allTags}
+      selectedTags={selectedTags}
+      onTagsChange={setSelectedTags}
+      searchValue={searchTerm}
+      onSearchChange={setSearchTerm}
     >
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {list.map((item) => (
+        {filteredList.map((item) => (
           <TabCard
             key={item.slug}
             title={item.title}
@@ -72,6 +97,8 @@ export function ExpressionsTab() {
 export function ScriptsTab() {
   const [list, setList] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -84,9 +111,28 @@ export function ScriptsTab() {
 
   const selectedItem = list.find(item => item.slug === slug);
 
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    list.forEach(item => {
+      item.tags?.forEach(tag => tags.add(tag));
+    });
+    return Array.from(tags);
+  }, [list]);
+
+  const filteredList = useMemo(() => {
+    return list.filter(item => {
+      const matchesTag = selectedTags.length === 0 || selectedTags.some(tag => item.tags?.includes(tag));
+      const matchesSearch = !searchTerm || 
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.author?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesTag && matchesSearch;
+    });
+  }, [list, selectedTags, searchTerm]);
+
   if (loading) {
     return (
-      <TabPanel title="脚本" count={0} icon={<Code className="w-6 h-6 text-primary" />} searchPlaceholder="加载中...">
+      <TabPanel title="脚本" count={0} icon={<Code className="w-6 h-6 text-primary" />}>
         <div className="text-center py-8 text-muted-foreground">加载中...</div>
       </TabPanel>
     );
@@ -110,12 +156,16 @@ export function ScriptsTab() {
   return (
     <TabPanel
       title="脚本"
-      count={list.length}
+      count={filteredList.length}
       icon={<Code className="w-6 h-6 text-primary" />}
-      searchPlaceholder="搜索脚本..."
+      tags={allTags}
+      selectedTags={selectedTags}
+      onTagsChange={setSelectedTags}
+      searchValue={searchTerm}
+      onSearchChange={setSearchTerm}
     >
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {list.map((item) => (
+        {filteredList.map((item) => (
           <TabCard
             key={item.slug}
             title={item.title}
