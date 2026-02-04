@@ -1,95 +1,127 @@
-import { ChevronLeft, ChevronRight as ChevronRightIcon, Code, FileCode } from 'lucide-react';
-import { ScriptCard } from './ScriptCard';
-import { aeScripts } from '@/data/mockData';
-import type { AEScript } from '@/types';
+import { useState, useEffect } from 'react';
+import { Code, Code2 } from 'lucide-react';
 import { TabPanel } from './TabPanel';
-import { useState } from 'react';
+import { TabCard } from './TabCard';
+import { TabContent } from './TabContent';
+import { loadContent, type ContentItem } from '@/lib/content';
 
-interface TabGridProps {
-  onScriptClick: (script: AEScript) => void;
-  category?: string;
-  title?: string;
-}
+export function ExpressionsTab() {
+  const [list, setList] = useState<ContentItem[]>([]);
+  const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
+  const [loading, setLoading] = useState(true);
 
-export function ExpressionsTab({ onScriptClick, category, title }: TabGridProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  useEffect(() => {
+    loadContent().then(data => {
+      setList(data.expressions);
+      setLoading(false);
+    });
+  }, []);
 
-  const filteredScripts = aeScripts.filter(script => {
-    if (category === 'expressions') {
-      return script.category === 'expressions' || script.tags.includes('expressions');
-    }
-    if (category === 'scripts') {
-      return script.category !== 'expressions';
-    }
-    return true;
-  });
+  if (loading) {
+    return (
+      <TabPanel title="表达式" count={0} icon={<Code2 className="w-6 h-6 text-primary" />} searchPlaceholder="加载中...">
+        <div className="text-center py-8 text-muted-foreground">加载中...</div>
+      </TabPanel>
+    );
+  }
 
-  const sortedScripts = [...filteredScripts].sort((a, b) => {
-    return b.stars - a.stars;
-  });
-
-  const totalPages = Math.ceil(sortedScripts.length / itemsPerPage);
-  const paginatedScripts = sortedScripts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const formatNumber = (num: number) => {
-    return num.toLocaleString('en-US');
-  };
+  if (selectedItem) {
+    return (
+      <TabContent
+        title={selectedItem.title}
+        iconEmoji={selectedItem.iconEmoji}
+        subtitle={`${selectedItem.author}/${selectedItem.slug}`}
+        command={selectedItem.command}
+        stars={selectedItem.stars}
+        downloads={selectedItem.downloads}
+        updatedAt={selectedItem.updatedAt}
+        content={selectedItem.content}
+        onBack={() => setSelectedItem(null)}
+      />
+    );
+  }
 
   return (
     <TabPanel
-      title={title || '浏览 AE 扩展脚本'}
-      count={sortedScripts.length}
-      icon={category === 'expressions' ? <Code className="w-6 h-6 text-primary" /> : <FileCode className="w-6 h-6 text-primary" />}
-      searchPlaceholder={`用 AI 搜索 ${formatNumber(aeScripts.length)} 个脚本...`}
+      title="表达式"
+      count={list.length}
+      icon={<Code2 className="w-6 h-6 text-primary" />}
+      searchPlaceholder="搜索表达式..."
     >
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {paginatedScripts.map((script) => (
-          <ScriptCard
-            key={script.id}
-            script={script}
-            onClick={() => onScriptClick(script)}
+        {list.map((item) => (
+          <TabCard
+            key={item.slug}
+            title={item.title}
+            subtitle={`${item.author}/${item.slug}`}
+            description={item.description}
+            iconEmoji={item.iconEmoji}
+            count={item.stars || 0}
+            command={item.command}
+            onClick={() => setSelectedItem(item)}
           />
         ))}
       </div>
+    </TabPanel>
+  );
+}
 
-      <div className="flex items-center justify-center gap-2 mt-8">
-        <button
-          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-          disabled={currentPage === 1}
-          className="p-2 rounded-md bg-secondary text-muted-foreground disabled:opacity-30 hover:bg-secondary/80 transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-        
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => setCurrentPage(page)}
-            className={`w-8 h-8 rounded-md text-sm font-mono transition-all ${
-              currentPage === page
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
-            }`}
-          >
-            {page}
-          </button>
+export function ScriptsTab() {
+  const [list, setList] = useState<ContentItem[]>([]);
+  const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadContent().then(data => {
+      setList(data.scripts);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return (
+      <TabPanel title="脚本" count={0} icon={<Code className="w-6 h-6 text-primary" />} searchPlaceholder="加载中...">
+        <div className="text-center py-8 text-muted-foreground">加载中...</div>
+      </TabPanel>
+    );
+  }
+
+  if (selectedItem) {
+    return (
+      <TabContent
+        title={selectedItem.title}
+        iconEmoji={selectedItem.iconEmoji}
+        subtitle={`${selectedItem.author}/${selectedItem.slug}`}
+        command={selectedItem.command}
+        stars={selectedItem.stars}
+        downloads={selectedItem.downloads}
+        updatedAt={selectedItem.updatedAt}
+        content={selectedItem.content}
+        onBack={() => setSelectedItem(null)}
+      />
+    );
+  }
+
+  return (
+    <TabPanel
+      title="脚本"
+      count={list.length}
+      icon={<Code className="w-6 h-6 text-primary" />}
+      searchPlaceholder="搜索脚本..."
+    >
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {list.map((item) => (
+          <TabCard
+            key={item.slug}
+            title={item.title}
+            subtitle={`${item.author}/${item.slug}`}
+            description={item.description}
+            iconEmoji={item.iconEmoji}
+            count={item.stars || 0}
+            command={item.command}
+            onClick={() => setSelectedItem(item)}
+          />
         ))}
-        
-        <button
-          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-          disabled={currentPage === totalPages}
-          className="p-2 rounded-md bg-secondary text-muted-foreground disabled:opacity-30 hover:bg-secondary/80 transition-colors"
-        >
-          <ChevronRightIcon className="w-4 h-4" />
-        </button>
-        
-        <span className="ml-4 text-xs text-muted-foreground font-mono">
-          {formatNumber(sortedScripts.length)} 个脚本
-        </span>
       </div>
     </TabPanel>
   );

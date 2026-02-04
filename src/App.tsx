@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from '@/components/Navbar';
 import { HeroSection } from '@/components/HeroSection';
-import { ExpressionsTab } from '@/components/ExpressionsTab';
+import { ExpressionsTab, ScriptsTab } from '@/components/ExpressionsTab';
 import { PresetsTab } from '@/components/PresetsTab';
 import { AboutSection } from '@/components/AboutSection';
 import { FAQSection } from '@/components/FAQSection';
 import { Footer } from '@/components/Footer';
-import { ScriptDetail } from '@/components/ScriptDetail';
 import { ExtensionsTab } from '@/components/ExtensionsTab';
-import type { AEScript } from '@/types';
 
 function App() {
   const [currentView, setCurrentView] = useState('home');
-  const [selectedScript, setSelectedScript] = useState<AEScript | null>(null);
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
@@ -28,10 +25,8 @@ function App() {
       const hash = window.location.hash.slice(1);
       if (hash && ['expressions', 'scripts', 'presets', 'extensions'].includes(hash)) {
         setCurrentView(hash);
-        setSelectedScript(null);
       } else {
         setCurrentView('home');
-        setSelectedScript(null);
       }
     };
 
@@ -48,40 +43,18 @@ function App() {
     window.scrollTo(0, 0);
   }, [currentView]);
 
-  const handleScriptClick = (script: AEScript) => {
-    setSelectedScript(script);
-    setCurrentView('detail');
-    window.scrollTo(0, 0);
-  };
-
-  const handleBack = () => {
-    setSelectedScript(null);
-    const hash = window.location.hash.slice(1);
-    setCurrentView(hash || 'home');
-    window.scrollTo(0, 0);
-  };
-
   const handleViewChange = (view: string) => {
     setCurrentView(view);
-    setSelectedScript(null);
     window.location.hash = view;
     window.scrollTo(0, 0);
   };
 
   const renderContent = () => {
     switch (currentView) {
-      case 'detail':
-        return selectedScript ? (
-          <ScriptDetail 
-            script={selectedScript} 
-            onBack={handleBack}
-          />
-        ) : null;
-      
       case 'expressions':
         return (
           <>
-            <ExpressionsTab onScriptClick={handleScriptClick} category="expressions" title="表达式" />
+            <ExpressionsTab />
             <Footer onViewChange={handleViewChange} />
           </>
         );
@@ -89,7 +62,7 @@ function App() {
       case 'scripts':
         return (
           <>
-            <ExpressionsTab onScriptClick={handleScriptClick} category="scripts" title="脚本" />
+            <ScriptsTab />
             <Footer onViewChange={handleViewChange} />
           </>
         );
@@ -105,7 +78,7 @@ function App() {
       case 'extensions':
         return (
           <>
-            <ExtensionsTab onViewChange={handleViewChange} />
+            <ExtensionsTab />
             <Footer onViewChange={handleViewChange} />
           </>
         );

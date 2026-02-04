@@ -1,71 +1,63 @@
-import { 
-  Play, Code, Type, Square, Sparkles, Palette, 
-  Target, Camera, Music, Layout, Box, Download,
-  Folder, Layers
-} from 'lucide-react';
-import type { ElementType } from 'react';
-import { categories } from '@/data/mockData';
+import { useState, useEffect } from 'react';
+import { Layers } from 'lucide-react';
 import { TabPanel } from './TabPanel';
-
-const iconMap: Record<string, ElementType> = {
-  Play, Code, Type, Square, Sparkles, Palette,
-  Target, Camera, Music, Layout, Box, Download
-};
-
-const formatNumber = (num: number) => {
-  return num.toLocaleString('en-US');
-};
+import { TabCard } from './TabCard';
+import { TabContent } from './TabContent';
+import { loadContent, type PresetItem } from '@/lib/content';
 
 export function PresetsTab() {
+  const [list, setList] = useState<PresetItem[]>([]);
+  const [selectedItem, setSelectedItem] = useState<PresetItem | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadContent().then(data => {
+      setList(data.presets);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return (
+      <TabPanel title="预设分类" count={0} icon={<Layers className="w-6 h-6 text-primary" />} searchPlaceholder="加载中...">
+        <div className="text-center py-8 text-muted-foreground">加载中...</div>
+      </TabPanel>
+    );
+  }
+
+  if (selectedItem) {
+    return (
+      <TabContent
+        title={selectedItem.title}
+        iconEmoji={selectedItem.iconEmoji}
+        subtitle={selectedItem.nameEn}
+        command={selectedItem.command}
+        content={selectedItem.content}
+        onBack={() => setSelectedItem(null)}
+      />
+    );
+  }
+
   return (
     <TabPanel
       title="预设分类"
-      count={categories.length}
+      count={list.length}
       icon={<Layers className="w-6 h-6 text-primary" />}
       searchPlaceholder="搜索分类..."
     >
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {categories.map((category) => {
-          const Icon = iconMap[category.icon] || Folder;
-          return (
-            <div 
-              key={category.id}
-              className="terminal-window card-hover cursor-pointer group"
-            >
-              <div className="terminal-header">
-                <span className="terminal-dot terminal-dot-red" />
-                <span className="terminal-dot terminal-dot-yellow" />
-                <span className="terminal-dot terminal-dot-green" />
-                <span className="ml-auto text-xs text-muted-foreground font-mono flex items-center gap-1">
-                  <Folder className="w-3 h-3" />
-                  {category.nameEn}
-                </span>
-              </div>
-              
-              <div className="p-4 space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-foreground font-medium">{category.name}</h3>
-                    <p className="text-xs text-muted-foreground font-mono">
-                      <span className="code-keyword">exports</span>
-                      <span className="code-number">: {formatNumber(category.count)}</span>
-                      <span className="code-comment"> // 个脚本</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-border">
-                  <p className="text-xs text-muted-foreground font-mono">
-                    <span className="text-success">$</span> cd {category.nameEn} && ls
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {list.map((item) => (
+          <TabCard
+            key={item.slug}
+            title={item.title}
+            subtitle={item.nameEn}
+            description={item.description}
+            iconEmoji={item.iconEmoji}
+            count={item.count}
+            command={item.command}
+            onClick={() => setSelectedItem(item)}
+          />
+        ))}
       </div>
     </TabPanel>
   );
