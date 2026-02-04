@@ -52,7 +52,6 @@ function parseFrontmatter(text: string): { frontmatter: Record<string, any>; con
   }
 
   if (openingDelim === -1 || closingDelim === -1) {
-    console.error('Could not find frontmatter delimiters');
     return { frontmatter: {}, content: text };
   }
 
@@ -91,8 +90,6 @@ let cachedContent: ContentData | null = null;
 let loadingPromise: Promise<ContentData> | null = null;
 
 async function loadFromFetch(): Promise<ContentData> {
-  console.log('Loading content from files...');
-  
   const [expressions, scripts, presets, extensions] = await Promise.all([
     fetch('/content/expressions/auto-keyframe.md').then(r => r.ok ? r.text() : ''),
     fetch('/content/scripts/shape-morpher.md').then(r => r.ok ? r.text() : ''),
@@ -123,7 +120,6 @@ async function loadFromFetch(): Promise<ContentData> {
       updatedAt: frontmatter.updatedAt,
       content: content.trim()
     });
-    console.log('Parsed expressions:', data.expressions[0]?.title);
   }
 
   if (scripts) {
@@ -142,7 +138,6 @@ async function loadFromFetch(): Promise<ContentData> {
       updatedAt: frontmatter.updatedAt,
       content: content.trim()
     });
-    console.log('Parsed scripts:', data.scripts[0]?.title);
   }
 
   if (presets) {
@@ -157,7 +152,6 @@ async function loadFromFetch(): Promise<ContentData> {
       description: frontmatter.description || '',
       content: content.trim()
     });
-    console.log('Parsed presets:', data.presets[0]?.title);
   }
 
   if (extensions) {
@@ -170,10 +164,8 @@ async function loadFromFetch(): Promise<ContentData> {
       description: frontmatter.description || '',
       content: content.trim()
     });
-    console.log('Parsed extensions:', data.extensions[0]?.title);
   }
 
-  console.log('Final data:', JSON.stringify(data, null, 2));
   return data;
 }
 
