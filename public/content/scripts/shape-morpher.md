@@ -4,10 +4,9 @@ iconEmoji: 🔷
 author: vector-labs
 tags: [shapes, morph, path]
 category: shapes
-description: Morph between any shapes seamlessly. Includes path interpolation and vertex matching algorithms.
+description: Morph between any shapes seamlessly.
 updatedAt: 2026-01-20
 ---
-
 # Shape Morpher
 
 形状之間無縫變形，包含路徑插值和頂點匹配算法。
