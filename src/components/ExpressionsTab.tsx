@@ -59,7 +59,6 @@ export function ExpressionsTab() {
             subtitle={`${item.author}/${item.slug}`}
             description={item.description}
             iconEmoji={item.iconEmoji}
-            count={item.stars || 0}
             author={item.author}
             updatedAt={item.updatedAt}
             to={`/expressions/${item.slug}`}
@@ -123,7 +122,6 @@ export function ScriptsTab() {
             subtitle={`${item.author}/${item.slug}`}
             description={item.description}
             iconEmoji={item.iconEmoji}
-            count={item.stars || 0}
             author={item.author}
             updatedAt={item.updatedAt}
             to={`/scripts/${item.slug}`}

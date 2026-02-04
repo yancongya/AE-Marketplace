@@ -2,8 +2,6 @@
 title: 自动关键帧
 iconEmoji: 🎯
 author: 烟囱鸭
-stars: 2847
-downloads: 45200
 tags: [关键帧, 缓动, 自动化]
 category: animation
 description: 自动化关键帧

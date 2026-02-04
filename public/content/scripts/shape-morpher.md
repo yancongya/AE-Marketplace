@@ -2,14 +2,10 @@
 title: Shape-Morpher
 iconEmoji: 🔷
 author: vector-labs
-stars: 2156
-downloads: 32100
 tags: [shapes, morph, path]
 category: shapes
-command: import shape_morpher
 description: Morph between any shapes seamlessly. Includes path interpolation and vertex matching algorithms.
 updatedAt: 2026-01-20
-date: 2026-01-20
 ---
 
 # Shape Morpher

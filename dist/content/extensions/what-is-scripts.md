@@ -1,8 +1,8 @@
 ---
 title: 什么是 Scripts?
 iconEmoji: 📖
-command: open what_is_scripts
 description: 了解 AE 脚本的基本概念和工作原理
+updatedAt: 2026-01-28
 ---
 
 # 什么是 Scripts?

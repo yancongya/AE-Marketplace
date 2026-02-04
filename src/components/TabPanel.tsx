@@ -45,7 +45,7 @@ export function TabPanel({
   };
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8">
+    <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="terminal-window">
           <div className="terminal-header">

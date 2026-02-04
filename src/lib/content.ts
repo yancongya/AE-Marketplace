@@ -3,8 +3,6 @@ export interface ContentItem {
   title: string;
   iconEmoji?: string;
   author?: string;
-  stars?: number;
-  downloads?: number;
   tags?: string[];
   category?: string;
   command: string;
@@ -112,8 +110,6 @@ async function loadFromFetch(): Promise<ContentData> {
       title: frontmatter.title || 'auto-keyframe',
       iconEmoji: frontmatter.iconEmoji,
       author: frontmatter.author,
-      stars: parseInt(frontmatter.stars) || undefined,
-      downloads: parseInt(frontmatter.downloads) || undefined,
       tags: frontmatter.tags,
       category: frontmatter.category,
       command: frontmatter.command || '',
@@ -131,8 +127,6 @@ async function loadFromFetch(): Promise<ContentData> {
       title: frontmatter.title || 'shape-morpher',
       iconEmoji: frontmatter.iconEmoji,
       author: frontmatter.author,
-      stars: parseInt(frontmatter.stars) || undefined,
-      downloads: parseInt(frontmatter.downloads) || undefined,
       tags: frontmatter.tags,
       category: frontmatter.category,
       command: frontmatter.command || '',

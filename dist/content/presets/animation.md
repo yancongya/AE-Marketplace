@@ -3,8 +3,8 @@ title: 动画预设
 iconEmoji: 🎬
 count: 12450
 nameEn: animation
-command: cd animation && ls
 description: 关键帧工具、缓动曲线、动画预设
+updatedAt: 2026-01-28
 ---
 
 # 动画分类
