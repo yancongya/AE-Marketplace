@@ -16,8 +16,50 @@ mermaid.initialize({
   theme: 'dark',
   securityLevel: 'loose',
   fontFamily: 'inherit',
-  flowchart: { curve: 'basis' },
-  sequence: { actorMargin: 50 },
+  flowchart: { 
+    curve: 'basis',
+    htmlLabels: true,
+  },
+  sequence: { 
+    actorMargin: 50,
+    diagramMarginX: 50,
+    diagramMarginY: 10,
+    boxMargin: 10,
+    boxTextMargin: 5,
+    noteMargin: 10,
+    messageMargin: 35,
+  },
+  themeVariables: {
+    primaryColor: '#3b82f6',
+    primaryTextColor: '#ffffff',
+    primaryBorderColor: '#60a5fa',
+    lineColor: '#94a3b8',
+    secondaryColor: '#8b5cf6',
+    tertiaryColor: '#f59e0b',
+    background: '#0f0f0f',
+    mainBkg: '#1e1e2e',
+    nodeBorder: '#3b82f6',
+    clusterBkg: '#181825',
+    clusterBorder: '#45475a',
+    titleColor: '#f8fafc',
+    edgeLabelBackground: '#1e1e2e',
+    actorBkg: '#3b82f6',
+    actorBorder: '#60a5fa',
+    actorTextColor: '#ffffff',
+    actorLineColor: '#94a3b8',
+    signalColor: '#94a3b8',
+    signalTextColor: '#f8fafc',
+    labelBoxBkgColor: '#1e1e2e',
+    labelBoxBorderColor: '#45475a',
+    labelTextColor: '#f8fafc',
+    loopTextColor: '#f8fafc',
+    noteBorderColor: '#f59e0b',
+    noteBkgColor: '#1e1e2e',
+    noteTextColor: '#f8fafc',
+    activationBorderColor: '#3b82f6',
+    activationBkgColor: '#1e1e2e',
+    sequenceNumberColor: '#f8fafc',
+  },
 });
 
 interface TabContentProps {
@@ -77,11 +119,136 @@ function MermaidDiagram({ code }: { code: string }) {
   const [id] = useState(() => `mermaid-${Math.random().toString(36).slice(2, 9)}`);
   const wheelTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const mermaidTheme = isDark ? 'dark' : 'default';
+  const getMermaidConfig = useCallback(() => {
+    if (isDark) {
+      return {
+        theme: 'dark' as const,
+        startOnLoad: false,
+        securityLevel: 'loose' as const,
+        fontFamily: 'inherit',
+        flowchart: { 
+          curve: 'basis' as const,
+          htmlLabels: true,
+        },
+        sequence: { 
+          actorMargin: 50,
+          diagramMarginX: 50,
+          diagramMarginY: 10,
+          boxMargin: 10,
+          boxTextMargin: 5,
+          noteMargin: 10,
+          messageMargin: 35,
+        },
+        gantt: {
+          titleTopMargin: 25,
+          barHeight: 20,
+          barGap: 4,
+          topPadding: 50,
+          sidePadding: 100,
+          gridLineStartPadding: 35,
+          gridLineEndPadding: 35,
+          arrowCurve: 0.5,
+        },
+        themeVariables: {
+          primaryColor: '#3b82f6',
+          primaryTextColor: '#ffffff',
+          primaryBorderColor: '#60a5fa',
+          lineColor: '#94a3b8',
+          secondaryColor: '#8b5cf6',
+          tertiaryColor: '#f59e0b',
+          background: '#0f0f0f',
+          mainBkg: '#1e1e2e',
+          nodeBorder: '#3b82f6',
+          clusterBkg: '#181825',
+          clusterBorder: '#45475a',
+          titleColor: '#f8fafc',
+          edgeLabelBackground: '#1e1e2e',
+          actorBkg: '#3b82f6',
+          actorBorder: '#60a5fa',
+          actorTextColor: '#ffffff',
+          actorLineColor: '#94a3b8',
+          signalColor: '#94a3b8',
+          signalTextColor: '#f8fafc',
+          labelBoxBkgColor: '#1e1e2e',
+          labelBoxBorderColor: '#45475a',
+          labelTextColor: '#f8fafc',
+          loopTextColor: '#f8fafc',
+          noteBorderColor: '#f59e0b',
+          noteBkgColor: '#1e1e2e',
+          noteTextColor: '#f8fafc',
+          activationBorderColor: '#3b82f6',
+          activationBkgColor: '#1e1e2e',
+          sequenceNumberColor: '#f8fafc',
+          sectionBkgColor: '#181825',
+          altSectionBkgColor: '#1e1e2e',
+          gridColor: '#2d2d3d',
+          scaleLabelColor: '#94a3b8',
+          dateLabelColor: '#94a3b8',
+          taskTextColor: '#f8fafc',
+          taskTextOutsideColor: '#94a3b8',
+          todayLineColor: '#f59e0b',
+          pie1: '#3b82f6',
+          pie2: '#8b5cf6',
+          pie3: '#f59e0b',
+          pie4: '#10b981',
+          pie5: '#ef4444',
+          pie6: '#6366f1',
+          pie7: '#ec4899',
+          pie8: '#14b8a6',
+          pie9: '#f97316',
+          pie10: '#84cc16',
+          pie11: '#06b6d4',
+          pie12: '#a855f7',
+          pie13: '#eab308',
+          pie14: '#22c55e',
+          pie15: '#f43f5e',
+          pieTitleTextSize: '20px',
+          pieTitleTextStyle: { fill: '#f8fafc', fontFamily: 'inherit' },
+          pieSectionTextSize: '16px',
+          pieSectionTextStyle: { fill: '#f8fafc', fontFamily: 'inherit' },
+          pieLegendTextSize: '14px',
+          pieLegendTextStyle: { fill: '#94a3b8', fontFamily: 'inherit' },
+          pieStrokeWidth: '2px',
+          pieOuterStrokeWidth: '2px',
+          pieOuterStrokeColor: '#1e1e2e',
+          pieOpacity: '0.9',
+        },
+      };
+    }
+    return {
+      theme: 'default' as const,
+      startOnLoad: false,
+      securityLevel: 'loose' as const,
+      fontFamily: 'inherit',
+      flowchart: { 
+        curve: 'basis' as const,
+        htmlLabels: true,
+      },
+      sequence: { 
+        actorMargin: 50,
+        diagramMarginX: 50,
+        diagramMarginY: 10,
+        boxMargin: 10,
+        boxTextMargin: 5,
+        noteMargin: 10,
+        messageMargin: 35,
+      },
+      gantt: {
+        titleTopMargin: 25,
+        barHeight: 20,
+        barGap: 4,
+        topPadding: 50,
+        sidePadding: 100,
+        gridLineStartPadding: 35,
+        gridLineEndPadding: 35,
+        arrowCurve: 0.5,
+      },
+    };
+  }, [isDark]);
 
   useEffect(() => {
-    mermaid.initialize({ theme: mermaidTheme });
-  }, [mermaidTheme]);
+    mermaid.initialize(getMermaidConfig());
+  }, [getMermaidConfig]);
 
   useEffect(() => {
     if (!code || !containerRef.current) return;
@@ -91,7 +258,7 @@ function MermaidDiagram({ code }: { code: string }) {
       try {
         const trimmedCode = code.trim();
         if (!trimmedCode) return;
-        mermaid.initialize({ theme: mermaidTheme });
+        mermaid.initialize(getMermaidConfig());
         const { svg: svgContent } = await mermaid.render(id, trimmedCode);
         if (isMounted) {
           setSvg(svgContent);
@@ -106,10 +273,10 @@ function MermaidDiagram({ code }: { code: string }) {
 
     renderDiagram();
     return () => { isMounted = false; };
-  }, [code, id, mermaidTheme]);
+  }, [code, id, getMermaidConfig]);
 
   const handleZoomIn = useCallback(() => {
-    setScale(prev => Math.min(prev + 0.1, 3));
+    setScale(prev => Math.min(prev + 0.1, 10));
   }, []);
 
   const handleZoomOut = useCallback(() => {
@@ -139,7 +306,7 @@ function MermaidDiagram({ code }: { code: string }) {
     }
 
     const delta = e.deltaY > 0 ? -0.05 : 0.05;
-    const newScale = Math.max(0.1, Math.min(3, scale + delta));
+    const newScale = Math.max(0.1, Math.min(10, scale + delta));
     setScale(newScale);
 
     wheelTimeoutRef.current = setTimeout(() => {
