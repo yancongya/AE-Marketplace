@@ -10,9 +10,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ['sonner', 'react-markdown', 'mermaid', 'rehype-highlight'],
+  },
   server: {
-    hmr: true,
+    port: 5173,
     strictPort: false,
+    hmr: {
+      port: 5173,
+    },
   },
   logLevel: 'error'
 });

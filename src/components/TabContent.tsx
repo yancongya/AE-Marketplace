@@ -1,13 +1,15 @@
-import { ChevronLeft, Copy, Check, ExternalLink, Expand, List, X } from 'lucide-react';
+import { ChevronLeft, Copy, Check, ExternalLink, List, X, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 import type { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import rehypeHighlight from 'rehype-highlight';
-import 'highlight.js/styles/github-dark.css';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import mermaid from 'mermaid';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as ScrollArea from '@radix-ui/react-scroll-area';
+import { useTheme } from '@/contexts/ThemeContext';
+import { toast } from 'sonner';
 
 mermaid.initialize({
   startOnLoad: false,
@@ -70,7 +72,16 @@ function MermaidDiagram({ code }: { code: string }) {
   const [svg, setSvg] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [isExpanded, setIsExpanded] = useState(false);
+  const [scale, setScale] = useState(1);
+  const { isDark } = useTheme();
   const [id] = useState(() => `mermaid-${Math.random().toString(36).slice(2, 9)}`);
+  const wheelTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const mermaidTheme = isDark ? 'dark' : 'default';
+
+  useEffect(() => {
+    mermaid.initialize({ theme: mermaidTheme });
+  }, [mermaidTheme]);
 
   useEffect(() => {
     if (!code || !containerRef.current) return;
@@ -80,6 +91,7 @@ function MermaidDiagram({ code }: { code: string }) {
       try {
         const trimmedCode = code.trim();
         if (!trimmedCode) return;
+        mermaid.initialize({ theme: mermaidTheme });
         const { svg: svgContent } = await mermaid.render(id, trimmedCode);
         if (isMounted) {
           setSvg(svgContent);
@@ -87,14 +99,53 @@ function MermaidDiagram({ code }: { code: string }) {
         }
       } catch (err) {
         if (isMounted) {
-          setError(err instanceof Error ? err.message : String(err));
+          setError(err instanceof Error ? err.message : 'Unknown error');
         }
       }
     };
 
     renderDiagram();
     return () => { isMounted = false; };
-  }, [code, id]);
+  }, [code, id, mermaidTheme]);
+
+  const handleZoomIn = useCallback(() => {
+    setScale(prev => Math.min(prev + 0.1, 3));
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    setScale(prev => Math.max(prev - 0.1, 0.1));
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setScale(1);
+  }, []);
+
+  const handleCopy = useCallback(async () => {
+    if (!code) return;
+    try {
+      await navigator.clipboard.writeText(code);
+      toast.success('代码已复制到剪贴板');
+    } catch {
+      toast.error('复制失败');
+    }
+  }, [code]);
+
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    if (!isExpanded) return;
+    e.preventDefault();
+    
+    if (wheelTimeoutRef.current) {
+      clearTimeout(wheelTimeoutRef.current);
+    }
+
+    const delta = e.deltaY > 0 ? -0.05 : 0.05;
+    const newScale = Math.max(0.1, Math.min(3, scale + delta));
+    setScale(newScale);
+
+    wheelTimeoutRef.current = setTimeout(() => {
+      wheelTimeoutRef.current = null;
+    }, 50);
+  }, [isExpanded, scale]);
 
   if (error) {
     return (
@@ -108,35 +159,90 @@ function MermaidDiagram({ code }: { code: string }) {
   return (
     <>
       <div className="relative group my-4">
-        <Dialog.Root open={isExpanded} onOpenChange={setIsExpanded}>
-          <Dialog.Trigger asChild>
-            <button className="absolute top-2 right-2 z-10 p-1.5 rounded bg-primary/20 hover:bg-primary/40 opacity-0 group-hover:opacity-100 transition-all" title="放大查看">
-              <Expand className="w-4 h-4 text-muted-foreground" />
-            </button>
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 bg-black/80 z-50" />
-            <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-5xl max-h-[90vh] bg-[#1a1a2e] rounded-xl z-50 overflow-auto p-4" aria-describedby={undefined}>
-              <Dialog.Title className="sr-only">图表全屏视图</Dialog.Title>
-              <div className="flex justify-center bg-black/20 rounded-lg p-8">
-                {svg ? <div className="mermaid-svg" dangerouslySetInnerHTML={{ __html: svg }} /> : <span className="text-muted-foreground">加载中...</span>}
-              </div>
-              <Dialog.Close className="absolute top-4 right-4 p-2 rounded hover:bg-white/10">
-                <span className="text-muted-foreground">✕</span>
-              </Dialog.Close>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
-        <div ref={containerRef} className="mermaid-content flex justify-center p-4 bg-black/20 rounded-lg">
+        <div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+          <button 
+            onClick={handleCopy}
+            className="p-1.5 rounded bg-primary/20 hover:bg-primary/40" 
+            title="复制代码"
+          >
+            <Copy className="w-4 h-4 text-muted-foreground" />
+          </button>
+          <button 
+            onClick={() => setIsExpanded(true)}
+            className="p-1.5 rounded bg-primary/20 hover:bg-primary/40" 
+            title="全屏查看"
+          >
+            <Maximize className="w-4 h-4 text-muted-foreground" />
+          </button>
+        </div>
+        <div ref={containerRef} className="mermaid-content flex justify-center p-4 bg-muted/30 rounded-lg overflow-hidden">
           {svg ? <div className="mermaid-svg" dangerouslySetInnerHTML={{ __html: svg }} /> : <span className="text-muted-foreground">加载中...</span>}
         </div>
       </div>
+
+      <Dialog.Root open={isExpanded} onOpenChange={setIsExpanded}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/90 z-[100]" />
+          <Dialog.Content className="fixed inset-0 z-[100] flex flex-col bg-background" aria-describedby={undefined}>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card shrink-0">
+              <span className="text-sm font-medium text-foreground">Mermaid 图表 - 全屏模式</span>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={handleZoomOut}
+                  className="p-2 rounded hover:bg-secondary transition-colors"
+                  title="缩小"
+                >
+                  <ZoomOut className="w-4 h-4 text-muted-foreground" />
+                </button>
+                <span className="text-sm text-muted-foreground font-mono min-w-[3.5rem] text-center">{Math.round(scale * 100)}%</span>
+                <button 
+                  onClick={handleZoomIn}
+                  className="p-2 rounded hover:bg-secondary transition-colors"
+                  title="放大"
+                >
+                  <ZoomIn className="w-4 h-4 text-muted-foreground" />
+                </button>
+                <button 
+                  onClick={handleReset}
+                  className="px-2 py-1 rounded hover:bg-secondary transition-colors text-xs"
+                  title="重置"
+                >
+                  重置
+                </button>
+                <div className="w-px h-6 bg-border mx-2" />
+                <button 
+                  onClick={handleCopy}
+                  className="p-2 rounded hover:bg-secondary transition-colors"
+                  title="复制代码"
+                >
+                  <Copy className="w-4 h-4 text-muted-foreground" />
+                </button>
+                <Dialog.Close className="p-2 rounded hover:bg-secondary transition-colors">
+                  <X className="w-4 h-4 text-muted-foreground" />
+                </Dialog.Close>
+              </div>
+            </div>
+            <div 
+              className="flex-1 flex justify-center items-center overflow-auto p-8"
+              onWheel={handleWheel}
+            >
+              <div 
+                className="transition-transform duration-75 origin-center"
+                style={{ transform: `scale(${scale})` }}
+              >
+                {svg ? <div className="mermaid-svg" dangerouslySetInnerHTML={{ __html: svg }} /> : <span className="text-muted-foreground">加载中...</span>}
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </>
   );
 }
 
 function CodeBlock({ children }: { children: React.ReactNode }) {
   const [copied, setCopied] = useState(false);
+  const { isDark } = useTheme();
   const childrenArray = Array.isArray(children) ? children : [children];
   const codeChild = childrenArray.find((c: React.ReactElement) => 
     c?.type === 'code' || (c?.props?.children && typeof c.props.children === 'string')
@@ -157,23 +263,46 @@ function CodeBlock({ children }: { children: React.ReactNode }) {
     try {
       await navigator.clipboard.writeText(codeString);
       setCopied(true);
+      toast.success('代码已复制到剪贴板');
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
+    } catch {
+      toast.error('复制失败');
     }
   };
 
   return (
-    <div className="relative group my-4 rounded-lg overflow-hidden border border-border/50">
-      <div className="flex items-center justify-between px-4 py-2 bg-black/40 border-b border-border/50">
+    <div className="relative group my-4 rounded-lg border border-border w-full">
+      <div className="flex items-center justify-between px-4 py-2 bg-muted/50 border-b border-border">
         <span className="text-xs text-muted-foreground font-mono">{language}</span>
-        <button onClick={handleCopy} className="flex items-center gap-1 px-2 py-1 rounded hover:bg-white/10 transition-colors" title="复制代码">
-          {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5 text-muted-foreground" />}
+        <button 
+          onClick={handleCopy} 
+          className="flex items-center gap-1 px-2 py-1 rounded hover:bg-secondary/50 transition-colors" 
+          title="复制代码"
+        >
+          {copied ? <Check className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5 text-muted-foreground" />}
         </button>
       </div>
-      <pre className="p-4 overflow-x-auto bg-[#0d0d1a]">
-        <code className={className}>{children}</code>
-      </pre>
+      <div className="overflow-x-auto">
+        <SyntaxHighlighter
+          language={language}
+          style={isDark ? vscDarkPlus : vs}
+          showLineNumbers
+          customStyle={{
+            margin: 0,
+            borderRadius: '0 0 0.5rem 0.5rem',
+            fontSize: '0.875rem',
+            lineHeight: '1.625rem',
+          }}
+          lineNumberStyle={{
+            fontSize: '0.75rem',
+            paddingRight: '1rem',
+            textAlign: 'right',
+            color: 'rgba(156, 163, 175, 0.5)',
+          }}
+        >
+          {codeString}
+        </SyntaxHighlighter>
+      </div>
     </div>
   );
 }
@@ -237,30 +366,33 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
       }, 10);
     };
 
+    const updateActiveHeading = () => {
+      if (headings.length > 0) {
+        const firstVisible = headings.find(h => {
+          const el = document.getElementById(h.id);
+          if (!el) return false;
+          const rect = el.getBoundingClientRect();
+          return rect.top >= 0 && rect.top < window.innerHeight;
+        });
+        if (firstVisible) {
+          setActiveId(firstVisible.id);
+        } else if (!activeId) {
+          setActiveId(headings[0].id);
+        }
+      }
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    const timeoutId = setTimeout(updateActiveHeading, 100);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
       if (scrollTimeoutRef.current) {
         clearTimeout(scrollTimeoutRef.current);
       }
+      clearTimeout(timeoutId);
     };
-  }, [headings]);
-
-  useEffect(() => {
-    if (headings.length > 0) {
-      const firstVisible = headings.find(h => {
-        const el = document.getElementById(h.id);
-        if (!el) return false;
-        const rect = el.getBoundingClientRect();
-        return rect.top >= 0 && rect.top < window.innerHeight;
-      });
-      if (firstVisible) {
-        setActiveId(firstVisible.id);
-      } else if (!activeId) {
-        setActiveId(headings[0].id);
-      }
-    }
   }, [headings, activeId]);
 
   if (headings.length === 0) return null;
@@ -278,10 +410,10 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
       <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 z-40 xl:hidden" />
-          <Dialog.Content className="fixed bottom-0 left-0 right-0 z-50 bg-[#1a1a2e] rounded-t-2xl p-4 xl:hidden max-h-[60vh] overflow-auto" aria-describedby={undefined}>
+          <Dialog.Content className="fixed bottom-0 left-0 right-0 z-50 bg-card rounded-t-2xl p-4 xl:hidden max-h-[60vh] overflow-auto" aria-describedby={undefined}>
             <div className="flex items-center justify-between mb-4">
               <Dialog.Title className="font-medium">目录</Dialog.Title>
-              <Dialog.Close className="p-1 rounded hover:bg-white/10">
+              <Dialog.Close className="p-1 rounded hover:bg-secondary">
                 <X className="w-5 h-5 text-muted-foreground" />
               </Dialog.Close>
             </div>
@@ -298,7 +430,7 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
                         : heading.level === 2
                           ? 'text-muted-foreground/70 pl-6'
                           : 'text-muted-foreground/50 pl-10'
-                  } hover:bg-white/5`}
+                  } hover:bg-secondary/50`}
                 >
                   {heading.text}
                 </button>
@@ -327,10 +459,10 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
                       activeId === heading.id 
                         ? 'bg-primary/20 text-primary font-bold' 
                         : heading.level === 1 
-                          ? 'text-foreground/90 hover:bg-white/5' 
+                          ? 'text-foreground/90 hover:bg-secondary/50' 
                           : heading.level === 2 
-                            ? 'text-muted-foreground/70 pl-6 hover:bg-white/5' 
-                            : 'text-muted-foreground/50 pl-10 hover:bg-white/5'
+                            ? 'text-muted-foreground/70 pl-6 hover:bg-secondary/50' 
+                            : 'text-muted-foreground/50 pl-10 hover:bg-secondary/50'
                     }`}
                     title={heading.text}
                   >
@@ -368,10 +500,10 @@ export function TabContent({
     <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col xl:flex-row gap-6">
-          <div className={`${headings.length > 0 ? 'xl:flex-[3]' : 'flex-1'} min-w-0 space-y-6`}>
+          <div className={`${headings.length > 0 ? 'xl:flex-[3]' : 'flex-1'} min-w-0 space-y-6 w-full`}>
             <div className="flex items-center gap-2 text-sm font-mono">
               <button onClick={onBack} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-                <span className="text-green-400">$</span> cd ..
+                <span className="text-success">$</span> cd ..
               </button>
             </div>
 
@@ -398,9 +530,9 @@ export function TabContent({
                   </button>
                 </div>
                 {(updatedAt || author) && (
-                  <div className="flex items-center gap-4 p-2 rounded bg-black/30 border border-border">
-                    {updatedAt && <span className="text-sm text-muted-foreground font-mono"><span className="text-green-400">$</span> 更新日期: {updatedAt}</span>}
-                    {author && <span className="text-sm text-muted-foreground font-mono"><span className="text-green-400">$</span> 作者: {author}</span>}
+                  <div className="flex items-center gap-4 p-2 rounded bg-muted/30 border border-border">
+                    {updatedAt && <span className="text-sm text-muted-foreground font-mono"><span className="text-success">$</span> 更新日期: {updatedAt}</span>}
+                    {author && <span className="text-sm text-muted-foreground font-mono"><span className="text-success">$</span> 作者: {author}</span>}
                   </div>
                 )}
               </div>
@@ -432,7 +564,6 @@ export function TabContent({
               <div className="p-6">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[[rehypeHighlight, { ignoreMissing: true }]]}
                   components={{
                     h1: ({ children }) => {
                       const id = slugify(String(children));
@@ -465,12 +596,12 @@ export function TabContent({
                     },
                     pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
                     table: ({ children }) => (
-                      <div className="overflow-x-auto my-4 rounded-lg border border-border/50">
+                      <div className="overflow-x-auto my-4 rounded-lg border border-border">
                         <table className="w-full border-collapse">{children}</table>
                       </div>
                     ),
-                    th: ({ children }) => <th className="border-b border-border/50 px-4 py-3 text-left font-semibold bg-white/5">{children}</th>,
-                    td: ({ children }) => <td className="border-t border-border/30 px-4 py-3 text-muted-foreground">{children}</td>,
+                    th: ({ children }) => <th className="border-b border-border px-4 py-3 text-left font-semibold bg-muted/30">{children}</th>,
+                    td: ({ children }) => <td className="border-t border-border/50 px-4 py-3 text-muted-foreground">{children}</td>,
                     hr: () => <hr className="border-border my-6" />,
                   }}
                 >

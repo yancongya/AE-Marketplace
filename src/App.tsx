@@ -8,6 +8,8 @@ import { AboutSection } from '@/components/AboutSection';
 import { FAQSection } from '@/components/FAQSection';
 import { Footer } from '@/components/Footer';
 import { ExtensionsTab } from '@/components/ExtensionsTab';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { Toaster } from '@/components/ui/sonner';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -29,12 +31,13 @@ function AppContent() {
   }, [isDark]);
 
   return (
-    <div className="min-h-screen bg-grid">
-      <Navbar
-        isDark={isDark}
-        onThemeChange={setIsDark}
-      />
-      <main className="relative">
+    <ThemeProvider isDark={isDark}>
+      <div className="min-h-screen bg-grid">
+        <Navbar
+          isDark={isDark}
+          onThemeChange={setIsDark}
+        />
+        <main className="relative">
         <Routes>
           <Route path="/" element={
             <>
@@ -99,7 +102,9 @@ function AppContent() {
           } />
         </Routes>
       </main>
+      <Toaster />
     </div>
+    </ThemeProvider>
   );
 }
 
