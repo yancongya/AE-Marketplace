@@ -96,12 +96,38 @@ interface ContentData {
 let cachedContent: ContentData | null = null;
 let loadingPromise: Promise<ContentData> | null = null;
 
+async function loadMarkdownFiles(basePath: string): Promise<{ frontmatter: Record<string, any>; content: string; slug: string }[]> {
+  const manifestUrl = `${basePath}/_manifest.json`;
+  try {
+    const response = await fetch(manifestUrl);
+    if (!response.ok) return [];
+    const files: string[] = await response.json();
+    const results: { frontmatter: Record<string, any>; content: string; slug: string }[] = [];
+    await Promise.all(
+      files
+        .filter((f: string) => f.endsWith('.md'))
+        .map(async (filename: string) => {
+          const slug = filename.replace('.md', '');
+          const res = await fetch(`${basePath}/${filename}`);
+          if (res.ok) {
+            const text = await res.text();
+            const { frontmatter, content } = parseFrontmatter(text);
+            results.push({ frontmatter, content, slug });
+          }
+        })
+    );
+    return results;
+  } catch {
+    return [];
+  }
+}
+
 async function loadFromFetch(): Promise<ContentData> {
-  const [expressions, scripts, presets, extensions] = await Promise.all([
-    fetch('/content/expressions/auto-keyframe.md').then(r => r.ok ? r.text() : ''),
-    fetch('/content/scripts/shape-morpher.md').then(r => r.ok ? r.text() : ''),
-    fetch('/content/presets/animation.md').then(r => r.ok ? r.text() : ''),
-    fetch('/content/extensions/what-is-scripts.md').then(r => r.ok ? r.text() : '')
+  const [expressionsFiles, scriptsFiles, presetsFiles, extensionsFiles] = await Promise.all([
+    loadMarkdownFiles('/content/expressions'),
+    loadMarkdownFiles('/content/scripts'),
+    loadMarkdownFiles('/content/presets'),
+    loadMarkdownFiles('/content/extensions')
   ]);
 
   const data: ContentData = {
@@ -111,11 +137,10 @@ async function loadFromFetch(): Promise<ContentData> {
     extensions: []
   };
 
-  if (expressions) {
-    const { frontmatter, content } = parseFrontmatter(expressions);
+  expressionsFiles.forEach(({ frontmatter, content, slug }) => {
     data.expressions.push({
-      slug: 'auto-keyframe',
-      title: frontmatter.title || 'auto-keyframe',
+      slug,
+      title: frontmatter.title || slug,
       iconEmoji: frontmatter.iconEmoji,
       author: frontmatter.author,
       tags: frontmatter.tags,
@@ -126,13 +151,12 @@ async function loadFromFetch(): Promise<ContentData> {
       date: frontmatter.date,
       content: content.trim()
     });
-  }
+  });
 
-  if (scripts) {
-    const { frontmatter, content } = parseFrontmatter(scripts);
+  scriptsFiles.forEach(({ frontmatter, content, slug }) => {
     data.scripts.push({
-      slug: 'shape-morpher',
-      title: frontmatter.title || 'shape-morpher',
+      slug,
+      title: frontmatter.title || slug,
       iconEmoji: frontmatter.iconEmoji,
       author: frontmatter.author,
       tags: frontmatter.tags,
@@ -143,13 +167,12 @@ async function loadFromFetch(): Promise<ContentData> {
       date: frontmatter.date,
       content: content.trim()
     });
-  }
+  });
 
-  if (presets) {
-    const { frontmatter, content } = parseFrontmatter(presets);
+  presetsFiles.forEach(({ frontmatter, content, slug }) => {
     data.presets.push({
-      slug: 'animation',
-      title: frontmatter.title || 'animation',
+      slug,
+      title: frontmatter.title || slug,
       iconEmoji: frontmatter.iconEmoji,
       count: parseInt(frontmatter.count) || 0,
       nameEn: frontmatter.nameEn,
@@ -161,13 +184,12 @@ async function loadFromFetch(): Promise<ContentData> {
       updatedAt: frontmatter.updatedAt,
       content: content.trim()
     });
-  }
+  });
 
-  if (extensions) {
-    const { frontmatter, content } = parseFrontmatter(extensions);
+  extensionsFiles.forEach(({ frontmatter, content, slug }) => {
     data.extensions.push({
-      slug: 'what-is-scripts',
-      title: frontmatter.title || 'what-is-scripts',
+      slug,
+      title: frontmatter.title || slug,
       iconEmoji: frontmatter.iconEmoji,
       author: frontmatter.author,
       tags: frontmatter.tags,
@@ -177,7 +199,7 @@ async function loadFromFetch(): Promise<ContentData> {
       updatedAt: frontmatter.updatedAt,
       content: content.trim()
     });
-  }
+  });
 
   return data;
 }

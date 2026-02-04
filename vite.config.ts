@@ -12,6 +12,7 @@ export default defineConfig({
   },
   server: {
     hmr: true,
-    strictPort: false
-  }
+    strictPort: false,
+  },
+  logLevel: 'error'
 });

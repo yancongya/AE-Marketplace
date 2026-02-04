@@ -1,8 +1,9 @@
 ---
 title: 动画预设
 iconEmoji: 🎬
-count: 12450
-nameEn: animation
+author: 烟囱鸭
+tags: [关键帧, 缓动, 自动化]
+category: animation
 description: 关键帧工具、缓动曲线、动画预设
 updatedAt: 2026-01-28
 ---
