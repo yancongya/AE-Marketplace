@@ -12,6 +12,7 @@ interface TabContentProps {
   author?: string;
   updatedAt?: string;
   tags?: string[];
+  filename?: string;
 }
 
 const TAG_COLORS = [
@@ -39,7 +40,8 @@ export function TabContent({
   onBack,
   author,
   updatedAt,
-  tags
+  tags,
+  filename
 }: TabContentProps) {
   return (
     <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
@@ -133,7 +135,7 @@ export function TabContent({
             <span className="terminal-dot terminal-dot-red" />
             <span className="terminal-dot terminal-dot-yellow" />
             <span className="terminal-dot terminal-dot-green" />
-            <span className="ml-2 text-xs text-muted-foreground font-mono">README.md</span>
+            <span className="ml-2 text-xs text-muted-foreground font-mono">{filename || 'README.md'}</span>
           </div>
           <div className="p-6 prose prose-invert max-w-none">
             {content.split('\n').map((line, i) => {

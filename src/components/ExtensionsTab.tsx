@@ -60,6 +60,7 @@ export function ExtensionsTab() {
         author={selectedItem.author}
         updatedAt={selectedItem.updatedAt}
         tags={selectedItem.tags}
+        filename={`${selectedItem.slug}.md`}
         onBack={() => navigate('/extensions')}
       />
     );

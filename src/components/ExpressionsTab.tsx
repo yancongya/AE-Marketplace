@@ -60,6 +60,7 @@ export function ExpressionsTab() {
         updatedAt={selectedItem.updatedAt}
         tags={selectedItem.tags}
         content={selectedItem.content}
+        filename={`${selectedItem.slug}.md`}
         onBack={() => navigate('/expressions')}
       />
     );
@@ -148,6 +149,7 @@ export function ScriptsTab() {
         updatedAt={selectedItem.updatedAt}
         tags={selectedItem.tags}
         content={selectedItem.content}
+        filename={`${selectedItem.slug}.md`}
         onBack={() => navigate('/scripts')}
       />
     );

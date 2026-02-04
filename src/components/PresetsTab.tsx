@@ -61,6 +61,7 @@ export function PresetsTab() {
         author={selectedItem.author}
         updatedAt={selectedItem.updatedAt}
         tags={selectedItem.tags}
+        filename={`${selectedItem.slug}.md`}
       />
     );
   }
