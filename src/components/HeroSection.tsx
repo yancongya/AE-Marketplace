@@ -439,7 +439,7 @@ export function HeroSection() {
               </div>
 
               {/* Stats code block */}
-              <div className="rounded-lg p-3 sm:p-4 space-y-2 border border-border">
+              <div className="rounded-lg p-3 sm:p-4 space-y-2 border border-border card-hover hover:border-primary/50 cursor-default">
                 <div className="text-base sm:text-lg leading-relaxed">
                   <span className="code-keyword">const</span>
                   <span className="code-function"> scripts</span>
@@ -455,7 +455,7 @@ export function HeroSection() {
               </div>
 
               {/* JSDoc comment block */}
-              <div className="p-3 sm:p-4 border-l-4 border-accent">
+              <div className="p-3 sm:p-4 border-l-4 border-accent card-hover hover:border-primary hover:bg-accent/5 cursor-default">
                 <div className="text-xs sm:text-sm text-accent leading-relaxed">
                   <div>{'/**'}</div>
                   <div>{' * AI 语义搜索或关键字筛选，按分类浏览，按热度排序。'}</div>
@@ -468,7 +468,7 @@ export function HeroSection() {
 
           {/* Right side - Radar chart - hidden on mobile */}
           <div className="hidden lg:block lg:col-span-5">
-            <div className="terminal-window">
+            <div className="terminal-window card-hover hover:border-primary/50">
               <div className="terminal-header">
                 <span className="terminal-dot terminal-dot-red" />
                 <span className="terminal-dot terminal-dot-yellow" />
@@ -488,14 +488,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Floating avatar icon */}
-      <div className="fixed right-4 sm:right-8 bottom-4 sm:bottom-8 z-40">
-        <div 
-          className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg"
-        >
-          <span className="text-black text-base font-bold">AI</span>
-        </div>
-      </div>
-    </section>
+      </section>
   );
 }

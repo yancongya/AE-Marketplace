@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Moon, ChevronDown } from 'lucide-react';
+import { Globe, Moon, ChevronDown, Code, FileCode, Layers, Box } from 'lucide-react';
 
 interface NavbarProps {
   isDark: boolean;
@@ -12,10 +12,10 @@ export function Navbar({ isDark, onThemeChange }: NavbarProps) {
   const location = useLocation();
 
   const navItems = [
-    { id: 'expressions', keyword: 'cd', arg: '/expressions', href: '/expressions' },
-    { id: 'scripts', keyword: 'cd', arg: '/scripts', href: '/scripts' },
-    { id: 'presets', keyword: 'cd', arg: '/presets', href: '/presets' },
-    { id: 'extensions', keyword: 'cd', arg: '/extensions', href: '/extensions' },
+    { id: 'expressions', label: '表达式', icon: Code, href: '/expressions' },
+    { id: 'scripts', label: '脚本', icon: FileCode, href: '/scripts' },
+    { id: 'presets', label: '预设', icon: Layers, href: '/presets' },
+    { id: 'extensions', label: '扩展', icon: Box, href: '/extensions' },
   ];
 
   const isActive = (href: string) => {
@@ -38,30 +38,34 @@ export function Navbar({ isDark, onThemeChange }: NavbarProps) {
               className="flex items-center gap-1 font-mono text-sm hover:opacity-80 transition-opacity"
             >
               <span className="text-[#CCCCCC]">~</span>
-              <span className="text-[#FFFFFF]">/aescripts</span>
+              <span className="text-[#FFFFFF]">/AE-Marketplace</span>
             </Link>
           </div>
 
           {/* Center: Command-style navigation buttons */}
           <div className="hidden md:flex items-center gap-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.id}
-                to={item.href}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded border font-mono text-xs transition-all duration-200 ${
-                  isActive(item.href)
-                    ? 'border-[#00B4D8] bg-[#1E1E1E]'
-                    : 'border-[#444444] bg-[#1E1E1E] hover:border-[#66CCFF] hover:bg-[#2A2A2A]'
-                }`}
-              >
-                <span className="text-[#00FF85]">$</span>
-                <span className="text-[#00FF85]">{item.keyword}</span>
-                <span className="text-[#FFFFFF]">{item.arg}</span>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.id}
+                  to={item.href}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded border font-mono text-xs transition-all duration-200 ${
+                    isActive(item.href)
+                      ? 'border-[#00B4D8] bg-[#1E1E1E]'
+                      : 'border-[#444444] bg-[#1E1E1E] hover:border-[#66CCFF] hover:bg-[#2A2A2A]'
+                  }`}
+                >
+                  <span className="text-[#00FF85]">$</span>
+                  <span className="text-[#00FF85]">cd</span>
+                  <span className="text-[#FFFFFF]">/{item.label}</span>
+                  <Icon className={`w-3 h-3 ${isActive(item.href) ? 'text-[#00B4D8]' : 'text-[#666666]'}`} />
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Right: Theme toggle, language, user menu */}
+          {/* Right: Theme toggle, language */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => onThemeChange(!isDark)}
@@ -75,12 +79,6 @@ export function Navbar({ isDark, onThemeChange }: NavbarProps) {
             >
               <Globe className="w-3.5 h-3.5" />
               <span>{lang.toUpperCase()}</span>
-            </button>
-            <button className="flex items-center gap-1.5 p-1 rounded hover:bg-[#2A2A2A] transition-colors">
-              <div className="w-8 h-8 rounded-full bg-[#FFFFFF] flex items-center justify-center">
-                <span className="text-[#000000] text-xs font-bold">X</span>
-              </div>
-              <ChevronDown className="w-3 h-3 text-[#CCCCCC]" />
             </button>
           </div>
         </div>
