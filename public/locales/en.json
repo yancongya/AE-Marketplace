@@ -1,0 +1,118 @@
+{
+  "nav": {
+    "home": "Home",
+    "expressions": "Expressions",
+    "scripts": "Scripts",
+    "presets": "Presets",
+    "extensions": "Extensions"
+  },
+  "hero": {
+    "title": "AE Scripts Marketplace",
+    "subtitle": "Based on the Open ExtendScript Ecosystem",
+    "stats": {
+      "label": "scripts",
+      "comment": "Discover",
+      "suffix": "open source AE scripts from GitHub"
+    },
+    "description": {
+      "line1": "AI semantic search or keyword filtering, browse by category, sort by popularity.",
+      "line2": "All scripts use the open ExtendScript standard, one-click installation"
+    },
+    "fileHeader": "skills.marketplace",
+    "fileComment": "// main.ts"
+  },
+  "about": {
+    "leftPanel": {
+      "title": "Why Choose AE Scripts Marketplace?",
+      "description": "Finding the right AE scripts among thousands of GitHub repositories can be overwhelming. AE Scripts Marketplace solves this by providing intelligent search, category filtering, and quality metrics to help you quickly find the scripts you need.",
+      "additional": "Whether you're a motion graphics designer, video editor, or AE enthusiast, you'll find scripts for various purposes. All scripts use the open JSX/ExtendScript standard, compatible with After Effects 2024, 2025, 2026 and later.",
+      "readyToExplore": "Ready to explore the largest collection of AE scripts?"
+    },
+    "rightPanel": {
+      "tabs": [
+        {
+          "title": "Expressions",
+          "icon": "Code",
+          "content": "AE expressions are JavaScript code snippets for creating dynamic animations and effects. Our expression library contains hundreds of optimized expressions, from simple keyframe control to complex particle systems. All expressions are tested and compatible with After Effects 2024+."
+        },
+        {
+          "title": "Scripts",
+          "icon": "FileCode",
+          "content": "AE scripts are written in ExtendScript and can automate complex workflows. Our script library covers animation, batch processing, UI design, and more. Each script comes with detailed instructions and examples to help you get started quickly."
+        },
+        {
+          "title": "Presets",
+          "icon": "Settings",
+          "content": "Presets are pre-configured animation effects and templates that can be directly applied to your projects. Includes transitions, text animations, effect presets, and more. Supports After Effects 2024, 2025, 2026 and later - import with one click."
+        },
+        {
+          "title": "Extensions",
+          "icon": "Box",
+          "content": "Extensions are fully-featured AE plugins that provide new workflows and toolsets. From 3D rendering to audio visualization, from data-driven animation to AI-assisted creation, extension plugins expand AE's capabilities infinitely."
+        }
+      ]
+    }
+  },
+  "common": {
+    "itemsCount": " items",
+    "searchPlaceholder": "Search to filter content",
+    "loading": "Loading...",
+    "copyCode": "Copy code",
+    "copySuccess": "Code copied to clipboard",
+    "copyFailed": "Copy failed",
+    "back": "Back",
+    "author": "Author",
+    "updatedAt": "Updated",
+    "tags": "Tags",
+    "tableOfContents": "Table of Contents",
+    "fullScreen": "View Fullscreen",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "reset": "Reset",
+    "renderFailed": "Render Failed",
+    "comment": "Comments",
+    "pagination": "Pagination",
+    "oneClickRun": "Run any Script with one click",
+    "themeToggle": {
+      "light": "Switch to Light Theme",
+      "dark": "Switch to Dark Theme"
+    },
+    "fallback": {
+      "tagline": "Discover and explore community-built AE extensions",
+      "resources": "Resources",
+      "docs": "Docs",
+      "copyright": "© 2026 Not affiliated with Adobe"
+    }
+  },
+  "radar": {
+    "categories": {
+      "expressions": "Expressions",
+      "scripts": "Scripts",
+      "presets": "Presets",
+      "extensions": "Extensions"
+    }
+  },
+  "footer": {
+    "tagline": "Discover and explore community-built AE extensions",
+    "resources": "Resources",
+    "docs": "Docs",
+    "online": "online",
+    "version": "v0.1.0",
+    "copyright": "© 2026 Not affiliated with Adobe",
+    "resourcesList": {
+      "social": {
+        "bilibili": "Bilibili",
+        "github": "GitHub",
+        "xiaohongshu": "Xiaohongshu",
+        "email": "Email"
+      },
+      "docs": {
+        "aescripts": "AE Scripts Official",
+        "adobeDocs": "Adobe AE Documentation",
+        "motionscript": "MotionScript Tutorial",
+        "videoCopilot": "Video Copilot",
+        "extendscript": "AE Script Development Guide"
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ import { ExpressionsTab, ScriptsTab } from '@/components/ExpressionsTab';
 import { PresetsTab } from '@/components/PresetsTab';
 import { ExtensionsTab } from '@/components/ExtensionsTab';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { I18nProvider } from '@/contexts/I18nContext';
 import { Toaster } from '@/components/ui/sonner';
 import { Home } from '@/pages/Home';
 
@@ -33,57 +34,59 @@ function AppContent() {
   }, [isDark]);
 
   return (
-    <ThemeProvider isDark={isDark} toggleTheme={toggleTheme}>
-      <div className="min-h-screen bg-grid">
-        <Navbar />
-        <main className="relative">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/expressions" element={
-            <>
-              <ExpressionsTab />
-            </>
-          } />
-          <Route path="/expressions/:slug" element={
-            <>
-              <ExpressionsTab />
-            </>
-          } />
-          <Route path="/scripts" element={
-            <>
-              <ScriptsTab />
-            </>
-          } />
-          <Route path="/scripts/:slug" element={
-            <>
-              <ScriptsTab />
-            </>
-          } />
-          <Route path="/presets" element={
-            <>
-              <PresetsTab />
-            </>
-          } />
-          <Route path="/presets/:slug" element={
-            <>
-              <PresetsTab />
-            </>
-          } />
-          <Route path="/extensions" element={
-            <>
-              <ExtensionsTab />
-            </>
-          } />
-          <Route path="/extensions/:slug" element={
-            <>
-              <ExtensionsTab />
-            </>
-          } />
-        </Routes>
-      </main>
-      <Toaster />
-    </div>
-    </ThemeProvider>
+    <I18nProvider>
+      <ThemeProvider isDark={isDark} toggleTheme={toggleTheme}>
+        <div className="min-h-screen bg-grid">
+          <Navbar />
+          <main className="relative">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/expressions" element={
+              <>
+                <ExpressionsTab />
+              </>
+            } />
+            <Route path="/expressions/:slug" element={
+              <>
+                <ExpressionsTab />
+              </>
+            } />
+            <Route path="/scripts" element={
+              <>
+                <ScriptsTab />
+              </>
+            } />
+            <Route path="/scripts/:slug" element={
+              <>
+                <ScriptsTab />
+              </>
+            } />
+            <Route path="/presets" element={
+              <>
+                <PresetsTab />
+              </>
+            } />
+            <Route path="/presets/:slug" element={
+              <>
+                <PresetsTab />
+              </>
+            } />
+            <Route path="/extensions" element={
+              <>
+                <ExtensionsTab />
+              </>
+            } />
+            <Route path="/extensions/:slug" element={
+              <>
+                <ExtensionsTab />
+              </>
+            } />
+          </Routes>
+        </main>
+        <Toaster />
+      </div>
+      </ThemeProvider>
+    </I18nProvider>
   );
 }
 

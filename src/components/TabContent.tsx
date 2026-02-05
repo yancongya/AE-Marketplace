@@ -8,6 +8,7 @@ import mermaid from 'mermaid';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useI18n } from '@/contexts/I18nContext';
 import { toast } from 'sonner';
 import { CommentSection } from './CommentSection';
 
@@ -109,7 +110,7 @@ function extractHeadings(content: string): Heading[] {
   return headings;
 }
 
-function MermaidDiagram({ code }: { code: string }) {
+function MermaidDiagram({ code, translations }: { code: string; translations: any }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -290,10 +291,9 @@ function MermaidDiagram({ code }: { code: string }) {
   const handleCopy = useCallback(async () => {
     if (!code) return;
     try {
-      await navigator.clipboard.writeText(code);
-      toast.success('代码已复制到剪贴板');
+toast.success(translations?.common.copySuccess || '代码已复制到剪贴板');
     } catch {
-      toast.error('复制失败');
+      toast.error(translations?.common.copyFailed || '复制失败');
     }
   }, [code]);
 
@@ -407,7 +407,7 @@ function MermaidDiagram({ code }: { code: string }) {
   );
 }
 
-function CodeBlock({ children }: { children: React.ReactNode }) {
+function CodeBlock({ children, translations }: { children: React.ReactNode; translations: any }) {
   const [copied, setCopied] = useState(false);
   const { isDark } = useTheme();
   const childrenArray = Array.isArray(children) ? children : [children];
@@ -419,7 +419,7 @@ function CodeBlock({ children }: { children: React.ReactNode }) {
   const isMermaid = className.includes('mermaid');
   
   if (isMermaid && typeof codeElement === 'string') {
-    return <MermaidDiagram code={codeElement.trim()} />;
+    return <MermaidDiagram code={codeElement.trim()} translations={translations} />;
   }
 
   const codeString = typeof codeElement === 'string' ? codeElement : '';
@@ -433,7 +433,7 @@ function CodeBlock({ children }: { children: React.ReactNode }) {
       toast.success('代码已复制到剪贴板');
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error('复制失败');
+      toast.error(translations?.common.copyFailed || '复制失败');
     }
   };
 
@@ -654,6 +654,7 @@ export function TabContent({
   tags,
   filename
 }: TabContentProps) {
+  const { translations } = useI18n();
   const headings = useMemo(() => extractHeadings(content), [content]);
 
   return (
@@ -757,7 +758,7 @@ export function TabContent({
                       if (isInline) return <code className="bg-primary/20 text-primary px-1.5 py-0.5 rounded text-sm">{children}</code>;
                       return <code className={className}>{children}</code>;
                     },
-                    pre: ({ children }) => <CodeBlock>{children}</CodeBlock>,
+                    pre: ({ children }) => <CodeBlock translations={translations}>{children}</CodeBlock>,
                     table: ({ children }) => (
                       <div className="overflow-x-auto my-4 rounded-lg border border-border">
                         <table className="w-full border-collapse">{children}</table>
@@ -780,7 +781,7 @@ export function TabContent({
       </div>
 
       {/* 评论系统 */}
-      <CommentSection title={title} path={filename} />
+      {filename && <CommentSection path={filename} />}
     </section>
   );
 }

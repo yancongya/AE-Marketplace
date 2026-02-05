@@ -2,11 +2,10 @@ import { useEffect, useRef } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 interface CommentSectionProps {
-  title: string;
   path: string;
 }
 
-export function CommentSection({ title, path }: CommentSectionProps) {
+export function CommentSection({ path }: CommentSectionProps) {
   const { isDark } = useTheme();
   const ref = useRef<HTMLDivElement>(null);
   const isLoadedRef = useRef(false);

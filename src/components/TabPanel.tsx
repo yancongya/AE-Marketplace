@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface TabPanelProps {
   title: string;
@@ -26,6 +27,7 @@ export function TabPanel({
   onSearchChange,
   children 
 }: TabPanelProps) {
+  const { translations } = useI18n();
   const [localSearch, setLocalSearch] = useState('');
   
   const currentSearch = searchValue !== undefined ? searchValue : localSearch;
@@ -64,7 +66,7 @@ export function TabPanel({
               <div className="mt-2 flex flex-wrap items-center gap-4">
                 <span className="text-sm text-muted-foreground font-mono">
                   $ count: <span className="text-primary">{formatNumber(count)}</span>
-                  {subtitle || ' 个项目'}
+                  {subtitle || translations?.common.itemsCount}
                 </span>
                 {tags && tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
@@ -103,7 +105,7 @@ export function TabPanel({
                 type="text"
                 value={currentSearch}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="输入内容筛选"
+                placeholder={translations?.common.searchPlaceholder}
                 className="flex-1 bg-transparent text-foreground font-mono text-sm placeholder:text-muted-foreground/50 focus:outline-none"
               />
               {currentSearch && (

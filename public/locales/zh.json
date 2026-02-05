@@ -1,0 +1,118 @@
+{
+  "nav": {
+    "home": "首页",
+    "expressions": "表达式",
+    "scripts": "脚本",
+    "presets": "预设",
+    "extensions": "扩展"
+  },
+  "hero": {
+    "title": "AE Scripts Marketplace",
+    "subtitle": "基于开放的 ExtendScript 生态系统",
+    "stats": {
+      "label": "scripts",
+      "comment": "发现来自 GitHub 的",
+      "suffix": "个开源 AE 脚本"
+    },
+    "description": {
+      "line1": "AI 语义搜索或关键字筛选，按分类浏览，按热度排序。",
+      "line2": "所有脚本采用开放的 ExtendScript 标准，一键安装"
+    },
+    "fileHeader": "skills.marketplace",
+    "fileComment": "// main.ts"
+  },
+  "about": {
+    "leftPanel": {
+      "title": "为什么选择 AE Scripts Marketplace？",
+      "description": "在数以千计的 GitHub 仓库中找到合适的 AE 脚本可能让人不知所措。AE Scripts Marketplace 通过提供智能搜索、分类筛选和质量指标来解决这个问题，帮助您快速找到所需的脚本。",
+      "additional": "无论您是动态图形设计师、视频编辑师，还是 AE 爱好者，都能找到适合各种用途的脚本。所有脚本采用开放的 JSX/ExtendScript 标准，兼容 After Effects 2024、2025、2026 等版本。",
+      "readyToExplore": "准备好探索最大的 AE 脚本集合了吗？"
+    },
+    "rightPanel": {
+      "tabs": [
+        {
+          "title": "表达式",
+          "icon": "Code",
+          "content": "AE 表达式是 JavaScript 代码片段，用于创建动态动画和效果。我们的表达式库包含数百个经过优化的表达式，从简单的关键帧控制到复杂的粒子系统。所有表达式都经过测试，兼容 After Effects 2024+ 版本。"
+        },
+        {
+          "title": "脚本",
+          "icon": "FileCode",
+          "content": "AE 脚本使用 ExtendScript 编写，可以自动化复杂的工作流程。我们的脚本库涵盖动画制作、批量处理、UI 设计等多个领域。每个脚本都提供详细的使用说明和示例，帮助您快速上手。"
+        },
+        {
+          "title": "预设",
+          "icon": "Settings",
+          "content": "预设是预先配置好的动画效果和模板，可以直接应用到您的项目中。包含转场、文字动画、特效预设等多种类型。支持 After Effects 2024、2025、2026 等版本，一键导入即可使用。"
+        },
+        {
+          "title": "扩展",
+          "icon": "Box",
+          "content": "扩展是功能完整的 AE 插件，提供全新的工作流程和工具集。从 3D 渲染到音频可视化，从数据驱动动画到 AI 辅助创作，扩展插件让 AE 的能力无限扩展。"
+        }
+      ]
+    }
+  },
+  "common": {
+    "itemsCount": " 个项目",
+    "searchPlaceholder": "输入内容筛选",
+    "loading": "加载中...",
+    "copyCode": "复制代码",
+    "copySuccess": "代码已复制到剪贴板",
+    "copyFailed": "复制失败",
+    "back": "返回",
+    "author": "作者",
+    "updatedAt": "更新日期",
+    "tags": "标签",
+    "tableOfContents": "目录",
+    "fullScreen": "全屏查看",
+    "zoomIn": "放大",
+    "zoomOut": "缩小",
+    "reset": "重置",
+    "renderFailed": "渲染失败",
+    "comment": "评论",
+    "pagination": "分页控件",
+    "oneClickRun": "一键运行任何Script",
+    "themeToggle": {
+      "light": "切换到亮色主题",
+      "dark": "切换到暗色主题"
+    },
+    "fallback": {
+      "tagline": "发现并探索由社区构建的 AE 扩展脚本",
+      "resources": "资源",
+      "docs": "文档",
+      "copyright": "© 2026 不隶属于 Adobe"
+    }
+  },
+  "radar": {
+    "categories": {
+      "expressions": "表达式",
+      "scripts": "脚本",
+      "presets": "预设",
+      "extensions": "扩展"
+    }
+  },
+  "footer": {
+    "tagline": "发现并探索由社区构建的 AE 扩展脚本",
+    "resources": "资源",
+    "docs": "文档",
+    "online": "在线",
+    "version": "v0.1.0",
+    "copyright": "© 2026 不隶属于 Adobe",
+    "resourcesList": {
+      "social": {
+        "bilibili": "B站",
+        "github": "GitHub",
+        "xiaohongshu": "小红书",
+        "email": "邮箱"
+      },
+      "docs": {
+        "aescripts": "AE Scripts 官网",
+        "adobeDocs": "Adobe AE 官方文档",
+        "motionscript": "MotionScript 教程",
+        "videoCopilot": "Video Copilot",
+        "extendscript": "AE 脚本开发指南"
+      }
+    }
+  }
+}

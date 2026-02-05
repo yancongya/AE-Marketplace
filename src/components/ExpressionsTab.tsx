@@ -5,8 +5,10 @@ import { TabPanel } from './TabPanel';
 import { TabCard } from './TabCard';
 import { TabContent } from './TabContent';
 import { loadContent, type ContentItem } from '@/lib/content';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function ExpressionsTab() {
+  const { translations } = useI18n();
   const [list, setList] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -66,10 +68,9 @@ export function ExpressionsTab() {
 
   if (loading) {
     return (
-      <TabPanel title="表达式" count={0} icon={<Code2 className="w-6 h-6 text-primary" />}>
-        <div className="text-center py-8 text-muted-foreground">加载中...</div>
-      </TabPanel>
-    );
+      <TabPanel title={translations?.nav.expressions || '表达式'} count={0} icon={<Code2 className="w-6 h-6 text-primary" />}>
+                  <div className="text-center py-8 text-muted-foreground">{translations?.common.loading || '加载中...'}</div>
+                </TabPanel>    );
   }
 
   if (selectedItem) {
@@ -90,7 +91,7 @@ export function ExpressionsTab() {
 
   return (
     <TabPanel
-      title="表达式"
+      title={translations?.nav.expressions || '表达式'}
       count={filteredList.length}
       icon={<Code2 className="w-6 h-6 text-primary" />}
       tags={allTags}
@@ -168,6 +169,7 @@ export function ExpressionsTab() {
 }
 
 export function ScriptsTab() {
+  const { translations } = useI18n();
   const [list, setList] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -227,8 +229,8 @@ export function ScriptsTab() {
 
   if (loading) {
     return (
-      <TabPanel title="脚本" count={0} icon={<Code className="w-6 h-6 text-primary" />}>
-        <div className="text-center py-8 text-muted-foreground">加载中...</div>
+      <TabPanel title={translations?.nav.scripts || '脚本'} count={0} icon={<Code className="w-6 h-6 text-primary" />}>
+        <div className="text-center py-8 text-muted-foreground">{translations?.common.loading || '加载中...'}</div>
       </TabPanel>
     );
   }
@@ -251,7 +253,7 @@ export function ScriptsTab() {
 
   return (
     <TabPanel
-      title="脚本"
+      title={translations?.nav.scripts || '脚本'}
       count={filteredList.length}
       icon={<Code className="w-6 h-6 text-primary" />}
       tags={allTags}

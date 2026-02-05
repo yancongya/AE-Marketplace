@@ -5,8 +5,10 @@ import { TabPanel } from './TabPanel';
 import { TabCard } from './TabCard';
 import { TabContent } from './TabContent';
 import { loadContent, type PresetItem } from '@/lib/content';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function PresetsTab() {
+  const { translations } = useI18n();
   const [list, setList] = useState<PresetItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -66,10 +68,9 @@ export function PresetsTab() {
 
   if (loading) {
     return (
-      <TabPanel title="预设分类" count={0} icon={<Layers className="w-6 h-6 text-primary" />}>
-        <div className="text-center py-8 text-muted-foreground">加载中...</div>
-      </TabPanel>
-    );
+      <TabPanel title={translations?.nav.presets || '预设'} count={0} icon={<Layers className="w-6 h-6 text-primary" />}>
+                  <div className="text-center py-8 text-muted-foreground">{translations?.common.loading || '加载中...'}</div>
+                </TabPanel>    );
   }
 
   if (selectedItem) {
@@ -90,7 +91,7 @@ export function PresetsTab() {
 
   return (
     <TabPanel
-      title="预设分类"
+      title={translations?.nav.presets || '预设'}
       count={filteredList.length}
       icon={<Layers className="w-6 h-6 text-primary" />}
       tags={allTags}

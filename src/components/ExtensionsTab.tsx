@@ -5,8 +5,10 @@ import { TabPanel } from './TabPanel';
 import { TabCard } from './TabCard';
 import { TabContent } from './TabContent';
 import { loadContent, type ExtensionItem } from '@/lib/content';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function ExtensionsTab() {
+  const { translations } = useI18n();
   const [list, setList] = useState<ExtensionItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -66,10 +68,9 @@ export function ExtensionsTab() {
 
   if (loading) {
     return (
-      <TabPanel title="扩展文档" count={0} icon={<Box className="w-6 h-6 text-primary" />}>
-        <div className="text-center py-8 text-muted-foreground">加载中...</div>
-      </TabPanel>
-    );
+      <TabPanel title={translations?.nav.extensions || '扩展'} count={0} icon={<Box className="w-6 h-6 text-primary" />}>
+                  <div className="text-center py-8 text-muted-foreground">{translations?.common.loading || '加载中...'}</div>
+                </TabPanel>    );
   }
 
   if (selectedItem) {
@@ -90,7 +91,7 @@ export function ExtensionsTab() {
 
   return (
     <TabPanel
-      title="扩展文档"
+      title={translations?.nav.extensions || '扩展'}
       count={filteredList.length}
       icon={<Box className="w-6 h-6 text-primary" />}
       tags={allTags}

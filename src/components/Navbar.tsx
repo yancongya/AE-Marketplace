@@ -1,18 +1,18 @@
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Moon, Sun, ChevronDown, Code, FileCode, Layers, Box } from 'lucide-react';
+import { Globe, Moon, Sun, Code, FileCode, Layers, Box } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useI18n } from '@/contexts/I18nContext';
 
 export function Navbar() {
   const { isDark, toggleTheme } = useTheme();
-  const [lang, setLang] = useState<'zh' | 'en'>('zh');
+  const { locale, setLocale, t } = useI18n();
   const location = useLocation();
 
   const navItems = [
-    { id: 'expressions', label: '表达式', icon: Code, href: '/expressions' },
-    { id: 'scripts', label: '脚本', icon: FileCode, href: '/scripts' },
-    { id: 'presets', label: '预设', icon: Layers, href: '/presets' },
-    { id: 'extensions', label: '扩展', icon: Box, href: '/extensions' },
+    { id: 'expressions', icon: Code, href: '/expressions' },
+    { id: 'scripts', icon: FileCode, href: '/scripts' },
+    { id: 'presets', icon: Layers, href: '/presets' },
+    { id: 'extensions', icon: Box, href: '/extensions' },
   ];
 
   const isActive = (href: string) => {
@@ -55,7 +55,7 @@ export function Navbar() {
                 >
                   <span className="text-[#00FF85]">$</span>
                   <span className="text-[#00FF85]">cd</span>
-                  <span className="text-[#FFFFFF]">/{item.label}</span>
+                  <span className="text-[#FFFFFF]">/{t(`nav.${item.id}`)}</span>
                   <Icon className={`w-3 h-3 ${isActive(item.href) ? 'text-[#00B4D8]' : 'text-[#666666]'}`} />
                 </Link>
               );
@@ -67,7 +67,7 @@ export function Navbar() {
             <button
               onClick={toggleTheme}
               className="p-2 rounded hover:bg-[#2A2A2A] transition-colors"
-              title={isDark ? '切换到亮色主题' : '切换到暗色主题'}
+              title={isDark ? t('common.themeToggle.light') : t('common.themeToggle.dark')}
             >
               {isDark ? (
                 <Moon className="w-4 h-4 text-[#CCCCCC]" />
@@ -76,11 +76,11 @@ export function Navbar() {
               )}
             </button>
             <button
-              onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+              onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
               className="flex items-center gap-1 px-2 py-1.5 rounded hover:bg-[#2A2A2A] transition-colors font-mono text-xs text-[#CCCCCC]"
             >
               <Globe className="w-3.5 h-3.5" />
-              <span>{lang.toUpperCase()}</span>
+              <span>{locale.toUpperCase()}</span>
             </button>
           </div>
         </div>
