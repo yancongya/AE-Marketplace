@@ -64,10 +64,10 @@ export function Footer() {
   };
 
   return (
-    <footer className="border-t mt-16" style={{ borderColor: '#2a2a2a' }}>
+    <footer className="border-t mt-16 animate-fade-in-up" style={{ borderColor: '#2a2a2a', animationDelay: '800ms' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
             <div className="flex items-center gap-2">
               <span className="text-green-400 font-mono text-sm">$</span>
               <span className="text-gray-500 font-mono text-sm">cat README.md</span>
@@ -80,7 +80,7 @@ export function Footer() {
             </p>
           </div>
 
-          <div>
+          <div className="animate-fade-in-up" style={{ animationDelay: '900ms' }}>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-green-400 font-mono text-sm">$</span>
               <span className="text-gray-500 font-mono text-sm">ls ./资源/</span>
@@ -105,7 +105,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="animate-fade-in-up" style={{ animationDelay: '1000ms' }}>
             <div className="flex items-center gap-2 mb-4">
               <span className="text-green-400 font-mono text-sm">$</span>
               <span className="text-gray-500 font-mono text-sm">ls ./文档/</span>
@@ -142,7 +142,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderColor: '#2a2a2a' }}>
+        <div className="mt-12 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4 animate-fade-in-up" style={{ borderColor: '#2a2a2a', animationDelay: '1100ms' }}>
           <div className="flex items-center gap-4 text-xs text-gray-500 font-mono">
             <span className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-green-400" />

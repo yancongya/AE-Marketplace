@@ -411,7 +411,7 @@ export function HeroSection() {
           {/* Left side - Code editor */}
           <div className="col-span-12 lg:col-span-7 space-y-4 w-full lg:w-auto">
             {/* File header with window controls - centered on mobile */}
-            <div className="flex items-center gap-2 px-4 py-2 h-8 w-full justify-center lg:justify-start">
+            <div className="flex items-center gap-2 px-4 py-2 h-8 w-full justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '0ms' }}>
               <span className="terminal-dot terminal-dot-red" />
               <span className="terminal-dot terminal-dot-yellow" />
               <span className="terminal-dot terminal-dot-green" />
@@ -420,10 +420,10 @@ export function HeroSection() {
             
             <div className="space-y-4 font-mono w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
               {/* File comment */}
-              <div className="text-code-comment text-xs sm:text-sm text-center lg:text-left">// main.ts</div>
+              <div className="text-code-comment text-xs sm:text-sm text-center lg:text-left animate-fade-in-up" style={{ animationDelay: '100ms' }}>// main.ts</div>
               
               {/* Main title with blue prompt - centered on mobile */}
-              <div className="flex items-start gap-2 justify-center lg:justify-start">
+              <div className="flex items-start gap-2 justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                 <span className="text-primary text-3xl sm:text-4xl md:text-[40px] font-bold leading-tight">{'>'}</span>
                 <h1 className="text-3xl sm:text-4xl md:text-[40px] font-bold text-foreground leading-tight whitespace-pre font-mono">
                   {typedText}
@@ -434,12 +434,12 @@ export function HeroSection() {
               </div>
               
               {/* Subtitle - centered on mobile */}
-              <div className="text-muted-foreground text-sm sm:text-base text-center lg:text-left">
+              <div className="text-muted-foreground text-sm sm:text-base text-center lg:text-left animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                 基于开放的 ExtendScript 生态系统
               </div>
 
               {/* Stats code block */}
-              <div className="rounded-lg p-3 sm:p-4 space-y-2 border border-border card-hover hover:border-primary/50 cursor-default">
+              <div className="rounded-lg p-3 sm:p-4 space-y-2 border border-border card-hover hover:border-primary/50 cursor-default animate-fade-in-up" style={{ animationDelay: '400ms' }}>
                 <div className="text-base sm:text-lg leading-relaxed">
                   <span className="code-keyword">const</span>
                   <span className="code-function"> scripts</span>
@@ -455,7 +455,7 @@ export function HeroSection() {
               </div>
 
               {/* JSDoc comment block */}
-              <div className="p-3 sm:p-4 border-l-4 border-accent card-hover hover:border-primary hover:bg-accent/5 cursor-default">
+              <div className="p-3 sm:p-4 border-l-4 border-accent card-hover hover:border-primary hover:bg-accent/5 cursor-default animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                 <div className="text-xs sm:text-sm text-accent leading-relaxed">
                   <div>{'/**'}</div>
                   <div>{' * AI 语义搜索或关键字筛选，按分类浏览，按热度排序。'}</div>
@@ -467,7 +467,7 @@ export function HeroSection() {
           </div>
 
           {/* Right side - Radar chart - hidden on mobile */}
-          <div className="hidden lg:block lg:col-span-5">
+          <div className="hidden lg:block lg:col-span-5 animate-scale-in" style={{ animationDelay: '600ms' }}>
             <div className="terminal-window card-hover hover:border-primary/50">
               <div className="terminal-header">
                 <span className="terminal-dot terminal-dot-red" />

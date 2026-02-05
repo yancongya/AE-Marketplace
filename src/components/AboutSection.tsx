@@ -87,7 +87,7 @@ export function AboutSection() {
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-8">
           {/* About card */}
-          <div className="terminal-window card-hover hover:border-primary/50">
+          <div className="terminal-window card-hover hover:border-primary/50 animate-fade-in-up" style={{ animationDelay: '0ms' }}>
             <div className="terminal-header">
               <span className="terminal-dot terminal-dot-red" />
               <span className="terminal-dot terminal-dot-yellow" />
@@ -118,7 +118,7 @@ export function AboutSection() {
           </div>
 
           {/* Features card */}
-          <div className="terminal-window card-hover hover:border-primary/50">
+          <div className="terminal-window card-hover hover:border-primary/50 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
             <div className="terminal-header">
               <span className="terminal-dot terminal-dot-red" />
               <span className="terminal-dot terminal-dot-yellow" />
