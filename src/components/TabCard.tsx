@@ -37,11 +37,13 @@ export function TabCard({
       title={description}
     >
       <div className="terminal-header flex-shrink-0">
-        <span className="terminal-dot terminal-dot-red" />
-        <span className="terminal-dot terminal-dot-yellow" />
-        <span className="terminal-dot terminal-dot-green" />
+        <div className="flex items-center gap-2 group-hover:gap-2.5 transition-all duration-300">
+          <span className="terminal-dot terminal-dot-red" />
+          <span className="terminal-dot terminal-dot-yellow" />
+          <span className="terminal-dot terminal-dot-green" />
+        </div>
         {count !== undefined && (
-          <span className="ml-auto text-xs text-muted-foreground font-mono">
+          <span className="ml-auto text-xs text-muted-foreground font-mono bg-black/20 px-2 py-1 rounded backdrop-blur-sm">
             {formatNumber(count)}
           </span>
         )}

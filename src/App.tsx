@@ -2,15 +2,12 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { Navbar } from '@/components/Navbar';
-import { HeroSection } from '@/components/HeroSection';
 import { ExpressionsTab, ScriptsTab } from '@/components/ExpressionsTab';
 import { PresetsTab } from '@/components/PresetsTab';
-import { AboutSection } from '@/components/AboutSection';
-import { FAQSection } from '@/components/FAQSection';
-import { Footer } from '@/components/Footer';
 import { ExtensionsTab } from '@/components/ExtensionsTab';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Toaster } from '@/components/ui/sonner';
+import { Home } from '@/pages/Home';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -40,65 +37,45 @@ function AppContent() {
         />
         <main className="relative">
         <Routes>
-          <Route path="/" element={
-            <>
-              <HeroSection />
-              <AboutSection />
-              <Footer />
-            </>
-          } />
+          <Route path="/" element={<Home />} />
           <Route path="/expressions" element={
             <>
               <ExpressionsTab />
-              <Footer />
             </>
           } />
           <Route path="/expressions/:slug" element={
             <>
               <ExpressionsTab />
-              <Footer />
             </>
           } />
           <Route path="/scripts" element={
             <>
               <ScriptsTab />
-              <Footer />
             </>
           } />
           <Route path="/scripts/:slug" element={
             <>
               <ScriptsTab />
-              <Footer />
             </>
           } />
           <Route path="/presets" element={
             <>
               <PresetsTab />
-              <Footer />
             </>
           } />
           <Route path="/presets/:slug" element={
             <>
               <PresetsTab />
-              <Footer />
             </>
           } />
           <Route path="/extensions" element={
             <>
               <ExtensionsTab />
-              <Footer />
             </>
           } />
           <Route path="/extensions/:slug" element={
             <>
               <ExtensionsTab />
-              <Footer />
-            </>
-          } />
-          <Route path="/faq" element={
-            <>
-              <FAQSection />
-              <Footer />
             </>
           } />
         </Routes>

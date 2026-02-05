@@ -1,16 +1,90 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
-import { stats } from '@/data/mockData';
+
+interface StatsData {
+  totalScripts: number;
+  dailyGrowth: number;
+  peakCount: number;
+  peakDay: string;
+  radarData: Array<{
+    category: string;
+    value: number;
+    count: number;
+  }>;
+}
+
+interface RadarPoint {
+  x: number;
+  y: number;
+  value: number;
+  count: number;
+  category: string;
+}
 
 export function HeroSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [animatedCount, setAnimatedCount] = useState(0);
+  const [hoveredPoint, setHoveredPoint] = useState<RadarPoint | null>(null);
+  const [statsData, setStatsData] = useState<StatsData | null>(null);
 
   useEffect(() => {
+    fetch('/stats.json')
+      .then(res => res.json())
+      .then(data => setStatsData(data))
+      .catch(() => {
+        setStatsData({
+          totalScripts: 12847,
+          dailyGrowth: 42,
+          peakCount: 847,
+          peakDay: '2025-01-15',
+          radarData: [
+            { category: '表达式', value: 75, count: 3200 },
+            { category: '脚本', value: 92, count: 4500 },
+            { category: '预设', value: 68, count: 2800 },
+            { category: '扩展', value: 54, count: 2347 }
+          ]
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!statsData) return;
+
+    // Animate number counting
+    const duration = 1500;
+    const start = 0;
+    const end = statsData.totalScripts;
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const current = Math.floor(start + (end - start) * easeOutQuart);
+      
+      setAnimatedCount(current);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }, [statsData]);
+
+  useEffect(() => {
+    if (!statsData) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    let animationProgress = 0;
+    let animationId: number;
+    let dataPoints: RadarPoint[] = [];
 
     const resize = () => {
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
@@ -20,82 +94,164 @@ export function HeroSection() {
     resize();
     window.addEventListener('resize', resize);
 
-    // Draw growth chart
-    const drawChart = () => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) * (canvas.width / rect.width / window.devicePixelRatio);
+      const y = (e.clientY - rect.top) * (canvas.height / rect.height / window.devicePixelRatio);
+
+      let found: RadarPoint | null = null;
+      for (const point of dataPoints) {
+        const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+        if (distance < 10) {
+          found = point;
+          break;
+        }
+      }
+      setHoveredPoint(found);
+    };
+
+    canvas.addEventListener('mousemove', handleMouseMove);
+
+    // Draw radar chart with animation
+    const drawRadarChart = () => {
       const width = canvas.offsetWidth;
       const height = canvas.offsetHeight;
-      const padding = 40;
-      const chartWidth = width - padding * 2;
-      const chartHeight = height - padding * 2;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const radius = Math.min(width, height) / 2 - 50;
 
       ctx.clearRect(0, 0, width, height);
 
-      // Generate growth data points
-      const points: [number, number][] = [];
-      const days = 30;
-      for (let i = 0; i <= days; i++) {
-        const x = padding + (i / days) * chartWidth;
-        const growth = Math.pow(i / days, 2.5);
-        const y = padding + chartHeight - growth * chartHeight;
-        points.push([x, y]);
+      const maxValue = 100;
+      const numPoints = statsData.radarData.length;
+
+      // Draw grid circles with terminal style
+      ctx.strokeStyle = '#2a2a2a';
+      ctx.lineWidth = 1;
+      for (let i = 1; i <= 4; i++) {
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, (radius / 4) * i, 0, Math.PI * 2);
+        ctx.stroke();
       }
 
-      // Draw gradient area
-      const gradient = ctx.createLinearGradient(0, padding, 0, height - padding);
-      gradient.addColorStop(0, 'rgba(96, 165, 250, 0.3)');
-      gradient.addColorStop(1, 'rgba(96, 165, 250, 0)');
-
-      ctx.beginPath();
-      ctx.moveTo(points[0][0], height - padding);
-      points.forEach(([x, y]) => ctx.lineTo(x, y));
-      ctx.lineTo(points[points.length - 1][0], height - padding);
-      ctx.closePath();
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      // Draw line
-      ctx.beginPath();
-      points.forEach(([x, y], i) => {
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      });
-      ctx.strokeStyle = '#60a5fa';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Draw axes
+      // Draw axes with terminal style
       ctx.strokeStyle = '#3a3a3a';
       ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(padding, padding);
-      ctx.lineTo(padding, height - padding);
-      ctx.lineTo(width - padding, height - padding);
-      ctx.stroke();
+      dataPoints = [];
+      
+      statsData.radarData.forEach((item, index) => {
+        const angle = (Math.PI * 2 * index) / numPoints - Math.PI / 2;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
 
-      // Draw labels
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        // Calculate data point position
+        const value = item.value / maxValue;
+        const pointX = centerX + Math.cos(angle) * radius * value;
+        const pointY = centerY + Math.sin(angle) * radius * value;
+        
+        dataPoints.push({
+          x: pointX,
+          y: pointY,
+          value: item.value,
+          count: item.count,
+          category: item.category
+        });
+      });
+
+      // Draw animated data polygon
+      const currentProgress = Math.min(animationProgress, 1);
+      
+      ctx.beginPath();
+      statsData.radarData.forEach((item, index) => {
+        const angle = (Math.PI * 2 * index) / numPoints - Math.PI / 2;
+        const value = (item.value / maxValue) * currentProgress;
+        const x = centerX + Math.cos(angle) * radius * value;
+        const y = centerY + Math.sin(angle) * radius * value;
+        
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      ctx.closePath();
+      
+      // Fill with terminal gradient
+      const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+      gradient.addColorStop(0, 'rgba(96, 165, 250, 0.3)');
+      gradient.addColorStop(1, 'rgba(96, 165, 250, 0.05)');
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      
+      // Stroke with terminal style
+      ctx.strokeStyle = '#60a5fa';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 3]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw data points with terminal style
+      dataPoints.forEach((point) => {
+        const isHovered = hoveredPoint && hoveredPoint.category === point.category;
+        
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, isHovered ? 6 : 4, 0, Math.PI * 2);
+        ctx.fillStyle = isHovered ? '#60a5fa' : '#4a5568';
+        ctx.fill();
+        ctx.strokeStyle = isHovered ? '#93c5fd' : '#2a2a2a';
+        ctx.lineWidth = isHovered ? 3 : 2;
+        ctx.stroke();
+
+        // Draw value label when hovered
+        if (isHovered) {
+          ctx.fillStyle = '#93c5fd';
+          ctx.font = '11px JetBrains Mono';
+          ctx.textAlign = 'center';
+          ctx.fillText(`${point.count}`, point.x, point.y - 12);
+        }
+      });
+
+      // Draw category labels
       ctx.fillStyle = '#6b7280';
       ctx.font = '10px JetBrains Mono';
       ctx.textAlign = 'center';
-      
-      const dates = ['11月24日', '12月1日', '12月8日', '12月15日', '12月22日', '12月29日', '1月5日', '1月12日', '1月19日', '2月2日'];
-      dates.forEach((date, i) => {
-        const x = padding + (i / (dates.length - 1)) * chartWidth;
-        ctx.fillText(date, x, height - padding + 20);
-      });
+      ctx.textBaseline = 'middle';
 
-      // Y-axis labels
-      ctx.textAlign = 'right';
-      const yLabels = ['0', '15000', '30000', '45000', '60000'];
-      yLabels.forEach((label, i) => {
-        const y = height - padding - (i / (yLabels.length - 1)) * chartHeight;
-        ctx.fillText(label, padding - 10, y + 3);
+      statsData.radarData.forEach((item, index) => {
+        const angle = (Math.PI * 2 * index) / numPoints - Math.PI / 2;
+        const labelX = centerX + Math.cos(angle) * (radius + 25);
+        const labelY = centerY + Math.sin(angle) * (radius + 25);
+        
+        const isHovered = hoveredPoint && hoveredPoint.category === item.category;
+        ctx.fillStyle = isHovered ? '#93c5fd' : '#6b7280';
+        ctx.fillText(item.category, labelX, labelY);
       });
     };
 
-    drawChart();
+    const animate = () => {
+      animationProgress += 0.02;
+      drawRadarChart();
+      
+      if (animationProgress < 1) {
+        animationId = requestAnimationFrame(animate);
+      } else {
+        drawRadarChart();
+      }
+    };
 
-    return () => window.removeEventListener('resize', resize);
-  }, []);
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  }, [hoveredPoint, statsData]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('en-US');
@@ -138,69 +294,32 @@ export function HeroSection() {
                   <span className="code-keyword">const</span>
                   <span className="text-foreground"> scripts </span>
                   <span className="code-keyword">=</span>
-                  <span className="code-number text-3xl font-bold ml-2"> {formatNumber(stats.totalScripts)}</span>
+                  <span className="code-number text-3xl font-bold ml-2"> {formatNumber(animatedCount)}</span>
                   <span className="text-muted-foreground">;</span>
                 </div>
                 <p className="mt-3 text-sm text-muted-foreground font-mono">
-                  <span className="code-comment">// 发现来自 GitHub 的开源 AE 扩展脚本</span>
+                  <span className="code-comment">// 一些自用或自制的ae表达式 脚本 预设 扩展等。</span>
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Right side - Chart */}
+          {/* Right side - Radar Chart */}
           <div className="terminal-window">
             <div className="terminal-header">
               <span className="terminal-dot terminal-dot-red" />
               <span className="terminal-dot terminal-dot-yellow" />
               <span className="terminal-dot terminal-dot-green" />
-              <span className="ml-2 text-xs text-muted-foreground font-mono">trend-analytics.tsx</span>
+              <span className="ml-2 text-xs text-muted-foreground font-mono">radar-analysis.tsx</span>
             </div>
             <div className="p-4">
               <canvas 
                 ref={canvasRef}
-                className="w-full h-64"
+                className="w-full h-64 cursor-crosshair"
               />
               <p className="mt-4 text-xs text-center text-muted-foreground font-mono">
-                根据脚本最后 push 时间统计，非当日提交的数量
+                <span className="text-green-400">$</span> 悬停在点上查看详细数量
               </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Testimonials */}
-        <div className="mt-12 grid md:grid-cols-2 gap-6">
-          <div className="terminal-window p-6">
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              This <span className="text-primary">AE Scripts marketplace</span> shares even more examples to inspire you. 
-              Explore community-built extensions that extend what After Effects can do—from automated keyframing 
-              and expression builders to color grading and motion tracking.
-            </p>
-            <div className="mt-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                <ChevronRight className="w-4 h-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-foreground">Motion Design Weekly</p>
-                <p className="text-xs text-muted-foreground">Industry Publication</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="terminal-window p-6">
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              We&apos;ve added scripts to our pipeline, making it possible to use the large and{' '}
-              <span className="text-primary">growing</span> collection of community extensions. 
-              It has significantly improved our motion graphics workflow.
-            </p>
-            <div className="mt-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
-                <ChevronRight className="w-4 h-4 text-purple-500" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-foreground">School of Motion</p>
-                <p className="text-xs text-muted-foreground">Online Education Platform</p>
-              </div>
             </div>
           </div>
         </div>
