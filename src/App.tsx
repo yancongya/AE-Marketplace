@@ -20,6 +20,10 @@ function ScrollToTop() {
 function AppContent() {
   const [isDark, setIsDark] = useState(true);
 
+  const toggleTheme = () => {
+    setIsDark(!isDark);
+  };
+
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
@@ -29,12 +33,9 @@ function AppContent() {
   }, [isDark]);
 
   return (
-    <ThemeProvider isDark={isDark}>
+    <ThemeProvider isDark={isDark} toggleTheme={toggleTheme}>
       <div className="min-h-screen bg-grid">
-        <Navbar
-          isDark={isDark}
-          onThemeChange={setIsDark}
-        />
+        <Navbar />
         <main className="relative">
         <Routes>
           <Route path="/" element={<Home />} />

@@ -7,9 +7,9 @@ import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import mermaid from 'mermaid';
 import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import * as ScrollArea from '@radix-ui/react-scroll-area';
 import { useTheme } from '@/contexts/ThemeContext';
 import { toast } from 'sonner';
+import { CommentSection } from './CommentSection';
 
 mermaid.initialize({
   startOnLoad: false,
@@ -607,7 +607,7 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
         </Dialog.Portal>
       </Dialog.Root>
 
-      <div className="hidden xl:block w-64 flex-shrink-0 sticky top-6 h-fit max-h-[calc(100vh-6rem)] overflow-hidden">
+      <div className="hidden xl:block w-64 flex-shrink-0 sticky top-6 h-[calc(100vh-6rem)] overflow-hidden">
         <div className="terminal-window h-full flex flex-col">
           <div className="terminal-header flex-shrink-0">
             <span className="terminal-dot terminal-dot-red" />
@@ -615,33 +615,26 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
             <span className="terminal-dot terminal-dot-green" />
             <span className="ml-2 text-xs text-muted-foreground font-mono">目录</span>
           </div>
-          <ScrollArea.Root className="flex-1 overflow-hidden">
-            <ScrollArea.Viewport className="w-full h-full p-4">
-              <nav className="space-y-1 pr-2">
-                {headings.map((heading) => (
-                  <button
-                    key={heading.id}
-                    onClick={() => scrollToHeading(heading.id)}
-                    className={`block w-full text-left px-3 py-1.5 rounded text-sm transition-all truncate ${
-                      activeId === heading.id 
-                        ? 'bg-primary/20 text-primary font-bold' 
-                        : heading.level === 1 
-                          ? 'text-foreground/90 hover:bg-secondary/50' 
-                          : heading.level === 2 
-                            ? 'text-muted-foreground/70 pl-6 hover:bg-secondary/50' 
-                            : 'text-muted-foreground/50 pl-10 hover:bg-secondary/50'
-                    }`}
-                    title={heading.text}
-                  >
-                    {heading.text}
-                  </button>
-                ))}
-              </nav>
-            </ScrollArea.Viewport>
-            <ScrollArea.Scrollbar orientation="vertical" className="flex select-none touch-none p-0.5 bg-black/20 w-2">
-              <ScrollArea.Thumb className="flex-1 bg-white/20 rounded-[10px] relative" />
-            </ScrollArea.Scrollbar>
-          </ScrollArea.Root>
+          <nav className="flex-1 overflow-y-auto overflow-x-hidden p-4 pr-6 space-y-1 scroll-smooth scrollbar-thin">
+            {headings.map((heading) => (
+              <button
+                key={heading.id}
+                onClick={() => scrollToHeading(heading.id)}
+                className={`block w-full text-left px-3 py-1.5 rounded text-sm transition-all truncate ${
+                  activeId === heading.id
+                    ? 'bg-primary/20 text-primary font-bold'
+                    : heading.level === 1
+                      ? 'text-foreground/90 hover:bg-secondary/50'
+                      : heading.level === 2
+                        ? 'text-muted-foreground/70 pl-6 hover:bg-secondary/50'
+                        : 'text-muted-foreground/50 pl-10 hover:bg-secondary/50'
+                }`}
+                title={heading.text}
+              >
+                {heading.text}
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
     </>
@@ -785,6 +778,9 @@ export function TabContent({
           </div>
         </div>
       </div>
+
+      {/* 评论系统 */}
+      <CommentSection title={title} path={filename} />
     </section>
   );
 }

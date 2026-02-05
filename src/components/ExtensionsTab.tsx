@@ -11,6 +11,8 @@ export function ExtensionsTab() {
   const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -32,15 +34,35 @@ export function ExtensionsTab() {
   }, [list]);
 
   const filteredList = useMemo(() => {
-    return list.filter(item => {
+    let result = list.filter(item => {
       const matchesTag = selectedTags.length === 0 || selectedTags.some(tag => item.tags?.includes(tag));
-      const matchesSearch = !searchTerm || 
+      const matchesSearch = !searchTerm ||
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.author?.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesTag && matchesSearch;
     });
+
+    // 按更新时间降序排序（最新的在前）
+    result.sort((a, b) => {
+      const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+      const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+      return dateB - dateA;
+    });
+
+    return result;
   }, [list, selectedTags, searchTerm]);
+
+  // 分页逻辑
+  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedList = filteredList.slice(startIndex, endIndex);
+
+  // 重置页码当筛选条件改变时
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTags, searchTerm]);
 
   if (loading) {
     return (
@@ -78,7 +100,7 @@ export function ExtensionsTab() {
       onSearchChange={setSearchTerm}
     >
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredList.map((item) => (
+        {paginatedList.map((item) => (
           <TabCard
             key={item.slug}
             title={item.title}
@@ -90,6 +112,55 @@ export function ExtensionsTab() {
           />
         ))}
       </div>
+
+      {/* 分页控件 */}
+      {totalPages > 1 && (
+        <div className="mt-8 flex justify-center items-center gap-2">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 rounded-md bg-secondary/50 text-muted-foreground text-sm font-mono hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            Prev
+          </button>
+          <div className="flex gap-1">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+              const showPage =
+                page === 1 ||
+                page === totalPages ||
+                Math.abs(page - currentPage) <= 1;
+
+              if (!showPage) {
+                if (Math.abs(page - currentPage) === 2) {
+                  return <span key={page} className="px-2 text-muted-foreground">...</span>;
+                }
+                return null;
+              }
+
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 rounded-md text-sm font-mono transition-colors ${
+                    currentPage === page
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-secondary/50 text-muted-foreground hover:bg-secondary'
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+          </div>
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 rounded-md bg-secondary/50 text-muted-foreground text-sm font-mono hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </TabPanel>
   );
 }

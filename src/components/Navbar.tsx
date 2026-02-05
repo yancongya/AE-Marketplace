@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Moon, ChevronDown, Code, FileCode, Layers, Box } from 'lucide-react';
+import { Globe, Moon, Sun, ChevronDown, Code, FileCode, Layers, Box } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
-interface NavbarProps {
-  isDark: boolean;
-  onThemeChange: (value: boolean) => void;
-}
-
-export function Navbar({ isDark, onThemeChange }: NavbarProps) {
+export function Navbar() {
+  const { isDark, toggleTheme } = useTheme();
   const [lang, setLang] = useState<'zh' | 'en'>('zh');
   const location = useLocation();
 
@@ -68,10 +65,15 @@ export function Navbar({ isDark, onThemeChange }: NavbarProps) {
           {/* Right: Theme toggle, language */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => onThemeChange(!isDark)}
+              onClick={toggleTheme}
               className="p-2 rounded hover:bg-[#2A2A2A] transition-colors"
+              title={isDark ? '切换到亮色主题' : '切换到暗色主题'}
             >
-              <Moon className="w-4 h-4 text-[#CCCCCC]" />
+              {isDark ? (
+                <Moon className="w-4 h-4 text-[#CCCCCC]" />
+              ) : (
+                <Sun className="w-4 h-4 text-[#CCCCCC]" />
+              )}
             </button>
             <button
               onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
