@@ -43,11 +43,40 @@
 
 参考：`examples/preset-example.md` 或 `public/content/presets/animation.md`
 
+## 重要注意事项
+
+### 1. 相关文档链接
+
+**格式：** 不包含 `.md` 后缀
+```markdown
+✅ [动画预设](./animation)
+✅ [高级预设](./advanced-presets)
+❌ [动画预设](./animation.md)  # 会导致路由错误
+```
+
+**只引用实际存在的文档：**
+- 检查 `public/content/presets/_manifest.json` 获取可用文档列表
+- 当前可用：`animation.md`, `advanced-presets.md`
+
+### 2. 图片引用
+
+**只引用实际存在的图片：**
+```markdown
+✅ ![效果](./assets/preview.png)  # 图片文件存在
+❌ ![演示](./assets/demo.gif)     # 文件不存在，不要添加
+```
+
+**如果没有实际图片：**
+- 使用文字描述代替
+- 或等待实际图片生成后再添加
+
 ## 质量检查
 
 - [ ] 顶部有下载链接（网络地址）
 - [ ] 包含文件信息
 - [ ] 包含效果预览
 - [ ] 包含使用场景
-- [ ] 图片使用相对路径 `./assets/`
+- [ ] 图片使用相对路径 `./assets/`（如果存在）
+- [ ] 相关文档链接不包含 `.md` 后缀
+- [ ] 相关文档链接指向实际存在的文档
 - [ ] 已更新 `presets/_manifest.json`

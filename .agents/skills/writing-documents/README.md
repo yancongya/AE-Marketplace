@@ -83,8 +83,34 @@ updatedAt: YYYY-MM-DD
 - [ ] 元数据包含所有 6 个必需字段
 - [ ] 文件保存在正确目录
 - [ ] 下载链接使用网络地址
-- [ ] 图片使用相对路径 `./assets/`
+- [ ] 图片使用相对路径 `./assets/`（如果存在）
+- [ ] 相关文档链接不包含 `.md` 后缀
+- [ ] 相关文档链接指向实际存在的文档
 - [ ] 已更新 _manifest.json
+
+## 重要注意事项
+
+### 1. 图片引用
+
+**只引用实际存在的图片：**
+- 不要添加不存在的图片链接
+- 如果没有实际图片，使用文字描述代替
+- 图片路径格式：`./assets/filename.png`
+
+### 2. 相关文档链接
+
+**链接格式（前端路由）：**
+```markdown
+✅ [文档名称](./document-name)   # 不包含 .md
+❌ [文档名称](./document-name.md) # 包含 .md 会导致无法打开
+```
+
+**只引用实际存在的文档：**
+- 检查对应目录的 `_manifest.json` 获取可用文档列表
+- **表达式**：`auto-keyframe.md`, `advanced-guide.md`, `looping-wiggle.md`
+- **脚本**：`shape-morpher.md`, `ae-script-guide.md`, `script-complete-guide.md`
+- **预设**：`animation.md`, `advanced-presets.md`
+- **扩展**：`what-is-scripts.md`, `extension-dev-guide.md`
 
 ## 参考资源
 

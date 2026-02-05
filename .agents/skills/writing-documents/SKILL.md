@@ -80,6 +80,29 @@ public/content/
 - **shared/download-links.md** - 下载链接规范
 - **examples/** - 文档示例（参考）
 
+## 重要注意事项
+
+### 1. 图片引用
+
+**只引用实际存在的图片：**
+- 不要添加不存在的图片链接
+- 如果没有实际图片，使用文字描述代替
+- 图片路径格式：`./assets/filename.png`
+
+### 2. 相关文档链接
+
+**链接格式（前端路由）：**
+```markdown
+✅ [文档名称](./document-name)   # 不包含 .md
+❌ [文档名称](./document-name.md) # 包含 .md 会导致无法打开
+```
+
+**只引用实际存在的文档：**
+- 表达式：检查 `public/content/expressions/_manifest.json`
+- 脚本：检查 `public/content/scripts/_manifest.json`
+- 预设：检查 `public/content/presets/_manifest.json`
+- 扩展：检查 `public/content/extensions/_manifest.json`
+
 ## 核心规则（必须）
 
 ### 1. 图片路径
