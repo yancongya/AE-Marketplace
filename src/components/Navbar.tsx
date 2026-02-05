@@ -26,10 +26,13 @@ export function Navbar() {
         <div className="flex items-center justify-between h-12">
           {/* Left: Status badge and path */}
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5 px-2 py-1 rounded text-xs font-mono bg-[#2D2D2D] text-[#CCCCCC]">
-              <span className="w-2 h-2 rounded-full bg-[#00FF85]" />
-              ready
-            </span>
+            <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <img src="/logo.svg" alt="AE Scripts" className="w-8 h-8" />
+              <span className="flex items-center gap-1.5 px-2 py-1 rounded text-xs font-mono bg-[#2D2D2D] text-[#CCCCCC]">
+                <span className="w-2 h-2 rounded-full bg-[#00FF85]" />
+                ready
+              </span>
+            </Link>
             <Link
               to="/"
               className="flex items-center gap-1 font-mono text-sm hover:opacity-80 transition-opacity"
