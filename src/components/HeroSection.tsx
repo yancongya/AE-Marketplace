@@ -2,29 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 
 interface StatsData {
-  totalScripts: number;
-  dailyGrowth: number;
-  peakCount: number;
-  peakDay: string;
-  radarData: Array<{
-    category: string;
-    value: number;
-    count: number;
-  }>;
-}
-
-interface RadarPoint {
-  x: number;
-  y: number;
-  value: number;
-  count: number;
-  category: string;
+  expressions: number;
+  scripts: number;
+  presets: number;
+  extensions: number;
 }
 
 export function HeroSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [animatedCount, setAnimatedCount] = useState(0);
-  const [hoveredPoint, setHoveredPoint] = useState<RadarPoint | null>(null);
   const [statsData, setStatsData] = useState<StatsData | null>(null);
 
   useEffect(() => {
@@ -33,16 +19,10 @@ export function HeroSection() {
       .then(data => setStatsData(data))
       .catch(() => {
         setStatsData({
-          totalScripts: 12847,
-          dailyGrowth: 42,
-          peakCount: 847,
-          peakDay: '2025-01-15',
-          radarData: [
-            { category: '表达式', value: 75, count: 3200 },
-            { category: '脚本', value: 92, count: 4500 },
-            { category: '预设', value: 68, count: 2800 },
-            { category: '扩展', value: 54, count: 2347 }
-          ]
+          expressions: 3200,
+          scripts: 4500,
+          presets: 2800,
+          extensions: 2347
         });
       });
   }, []);
@@ -50,10 +30,12 @@ export function HeroSection() {
   useEffect(() => {
     if (!statsData) return;
 
+    const total = statsData.expressions + statsData.scripts + statsData.presets + statsData.extensions;
+
     // Animate number counting
     const duration = 1500;
     const start = 0;
-    const end = statsData.totalScripts;
+    const end = total;
     const startTime = performance.now();
 
     const animate = (currentTime: number) => {
@@ -84,7 +66,6 @@ export function HeroSection() {
 
     let animationProgress = 0;
     let animationId: number;
-    let dataPoints: RadarPoint[] = [];
 
     const resize = () => {
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
@@ -94,25 +75,15 @@ export function HeroSection() {
     resize();
     window.addEventListener('resize', resize);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const x = (e.clientX - rect.left) * (canvas.width / rect.width / window.devicePixelRatio);
-      const y = (e.clientY - rect.top) * (canvas.height / rect.height / window.devicePixelRatio);
+    const radarData = [
+      { category: '表达式', count: statsData.expressions, color: '#8b5cf6' },
+      { category: '脚本', count: statsData.scripts, color: '#3b82f6' },
+      { category: '预设', count: statsData.presets, color: '#10b981' },
+      { category: '扩展', count: statsData.extensions, color: '#f59e0b' }
+    ];
 
-      let found: RadarPoint | null = null;
-      for (const point of dataPoints) {
-        const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
-        if (distance < 10) {
-          found = point;
-          break;
-        }
-      }
-      setHoveredPoint(found);
-    };
+    const maxValue = Math.max(...radarData.map(d => d.count));
 
-    canvas.addEventListener('mousemove', handleMouseMove);
-
-    // Draw radar chart with animation
     const drawRadarChart = () => {
       const width = canvas.offsetWidth;
       const height = canvas.offsetHeight;
@@ -122,11 +93,10 @@ export function HeroSection() {
 
       ctx.clearRect(0, 0, width, height);
 
-      const maxValue = 100;
-      const numPoints = statsData.radarData.length;
+      const numPoints = radarData.length;
 
-      // Draw grid circles with terminal style
-      ctx.strokeStyle = '#2a2a2a';
+      // Draw grid circles
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
       ctx.lineWidth = 1;
       for (let i = 1; i <= 4; i++) {
         ctx.beginPath();
@@ -134,42 +104,27 @@ export function HeroSection() {
         ctx.stroke();
       }
 
-      // Draw axes with terminal style
-      ctx.strokeStyle = '#3a3a3a';
-      ctx.lineWidth = 1;
-      dataPoints = [];
-      
-      statsData.radarData.forEach((item, index) => {
+      // Draw axes
+      radarData.forEach((_, index) => {
         const angle = (Math.PI * 2 * index) / numPoints - Math.PI / 2;
         const x = centerX + Math.cos(angle) * radius;
         const y = centerY + Math.sin(angle) * radius;
 
+        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
         ctx.lineTo(x, y);
         ctx.stroke();
-
-        // Calculate data point position
-        const value = item.value / maxValue;
-        const pointX = centerX + Math.cos(angle) * radius * value;
-        const pointY = centerY + Math.sin(angle) * radius * value;
-        
-        dataPoints.push({
-          x: pointX,
-          y: pointY,
-          value: item.value,
-          count: item.count,
-          category: item.category
-        });
       });
 
-      // Draw animated data polygon
+      // Draw animated polygon
       const currentProgress = Math.min(animationProgress, 1);
       
       ctx.beginPath();
-      statsData.radarData.forEach((item, index) => {
+      radarData.forEach((item, index) => {
         const angle = (Math.PI * 2 * index) / numPoints - Math.PI / 2;
-        const value = (item.value / maxValue) * currentProgress;
+        const value = (item.count / maxValue) * currentProgress;
         const x = centerX + Math.cos(angle) * radius * value;
         const y = centerY + Math.sin(angle) * radius * value;
         
@@ -181,55 +136,54 @@ export function HeroSection() {
       });
       ctx.closePath();
       
-      // Fill with terminal gradient
+      // Fill with gradient
       const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-      gradient.addColorStop(0, 'rgba(96, 165, 250, 0.3)');
-      gradient.addColorStop(1, 'rgba(96, 165, 250, 0.05)');
+      gradient.addColorStop(0, 'rgba(96, 165, 250, 0.25)');
+      gradient.addColorStop(1, 'rgba(96, 165, 250, 0.03)');
       ctx.fillStyle = gradient;
       ctx.fill();
       
-      // Stroke with terminal style
+      // Stroke
       ctx.strokeStyle = '#60a5fa';
       ctx.lineWidth = 2;
-      ctx.setLineDash([5, 3]);
       ctx.stroke();
-      ctx.setLineDash([]);
 
-      // Draw data points with terminal style
-      dataPoints.forEach((point) => {
-        const isHovered = hoveredPoint && hoveredPoint.category === point.category;
+      // Draw data points
+      radarData.forEach((item, index) => {
+        const angle = (Math.PI * 2 * index) / numPoints - Math.PI / 2;
+        const value = item.count / maxValue;
+        const pointX = centerX + Math.cos(angle) * radius * value;
+        const pointY = centerY + Math.sin(angle) * radius * value;
         
         ctx.beginPath();
-        ctx.arc(point.x, point.y, isHovered ? 6 : 4, 0, Math.PI * 2);
-        ctx.fillStyle = isHovered ? '#60a5fa' : '#4a5568';
+        ctx.arc(pointX, pointY, 5, 0, Math.PI * 2);
+        ctx.fillStyle = item.color;
         ctx.fill();
-        ctx.strokeStyle = isHovered ? '#93c5fd' : '#2a2a2a';
-        ctx.lineWidth = isHovered ? 3 : 2;
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.lineWidth = 1.5;
         ctx.stroke();
-
-        // Draw value label when hovered
-        if (isHovered) {
-          ctx.fillStyle = '#93c5fd';
-          ctx.font = '11px JetBrains Mono';
-          ctx.textAlign = 'center';
-          ctx.fillText(`${point.count}`, point.x, point.y - 12);
-        }
       });
 
-      // Draw category labels
-      ctx.fillStyle = '#6b7280';
-      ctx.font = '10px JetBrains Mono';
+      // Draw category labels with values next to them
+      ctx.font = '11px JetBrains Mono';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      statsData.radarData.forEach((item, index) => {
+      radarData.forEach((item, index) => {
         const angle = (Math.PI * 2 * index) / numPoints - Math.PI / 2;
-        const labelX = centerX + Math.cos(angle) * (radius + 25);
-        const labelY = centerY + Math.sin(angle) * (radius + 25);
         
-        const isHovered = hoveredPoint && hoveredPoint.category === item.category;
-        ctx.fillStyle = isHovered ? '#93c5fd' : '#6b7280';
-        ctx.fillText(item.category, labelX, labelY);
+        // Category label and value next to it
+        const labelX = centerX + Math.cos(angle) * (radius + 35);
+        const labelY = centerY + Math.sin(angle) * (radius + 35);
+        
+        // Draw label
+        ctx.fillStyle = item.color;
+        ctx.fillText(item.category, labelX - 15, labelY);
+        
+        // Draw value next to label
+        ctx.fillStyle = 'rgba(255,255,255,0.9)';
+        ctx.font = 'bold 11px JetBrains Mono';
+        ctx.fillText(formatNumber(item.count), labelX + 20, labelY);
       });
     };
 
@@ -248,10 +202,9 @@ export function HeroSection() {
 
     return () => {
       window.removeEventListener('resize', resize);
-      canvas.removeEventListener('mousemove', handleMouseMove);
       if (animationId) cancelAnimationFrame(animationId);
     };
-  }, [hoveredPoint, statsData]);
+  }, [statsData]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('en-US');
@@ -305,23 +258,20 @@ export function HeroSection() {
           </div>
 
           {/* Right side - Radar Chart */}
-          <div className="terminal-window">
-            <div className="terminal-header">
-              <span className="terminal-dot terminal-dot-red" />
-              <span className="terminal-dot terminal-dot-yellow" />
-              <span className="terminal-dot terminal-dot-green" />
-              <span className="ml-2 text-xs text-muted-foreground font-mono">radar-analysis.tsx</span>
+            <div className="terminal-window">
+              <div className="terminal-header">
+                <span className="terminal-dot terminal-dot-red" />
+                <span className="terminal-dot terminal-dot-yellow" />
+                <span className="terminal-dot terminal-dot-green" />
+                <span className="ml-2 text-xs text-muted-foreground font-mono">radar-analysis.tsx</span>
+              </div>
+              <div className="p-4">
+                <canvas 
+                  ref={canvasRef}
+                  className="w-full h-64"
+                />
+              </div>
             </div>
-            <div className="p-4">
-              <canvas 
-                ref={canvasRef}
-                className="w-full h-64 cursor-crosshair"
-              />
-              <p className="mt-4 text-xs text-center text-muted-foreground font-mono">
-                <span className="text-green-400">$</span> 悬停在点上查看详细数量
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
