@@ -15,6 +15,7 @@ export function HeroSection() {
   const [typedText, setTypedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const { translations } = useI18n();
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
     fetch('/stats.json')
@@ -80,6 +81,8 @@ export function HeroSection() {
   }, [statsData]);
 
   useEffect(() => {
+    if (!translations || !statsData) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -381,7 +384,19 @@ export function HeroSection() {
       }
     };
 
-    animate();
+    // Only play entrance animation on first render
+    if (!hasAnimated.current) {
+      animate();
+      hasAnimated.current = true;
+    } else {
+      // Skip animation on language switch, just render static chart
+      animationProgress = 1;
+      pointPositions = radarData.map((_, index) => {
+        const pos = getPointPosition(index, 1);
+        return { x: pos.x, y: pos.y, originalX: pos.x, originalY: pos.y };
+      });
+      drawRadarChart();
+    }
 
     return () => {
       window.removeEventListener('resize', resize);
@@ -396,7 +411,7 @@ export function HeroSection() {
       canvas.removeEventListener('touchmove', handleMouseMove, { passive: true } as any);
       canvas.removeEventListener('touchend', handleMouseUp, { passive: true } as any);
     };
-  }, [statsData]);
+  }, [statsData, translations]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('en-US');
