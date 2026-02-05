@@ -7,12 +7,29 @@ interface StatsData {
   extensions: number;
 }
 
+interface HeroData {
+  title: string;
+  subtitle: string;
+  stats: {
+    label: string;
+    comment: string;
+    suffix: string;
+  };
+  description: {
+    line1: string;
+    line2: string;
+  };
+  fileHeader: string;
+  fileComment: string;
+}
+
 export function HeroSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [animatedCount, setAnimatedCount] = useState(0);
   const [statsData, setStatsData] = useState<StatsData | null>(null);
   const [typedText, setTypedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [heroData, setHeroData] = useState<HeroData | null>(null);
 
   useEffect(() => {
     fetch('/stats.json')
@@ -30,25 +47,28 @@ export function HeroSection() {
 
   // Typing animation for title
   useEffect(() => {
-    const fullText = 'AE Scripts\nMarketplace';
-    let index = 0;
-    const typingSpeed = 80;
-
-    const typeNextChar = () => {
-      if (index < fullText.length) {
-        setTypedText(fullText.slice(0, index + 1));
-        index++;
-        setTimeout(typeNextChar, typingSpeed);
-      } else {
-        setIsTyping(false);
-      }
-    };
-
-    typeNextChar();
-  }, []);
+      if (!heroData) return;
+  
+      const fullText = heroData.title;
+      let index = 0;
+      const typingSpeed = 80;
+  
+      const typeNextChar = () => {
+        if (index < fullText.length) {
+          setTypedText(fullText.slice(0, index + 1));
+          index++;
+          setTimeout(typeNextChar, typingSpeed);
+        } else {
+          setIsTyping(false);
+        }
+      };
+  
+      typeNextChar();
+    }, [heroData]);
 
   useEffect(() => {
     if (!statsData) return;
+    if (!heroData) return;
 
     const total = statsData.expressions + statsData.scripts + statsData.presets + statsData.extensions;
 
@@ -73,6 +93,29 @@ export function HeroSection() {
     
     requestAnimationFrame(animate);
   }, [statsData]);
+
+  useEffect(() => {
+    fetch('/hero.json')
+      .then(res => res.json())
+      .then(data => setHeroData(data))
+      .catch(() => {
+        setHeroData({
+          title: 'AE Scripts Marketplace',
+          subtitle: '基于开放的 ExtendScript 生态系统',
+          stats: {
+            label: 'scripts',
+            comment: '发现来自 GitHub 的',
+            suffix: '个开源 AE 脚本'
+          },
+          description: {
+            line1: 'AI 语义搜索或关键字筛选，按分类浏览，按热度排序。',
+            line2: '所有脚本采用开放的 ExtendScript 标准，一键安装'
+          },
+          fileHeader: 'skills.marketplace',
+          fileComment: '// main.ts'
+        });
+      });
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -401,6 +444,27 @@ export function HeroSection() {
     return num.toLocaleString('en-US');
   };
 
+  if (!heroData) {
+    const data = {
+      title: 'AE Scripts Marketplace',
+      subtitle: '基于开放的 ExtendScript 生态系统',
+      stats: {
+        label: 'scripts',
+        comment: '发现来自 GitHub 的',
+        suffix: '个开源 AE 脚本'
+      },
+      description: {
+        line1: 'AI 语义搜索或关键字筛选，按分类浏览，按热度排序。',
+        line2: '所有脚本采用开放的 ExtendScript 标准，一键安装'
+      },
+      fileHeader: 'skills.marketplace',
+      fileComment: '// main.ts'
+    };
+    setHeroData(data);
+  }
+
+
+
   return (
     <section className="relative min-h-screen px-4 sm:px-6 lg:px-8 bg-background bg-grid flex flex-col lg:flex-row">
       {/* Navbar spacer */}
@@ -410,17 +474,17 @@ export function HeroSection() {
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start w-full">
           {/* Left side - Code editor */}
           <div className="col-span-12 lg:col-span-7 space-y-4 w-full lg:w-auto">
-            {/* File header with window controls - centered on mobile */}
+{/* File header with window controls - centered on mobile */}
             <div className="flex items-center gap-2 px-4 py-2 h-8 w-full justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '0ms' }}>
               <span className="terminal-dot terminal-dot-red" />
               <span className="terminal-dot terminal-dot-yellow" />
               <span className="terminal-dot terminal-dot-green" />
-              <span className="ml-2 text-xs font-mono text-muted-foreground">skills.marketplace</span>
+              <span className="ml-2 text-xs font-mono text-muted-foreground">{heroData?.fileHeader || 'skills.marketplace'}</span>
             </div>
             
             <div className="space-y-4 font-mono w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
               {/* File comment */}
-              <div className="text-code-comment text-xs sm:text-sm text-center lg:text-left animate-fade-in-up" style={{ animationDelay: '100ms' }}>// main.ts</div>
+              <div className="text-code-comment text-xs sm:text-sm text-center lg:text-left animate-fade-in-up" style={{ animationDelay: '100ms' }}>{heroData?.fileComment || '// main.ts'}</div>
               
               {/* Main title with blue prompt - centered on mobile */}
               <div className="flex items-start gap-2 justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '200ms' }}>
@@ -435,22 +499,20 @@ export function HeroSection() {
               
               {/* Subtitle - centered on mobile */}
               <div className="text-muted-foreground text-sm sm:text-base text-center lg:text-left animate-fade-in-up" style={{ animationDelay: '300ms' }}>
-                基于开放的 ExtendScript 生态系统
+                {heroData?.subtitle || '基于开放的 ExtendScript 生态系统'}
               </div>
 
               {/* Stats code block */}
               <div className="rounded-lg p-3 sm:p-4 space-y-2 border border-border card-hover hover:border-primary/50 cursor-default animate-fade-in-up" style={{ animationDelay: '400ms' }}>
                 <div className="text-base sm:text-lg leading-relaxed">
                   <span className="code-keyword">const</span>
-                  <span className="code-function"> scripts</span>
+                  <span className="code-function"> {heroData?.stats?.label || 'scripts'}</span>
                   <span className="text-foreground"> =</span>
                   <span className="code-number text-xl sm:text-2xl md:text-[28px] font-bold ml-2">{formatNumber(animatedCount)}</span>
                   <span className="text-foreground">;</span>
                 </div>
                 <div className="text-xs sm:text-sm code-comment">
-                  <span>{'// 发现来自 GitHub 的 '}</span>
-                  <span className="code-function">{animatedCount.toLocaleString()}</span>
-                  <span>{' 个开源 AE 脚本'}</span>
+                  <span>{'// '}{heroData?.stats?.comment || '发现来自 GitHub 的'}{animatedCount.toLocaleString()}{heroData?.stats?.suffix || '个开源 AE 脚本'}</span>
                 </div>
               </div>
 
@@ -458,8 +520,8 @@ export function HeroSection() {
               <div className="p-3 sm:p-4 border-l-4 border-accent card-hover hover:border-primary hover:bg-accent/5 cursor-default animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                 <div className="text-xs sm:text-sm text-accent leading-relaxed">
                   <div>{'/**'}</div>
-                  <div>{' * AI 语义搜索或关键字筛选，按分类浏览，按热度排序。'}</div>
-                  <div>{' * 所有脚本采用开放的 ExtendScript 标准，一键安装'}</div>
+                  <div>{' * '}{heroData?.description?.line1 || 'AI 语义搜索或关键字筛选，按分类浏览，按热度排序。'}</div>
+                  <div>{' * '}{heroData?.description?.line2 || '所有脚本采用开放的 ExtendScript 标准，一键安装'}</div>
                   <div>{' */'}</div>
                 </div>
               </div>
