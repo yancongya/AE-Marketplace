@@ -99,6 +99,20 @@ export function HeroSection() {
     resize();
     window.addEventListener('resize', resize);
 
+    // Theme change listener to redraw chart
+    const handleThemeChange = () => {
+      if (pointPositions.length > 0) {
+        drawRadarChart();
+      }
+    };
+
+    // Watch for theme changes
+    const observer = new MutationObserver(handleThemeChange);
+    observer.observe(document.documentElement, { 
+      attributes: true, 
+      attributeFilter: ['class'] 
+    });
+
     const radarData = [
       { category: '表达式', count: statsData?.expressions || 3200, color: '#8b5cf6' },
       { category: '脚本', count: statsData?.scripts || 4500, color: '#3b82f6' },
@@ -126,16 +140,37 @@ export function HeroSection() {
     const drawRadarChart = () => {
       const width = canvas.offsetWidth;
       const height = canvas.offsetHeight;
+      
+      // Check if canvas is visible and has valid dimensions
+      if (width === 0 || height === 0) return;
+      
       const centerX = width / 2;
       const centerY = height / 2;
-      const radius = Math.min(width, height) / 2 - 50;
+      
+      // Better theme detection - check if light class is present
+      const isDarkMode = !document.documentElement.classList.contains('light');
+      
+      // Adjust margin for mobile - more aggressive for small screens
+      const isMobile = width < 640;
+      const margin = isMobile ? 40 : 50;
+      const radius = Math.max(0, Math.min(width, height) / 2 - margin);
 
       ctx.clearRect(0, 0, width, height);
 
       const numPoints = radarData.length;
 
+      // Theme-aware colors
+      const gridColor = isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)';
+      const axisColor = isDarkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.15)';
+      const polygonFill = isDarkMode ? 'rgba(96, 165, 250, 0.25)' : 'rgba(59, 130, 246, 0.2)';
+      const polygonFillEnd = isDarkMode ? 'rgba(96, 165, 250, 0.03)' : 'rgba(59, 130, 246, 0.05)';
+      const polygonStroke = isDarkMode ? '#60a5fa' : '#3b82f6';
+      const textColor = isDarkMode ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.9)';
+      const mutedTextColor = isDarkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)';
+      const pointStroke = isDarkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)';
+
       // Draw grid circles
-      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.strokeStyle = gridColor;
       ctx.lineWidth = 1;
       for (let i = 1; i <= 4; i++) {
         ctx.beginPath();
@@ -149,7 +184,7 @@ export function HeroSection() {
         const x = centerX + Math.cos(angle) * radius;
         const y = centerY + Math.sin(angle) * radius;
 
-        ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+        ctx.strokeStyle = axisColor;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(centerX, centerY);
@@ -172,13 +207,13 @@ export function HeroSection() {
       
       // Fill with gradient
       const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-      gradient.addColorStop(0, 'rgba(96, 165, 250, 0.25)');
-      gradient.addColorStop(1, 'rgba(96, 165, 250, 0.03)');
+      gradient.addColorStop(0, polygonFill);
+      gradient.addColorStop(1, polygonFillEnd);
       ctx.fillStyle = gradient;
       ctx.fill();
       
       // Stroke
-      ctx.strokeStyle = '#60a5fa';
+      ctx.strokeStyle = polygonStroke;
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -188,13 +223,17 @@ export function HeroSection() {
         ctx.arc(pos.x, pos.y, isDragging && draggedPointIndex === index ? 7 : 5, 0, Math.PI * 2);
         ctx.fillStyle = radarData[index].color;
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.strokeStyle = pointStroke;
         ctx.lineWidth = 1.5;
         ctx.stroke();
       });
 
       // Draw category labels with values next to them
-      ctx.font = '11px JetBrains Mono';
+      const fontSize = isMobile ? 9 : 11;
+      const labelOffset = isMobile ? 30 : 35;
+      const valueOffset = isMobile ? 12 : 15;
+      
+      ctx.font = `${fontSize}px JetBrains Mono`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
@@ -202,17 +241,17 @@ export function HeroSection() {
         const angle = (Math.PI * 2 * index) / numPoints - Math.PI / 2;
         
         // Category label and value next to it
-        const labelX = centerX + Math.cos(angle) * (radius + 35);
-        const labelY = centerY + Math.sin(angle) * (radius + 35);
+        const labelX = centerX + Math.cos(angle) * (radius + labelOffset);
+        const labelY = centerY + Math.sin(angle) * (radius + labelOffset);
         
         // Draw label
         ctx.fillStyle = item.color;
-        ctx.fillText(item.category, labelX - 15, labelY);
+        ctx.fillText(item.category, labelX - valueOffset, labelY);
         
         // Draw value next to label
-        ctx.fillStyle = 'rgba(255,255,255,0.9)';
-        ctx.font = 'bold 11px JetBrains Mono';
-        ctx.fillText(formatNumber(item.count), labelX + 20, labelY);
+        ctx.fillStyle = textColor;
+        ctx.font = `bold ${fontSize}px JetBrains Mono`;
+        ctx.fillText(formatNumber(item.count), labelX + valueOffset, labelY);
       });
     };
 
@@ -316,10 +355,10 @@ export function HeroSection() {
     canvas.addEventListener('mouseup', handleMouseUp);
     canvas.addEventListener('mouseleave', handleMouseUp);
 
-    // Touch events
-    canvas.addEventListener('touchstart', handleMouseDown);
-    canvas.addEventListener('touchmove', handleMouseMove);
-    canvas.addEventListener('touchend', handleMouseUp);
+    // Touch events with passive option
+    canvas.addEventListener('touchstart', handleMouseDown, { passive: true });
+    canvas.addEventListener('touchmove', handleMouseMove, { passive: true });
+    canvas.addEventListener('touchend', handleMouseUp, { passive: true });
 
     const animate = () => {
       animationProgress += 0.02;
@@ -345,15 +384,16 @@ export function HeroSection() {
 
     return () => {
       window.removeEventListener('resize', resize);
+      observer.disconnect();
       if (animationId) cancelAnimationFrame(animationId);
       if (springAnimationId) cancelAnimationFrame(springAnimationId);
       canvas.removeEventListener('mousedown', handleMouseDown);
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseup', handleMouseUp);
       canvas.removeEventListener('mouseleave', handleMouseUp);
-      canvas.removeEventListener('touchstart', handleMouseDown);
-      canvas.removeEventListener('touchmove', handleMouseMove);
-      canvas.removeEventListener('touchend', handleMouseUp);
+      canvas.removeEventListener('touchstart', handleMouseDown, { passive: true } as any);
+      canvas.removeEventListener('touchmove', handleMouseMove, { passive: true } as any);
+      canvas.removeEventListener('touchend', handleMouseUp, { passive: true } as any);
     };
   }, [statsData]);
 
@@ -362,49 +402,52 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-background bg-grid">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-12 gap-8 items-start">
-          {/* Left side - Code editor (55%) */}
-          <div className="lg:col-span-7 space-y-4">
-            {/* File header with window controls */}
-            <div className="flex items-center gap-2 px-4 py-2 h-8">
+    <section className="relative min-h-screen px-4 sm:px-6 lg:px-8 bg-background bg-grid flex flex-col lg:flex-row">
+      {/* Navbar spacer */}
+      <div className="h-12 flex-shrink-0" />
+      
+      <div className="flex-1 max-w-7xl mx-auto w-full py-8 sm:py-12 flex items-center">
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start w-full">
+          {/* Left side - Code editor */}
+          <div className="col-span-12 lg:col-span-7 space-y-4 w-full lg:w-auto">
+            {/* File header with window controls - centered on mobile */}
+            <div className="flex items-center gap-2 px-4 py-2 h-8 w-full justify-center lg:justify-start">
               <span className="terminal-dot terminal-dot-red" />
               <span className="terminal-dot terminal-dot-yellow" />
               <span className="terminal-dot terminal-dot-green" />
               <span className="ml-2 text-xs font-mono text-muted-foreground">skills.marketplace</span>
             </div>
             
-            <div className="space-y-4 font-mono">
+            <div className="space-y-4 font-mono w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none">
               {/* File comment */}
-              <div className="text-code-comment text-sm">// main.ts</div>
+              <div className="text-code-comment text-xs sm:text-sm text-center lg:text-left">// main.ts</div>
               
-              {/* Main title with blue prompt */}
-              <div className="flex items-start gap-2">
-                <span className="text-primary text-[40px] font-bold leading-tight">{'>'}</span>
-                <h1 className="text-[40px] font-bold text-foreground leading-tight whitespace-pre font-mono">
+              {/* Main title with blue prompt - centered on mobile */}
+              <div className="flex items-start gap-2 justify-center lg:justify-start">
+                <span className="text-primary text-3xl sm:text-4xl md:text-[40px] font-bold leading-tight">{'>'}</span>
+                <h1 className="text-3xl sm:text-4xl md:text-[40px] font-bold text-foreground leading-tight whitespace-pre font-mono">
                   {typedText}
                   <span 
-                    className={`inline-block w-[3px] h-[40px] bg-primary align-middle ml-0.5 ${!isTyping ? 'animate-caret-blink' : ''}`} 
+                    className={`inline-block w-[3px] h-8 sm:h-10 md:h-[40px] bg-primary align-middle ml-0.5 ${!isTyping ? 'animate-caret-blink' : ''}`} 
                   />
                 </h1>
               </div>
               
-              {/* Subtitle */}
-              <div className="text-muted-foreground text-base ml-9">
+              {/* Subtitle - centered on mobile */}
+              <div className="text-muted-foreground text-sm sm:text-base text-center lg:text-left">
                 基于开放的 ExtendScript 生态系统
               </div>
 
               {/* Stats code block */}
-              <div className="rounded-lg p-4 space-y-2 border border-border">
-                <div className="text-lg leading-relaxed">
+              <div className="rounded-lg p-3 sm:p-4 space-y-2 border border-border">
+                <div className="text-base sm:text-lg leading-relaxed">
                   <span className="code-keyword">const</span>
                   <span className="code-function"> scripts</span>
                   <span className="text-foreground"> =</span>
-                  <span className="code-number text-[28px] font-bold ml-2">{formatNumber(animatedCount)}</span>
+                  <span className="code-number text-xl sm:text-2xl md:text-[28px] font-bold ml-2">{formatNumber(animatedCount)}</span>
                   <span className="text-foreground">;</span>
                 </div>
-                <div className="text-sm code-comment">
+                <div className="text-xs sm:text-sm code-comment">
                   <span>{'// 发现来自 GitHub 的 '}</span>
                   <span className="code-function">{animatedCount.toLocaleString()}</span>
                   <span>{' 个开源 AE 脚本'}</span>
@@ -412,8 +455,8 @@ export function HeroSection() {
               </div>
 
               {/* JSDoc comment block */}
-              <div className="p-4 border-l-4 border-accent">
-                <div className="text-sm text-accent leading-relaxed">
+              <div className="p-3 sm:p-4 border-l-4 border-accent">
+                <div className="text-xs sm:text-sm text-accent leading-relaxed">
                   <div>{'/**'}</div>
                   <div>{' * AI 语义搜索或关键字筛选，按分类浏览，按热度排序。'}</div>
                   <div>{' * 所有脚本采用开放的 ExtendScript 标准，一键安装'}</div>
@@ -423,8 +466,8 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* Right side - Radar chart (40%) */}
-          <div className="lg:col-span-5">
+          {/* Right side - Radar chart - hidden on mobile */}
+          <div className="hidden lg:block lg:col-span-5">
             <div className="terminal-window">
               <div className="terminal-header">
                 <span className="terminal-dot terminal-dot-red" />
@@ -433,24 +476,24 @@ export function HeroSection() {
                 <span className="ml-2 text-xs font-mono text-muted-foreground">radar-analysis.tsx</span>
               </div>
               
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <canvas 
                   ref={canvasRef}
                   className="w-full"
-                  style={{ height: '320px' }}
+                  style={{ height: 'auto', aspectRatio: '4/3' }}
                 />
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Floating avatar icon */}
-        <div className="fixed right-8 bottom-8 z-40">
-          <div 
-            className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg"
-          >
-            <span className="text-black text-base font-bold">AI</span>
-          </div>
+      {/* Floating avatar icon */}
+      <div className="fixed right-4 sm:right-8 bottom-4 sm:bottom-8 z-40">
+        <div 
+          className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-lg"
+        >
+          <span className="text-black text-base font-bold">AI</span>
         </div>
       </div>
     </section>
