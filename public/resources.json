@@ -1,0 +1,42 @@
+{
+  "social": [
+    {
+      "title": "B站",
+      "href": "https://space.bilibili.com/100881808"
+    },
+    {
+      "title": "GitHub",
+      "href": "https://github.com/yancongya"
+    },
+    {
+      "title": "小红书",
+      "href": "https://xhslink.com/m/4Lx1IVQhPYX"
+    },
+    {
+      "title": "邮箱",
+      "href": "mailto:2655283737@qq.com"
+    }
+  ],
+  "docs": [
+    {
+      "title": "AE Scripts 官网",
+      "href": "https://aescripts.com"
+    },
+    {
+      "title": "Adobe AE 官方文档",
+      "href": "https://helpx.adobe.com/after-effects/user-guide.html"
+    },
+    {
+      "title": "MotionScript 教程",
+      "href": "http://www.motionscript.com"
+    },
+    {
+      "title": "Video Copilot",
+      "href": "https://www.videocopilot.net"
+    },
+    {
+      "title": "AE 脚本开发指南",
+      "href": "https://extendscript.docsforadobe.dev"
+    }
+  ]
+}
