@@ -1,5 +1,6 @@
 import { ChevronLeft, Copy, Check, ExternalLink, List, X, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 import type { ReactNode } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -14,7 +15,7 @@ import { toast } from 'sonner';
 import { CommentSection } from './CommentSection';
 import { visit } from 'unist-util-visit';
 
-// 自定义 remark 插件：将视频链接和网页链接转换为 HTML 标签
+// 自定义 remark 插素：将视频链接和网页链接转换为特殊节点
 function remarkVideoLinks() {
   return (tree: any) => {
     visit(tree, 'link', (node: any) => {
@@ -33,10 +34,14 @@ function remarkVideoLinks() {
           node.value = `<div class="my-4"><iframe src="${videoInfo.embedUrl}" title="${videoInfo.title}" class="w-full rounded-lg border-0" allowfullscreen style="aspect-ratio: 16/9; min-height: 300px;"></iframe></div>`;
         }
       } else if (url.startsWith('http')) {
-        // 普通网页链接，转换为 HTML 格式以避免嵌套在段落标签中
-        const linkText = node.children?.map((child: any) => child.value || '').join('') || url;
-        node.type = 'html';
-        node.value = `<a href="${url}" target="_blank" rel="noopener noreferrer" data-preview-link="true" data-url="${url}" class="block my-4 p-4 rounded-lg border border-border bg-muted/20 hover:bg-muted/30 transition-all group"><div class="flex items-start gap-3"><img src="https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=32" alt="" class="w-8 h-8 rounded flex-shrink-0" /><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm font-semibold text-foreground truncate">${linkText}</span><span class="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">↗</span></div><span class="text-xs text-muted-foreground truncate">${new URL(url).hostname}</span></div></div></a>`;
+        // 普通网页链接，添加预览标记
+        node.data = {
+          ...node.data,
+          hProperties: {
+            ...node.data?.hProperties,
+            'data-preview-link': 'true'
+          }
+        };
       }
     });
 
@@ -45,7 +50,7 @@ function remarkVideoLinks() {
       if (node.children && node.children.length === 1 && node.children[0].type === 'text') {
         const text = node.children[0].value;
         const videoInfo = getVideoInfo(text);
-        
+
         if (videoInfo) {
           // 根据视频类型生成不同的 HTML 标签
           if (videoInfo.type === 'video') {
@@ -57,6 +62,23 @@ function remarkVideoLinks() {
             node.type = 'html';
             node.value = `<div class="my-4"><iframe src="${videoInfo.embedUrl}" title="${videoInfo.title}" class="w-full rounded-lg border-0" allowfullscreen style="aspect-ratio: 16/9; min-height: 300px;"></iframe></div>`;
           }
+        }
+      } else if (node.children && node.children.length > 0) {
+        // 检查段落中是否只包含预览链接
+        const hasOnlyPreviewLink = node.children.length === 1 &&
+          node.children[0].type === 'link' &&
+          node.children[0].data?.hProperties?.['data-preview-link'];
+
+        if (hasOnlyPreviewLink) {
+          // 将段落转换为 HTML，生成完整的预览卡片
+          const linkNode = node.children[0];
+          const linkText = linkNode.children?.map((child: any) => child.value || '').join('') || linkNode.url;
+          const url = linkNode.url;
+          const domain = new URL(url).hostname;
+          const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
+
+          node.type = 'html';
+          node.value = `<div class="my-4 p-4 rounded-lg border border-border bg-muted/20 hover:bg-muted/30 transition-all group"><a href="${url}" target="_blank" rel="noopener noreferrer" class="flex items-start gap-3"><img src="${faviconUrl}" alt="" class="w-8 h-8 rounded flex-shrink-0" /><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm font-semibold text-foreground truncate">${linkText}</span><span class="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">↗</span></div><span class="text-xs text-muted-foreground truncate">${domain}</span></div></a></div>`;
         }
       }
     });
