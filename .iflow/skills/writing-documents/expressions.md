@@ -19,7 +19,61 @@ expression_code_here
 
 解释表达式的工作机制和关键参数。
 
-### 4. 示例（可选）
+### 4. 媒体内容（可选）
+
+文档支持插入视频、网页和图片来展示表达式效果。
+
+#### 4.1 视频插入方式
+
+**方式 1：直接粘贴视频链接（推荐）**
+
+```markdown
+## 效果演示
+
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
+https://www.bilibili.com/video/BV1xx411c7mD
+```
+
+**支持的格式：**
+- ✅ YouTube 视频链接（自动识别并渲染为播放器）
+- ✅ Bilibili 视频链接（自动识别并渲染为播放器）
+- ✅ 直接视频文件（`.mp4`, `.webm`, `.ogg`, `.mov`, `.avi`）
+
+**方式 2：使用 Markdown 链接语法**
+
+```markdown
+[观看演示视频](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+```
+
+**方式 3：使用 HTML 标签**
+
+```markdown
+<video src="https://www.w3schools.com/html/mov_bbb.mp4" controls width="100%"></video>
+```
+
+#### 4.2 图片插入方式
+
+**方式 1：使用标准 Markdown 语法（推荐）**
+
+```markdown
+![表达式效果](./assets/preview.png)
+![对比图](./assets/comparison.png)
+```
+
+**方式 2：使用 HTML img 标签**
+
+```markdown
+<img src="./assets/screenshot.png" alt="效果预览" width="100%" />
+```
+
+#### 4.3 媒体内容使用建议
+
+- **视频**：优先使用 YouTube 或 Bilibili 链接展示表达式效果
+- **图片**：优先使用标准 Markdown 语法，图片会自动懒加载
+- **对比展示**：可以并排使用多个图片或视频来对比不同效果
+
+### 5. 示例（可选）
 
 提供使用示例和效果展示。
 
@@ -54,6 +108,12 @@ expression_code_here
 - 使用文字描述代替
 - 或等待实际图片生成后再添加
 
+### 3. 媒体内容注意事项
+
+- **视频大小**：建议单个视频不超过 10MB
+- **懒加载**：图片会自动懒加载，优化性能
+- **响应式**：所有媒体内容都会自动适应容器宽度
+
 ## 质量检查
 
 - [ ] 顶部有可复制代码块
@@ -63,3 +123,4 @@ expression_code_here
 - [ ] 相关文档链接不包含 `.md` 后缀
 - [ ] 相关文档链接指向实际存在的文档
 - [ ] 已更新 `expressions/_manifest.json`
+- [ ] 媒体链接使用合适的格式（视频链接/HTML 标签）

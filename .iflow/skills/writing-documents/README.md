@@ -74,10 +74,81 @@ updatedAt: YYYY-MM-DD
 
 | 类型 | 参考文档 | 核心要素 |
 |------|----------|----------|
-| 表达式 | expressions.md | 可复制代码、使用场景、原理分析 |
-| 脚本 | scripts.md | 下载链接、功能特性、使用教程 |
-| 预设 | presets.md | 下载链接、效果预览、参数说明 |
-| 扩展 | extensions.md | 下载链接、系统要求、安装教程 |
+| 表达式 | expressions.md | 可复制代码、使用场景、原理分析、媒体内容 |
+| 脚本 | scripts.md | 下载链接、功能特性、使用教程、媒体内容 |
+| 预设 | presets.md | 下载链接、效果预览、参数说明、媒体内容 |
+| 扩展 | extensions.md | 下载链接、系统要求、安装教程、媒体内容 |
+
+## 媒体内容支持
+
+文档支持插入视频、网页和图片等媒体内容，增强文档的表现力。
+
+### 支持的媒体类型
+
+1. **视频内容**
+   - YouTube 视频链接（自动识别并渲染为播放器）
+   - Bilibili 视频链接（自动识别并渲染为播放器）
+   - 直接视频文件（`.mp4`, `.webm`, `.ogg`, `.mov`, `.avi`）
+
+2. **网页内容**
+   - 普通网页链接（显示为预览卡片，包含网站图标和域名）
+   - iframe 嵌入（用于嵌入地图、在线工具等）
+
+3. **图片内容**
+   - 标准 Markdown 图片语法
+   - HTML img 标签
+   - 自动懒加载优化
+
+### 插入方式
+
+#### 视频插入
+
+**方式 1：直接粘贴链接（推荐）**
+```markdown
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+```
+
+**方式 2：Markdown 链接语法**
+```markdown
+[观看视频](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+```
+
+**方式 3：HTML 标签**
+```markdown
+<video src="https://example.com/video.mp4" controls width="100%"></video>
+```
+
+#### 网页插入
+
+**方式 1：Markdown 链接（推荐，显示预览卡片）**
+```markdown
+[访问文档](https://example.com/docs)
+```
+
+**方式 2：iframe 嵌入**
+```markdown
+<iframe src="https://www.openstreetmap.org/export/embed.html?..." width="100%" height="400"></iframe>
+```
+
+#### 图片插入
+
+**方式 1：Markdown 语法（推荐）**
+```markdown
+![图片描述](./assets/screenshot.png)
+![示例图片](https://picsum.photos/800/400)
+```
+
+**方式 2：HTML 标签**
+```markdown
+<img src="./assets/demo.png" alt="描述" width="100%" />
+```
+
+### 使用建议
+
+- **视频**：优先使用 YouTube 或 Bilibili 链接展示效果
+- **网页**：使用 Markdown 链接显示预览卡片
+- **图片**：使用标准 Markdown 语法，自动懒加载
+- **精确控制**：使用 HTML 标签进行精确控制
 
 ## 质量检查
 
@@ -88,6 +159,9 @@ updatedAt: YYYY-MM-DD
 - [ ] 相关文档链接不包含 `.md` 后缀
 - [ ] 相关文档链接指向实际存在的文档
 - [ ] 已更新 _manifest.json
+- [ ] 媒体链接使用合适的格式（视频链接/HTML 标签）
+- [ ] 视频文件大小控制在合理范围内（建议 10MB 以内）
+- [ ] 使用的网站允许 iframe 嵌入（对于 iframe 嵌入）
 
 ## 重要注意事项
 

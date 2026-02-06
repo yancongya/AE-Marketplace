@@ -34,13 +34,15 @@ https://www.bilibili.com/video/BV1xx411c7mD
 
 https://www.w3schools.com/html/mov_bbb.mp4
 
-## 普通链接
+## 普通链接预览
 
-普通网页链接会显示为可点击的链接：
+普通网页链接现在会显示为预览卡片，包含网站图标和域名：
 
 [访问 Google](https://www.google.com)
 
 [访问 GitHub](https://github.com)
+
+[访问 Bilibili](https://www.bilibili.com)
 
 ## 图片链接
 

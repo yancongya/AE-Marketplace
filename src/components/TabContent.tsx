@@ -14,13 +14,13 @@ import { toast } from 'sonner';
 import { CommentSection } from './CommentSection';
 import { visit } from 'unist-util-visit';
 
-// 自定义 remark 插件：将视频链接转换为 HTML 标签
+// 自定义 remark 插件：将视频链接和网页链接转换为 HTML 标签
 function remarkVideoLinks() {
   return (tree: any) => {
     visit(tree, 'link', (node: any) => {
       const url = node.url || '';
       const videoInfo = getVideoInfo(url);
-      
+
       if (videoInfo) {
         // 根据视频类型生成不同的 HTML 标签
         if (videoInfo.type === 'video') {
@@ -32,6 +32,11 @@ function remarkVideoLinks() {
           node.type = 'html';
           node.value = `<div class="my-4"><iframe src="${videoInfo.embedUrl}" title="${videoInfo.title}" class="w-full rounded-lg border-0" allowfullscreen style="aspect-ratio: 16/9; min-height: 300px;"></iframe></div>`;
         }
+      } else if (url.startsWith('http')) {
+        // 普通网页链接，转换为 HTML 格式以避免嵌套在段落标签中
+        const linkText = node.children?.map((child: any) => child.value || '').join('') || url;
+        node.type = 'html';
+        node.value = `<a href="${url}" target="_blank" rel="noopener noreferrer" data-preview-link="true" data-url="${url}" class="block my-4 p-4 rounded-lg border border-border bg-muted/20 hover:bg-muted/30 transition-all group"><div class="flex items-start gap-3"><img src="https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=32" alt="" class="w-8 h-8 rounded flex-shrink-0" /><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm font-semibold text-foreground truncate">${linkText}</span><span class="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">↗</span></div><span class="text-xs text-muted-foreground truncate">${new URL(url).hostname}</span></div></div></a>`;
       }
     });
 

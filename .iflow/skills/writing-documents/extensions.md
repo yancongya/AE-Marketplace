@@ -23,19 +23,97 @@
 ![主界面](./assets/main-ui.png)
 ```
 
-### 3. 使用场景（推荐）
+### 3. 媒体内容（可选）
+
+文档支持插入视频、网页和图片来展示扩展功能。
+
+#### 3.1 视频插入方式
+
+**方式 1：直接粘贴视频链接（推荐）**
+
+```markdown
+## 效果演示
+
+https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
+https://www.bilibili.com/video/BV1xx411c7mD
+```
+
+**支持的格式：**
+- ✅ YouTube 视频链接（自动识别并渲染为播放器）
+- ✅ Bilibili 视频链接（自动识别并渲染为播放器）
+- ✅ 直接视频文件（`.mp4`, `.webm`, `.ogg`, `.mov`, `.avi`）
+
+**方式 2：使用 Markdown 链接语法**
+
+```markdown
+[观看演示视频](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+```
+
+**方式 3：使用 HTML 标签**
+
+```markdown
+<video src="https://www.w3schools.com/html/mov_bbb.mp4" controls width="100%"></video>
+```
+
+#### 3.2 网页插入方式
+
+**方式 1：使用 Markdown 链接（推荐，显示预览卡片）**
+
+```markdown
+[访问官方文档](https://example.com/docs)
+[查看教程](https://www.example.com/tutorial)
+```
+
+预览卡片会显示：
+- 网站图标（自动获取）
+- 链接标题
+- 域名信息
+- 悬停效果
+
+**方式 2：使用 HTML iframe 标签**
+
+```markdown
+<iframe src="https://www.openstreetmap.org/export/embed.html?..." width="100%" height="400"></iframe>
+```
+
+**注意：** 某些网站可能不允许 iframe 嵌入（如 w3schools.com），请选择支持嵌入的网站。
+
+#### 3.3 图片插入方式
+
+**方式 1：使用标准 Markdown 语法（推荐）**
+
+```markdown
+![主界面](./assets/main-ui.png)
+![功能截图](./assets/screenshot.png)
+```
+
+**方式 2：使用 HTML img 标签**
+
+```markdown
+<img src="./assets/screenshot.png" alt="界面预览" width="100%" />
+```
+
+#### 3.4 媒体内容使用建议
+
+- **视频**：优先使用 YouTube 或 Bilibili 链接展示扩展功能
+- **网页**：使用 Markdown 链接显示预览卡片，链接到相关文档
+- **图片**：优先使用标准 Markdown 语法，图片会自动懒加载
+- **精确控制**：使用 HTML 标签进行精确控制
+
+### 4. 使用场景（推荐）
 
 列举 3-5 个典型应用场景。
 
-### 4. 系统要求（推荐）
+### 5. 系统要求（推荐）
 
 操作系统、After Effects 版本、内存等。
 
-### 5. 安装教程（推荐）
+### 6. 安装教程（推荐）
 
 自动安装和手动安装方法。
 
-### 6. 使用教程（推荐）
+### 7. 使用教程（推荐）
 
 打开、基本使用、高级功能步骤。
 
@@ -70,6 +148,13 @@
 - 使用文字描述代替
 - 或等待实际图片生成后再添加
 
+### 3. 媒体内容注意事项
+
+- **视频大小**：建议单个视频不超过 10MB
+- **嵌入限制**：某些网站不允许 iframe 嵌入，请选择支持的网站
+- **懒加载**：图片会自动懒加载，优化性能
+- **响应式**：所有媒体内容都会自动适应容器宽度
+
 ## 质量检查
 
 - [ ] 顶部有下载链接（网络地址）
@@ -80,3 +165,6 @@
 - [ ] 相关文档链接不包含 `.md` 后缀
 - [ ] 相关文档链接指向实际存在的文档
 - [ ] 已更新 `extensions/_manifest.json`
+- [ ] 媒体链接使用合适的格式（视频链接/HTML 标签）
+- [ ] 视频文件大小控制在合理范围内
+- [ ] 使用的网站允许 iframe 嵌入（对于 iframe 嵌入）
