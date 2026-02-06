@@ -46,7 +46,7 @@ export function Navbar() {
           {/* Left: Status badge and path */}
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <img src="/logo.svg" alt="AE Scripts" className="w-8 h-8" />
+              <img src="/favicon.svg" alt="AE Scripts" className="w-8 h-8" />
               <span className="flex items-center gap-1.5 px-2 py-1 rounded text-xs font-mono bg-secondary text-muted-foreground">
                 <span className="w-2 h-2 rounded-full bg-success" />
                 ready

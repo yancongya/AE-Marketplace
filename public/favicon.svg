@@ -1,21 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <defs>
-    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#c084fc;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <!-- Background -->
-  <rect x="4" y="4" width="56" height="56" rx="12" fill="url(#gradient)" />
-  
-  <!-- AE Text -->
-  <text x="32" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">
-    AE
-  </text>
-  
-  <!-- Code Lines -->
-  <rect x="12" y="48" width="16" height="3" rx="1.5" fill="white" opacity="0.9"/>
-  <rect x="32" y="48" width="20" height="3" rx="1.5" fill="white" opacity="0.7"/>
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg t="1770382327160" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13624" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32">
+  <path d="M847.296 568.576h146.090667l29.205333-146.261333-196.842667 0.106666A424.832 424.832 0 0 0 612.224 175.445333L611.946667 42.666667h-141.290667l-44.373333 88.149333c-0.938667 0-1.834667-0.128-2.773334-0.128C189.632 130.666667 0 320.277333 0 554.133333c0 95.488 31.978667 183.253333 85.269333 254.08L0 977.6h175.296l29.269333-61.482667a421.034667 421.034667 0 0 0 218.922667 61.482667c80.576 0 155.605333-22.912 219.733333-61.973333l-0.448 3.541333 29.205334 29.226667h292.138666l29.226667-146.112h-204.544l29.248-58.410667h146.069333v-116.864h-123.882666c3.178667-18.325333 5.098667-37.056 5.845333-56.128l1.216-2.304z m-379.818667-204.522667v175.296H384l83.477333-175.296zM130.666667 718.016a333.226667 333.226667 0 0 1-43.136-164.181333c0-170.816 127.893333-311.488 293.248-332.629334L130.666667 718.016z m293.141333 171.477333c-66.794667 0-128.896-19.690667-181.226667-53.205333l57.92-121.621333h166.954667v87.616h146.090667l-1.130667-526.336a336.896 336.896 0 0 1 120.704 146.538666h-2.730667l-29.205333 29.226667-42.794667 342.336a335.125333 335.125333 0 0 1-234.581333 95.445333z" p-id="13625" fill="#6366f1"/>
 </svg>
