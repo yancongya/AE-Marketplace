@@ -40,6 +40,7 @@ title: 文档标题
 iconEmoji: 🔧
 author: 烟囱鸭
 tags: [标签1, 标签2, 标签3]
+category: 类别
 description: 简短副标题
 updatedAt: YYYY-MM-DD
 ---
@@ -80,7 +81,7 @@ updatedAt: YYYY-MM-DD
 
 ## 质量检查
 
-- [ ] 元数据包含所有 6 个必需字段
+- [ ] 元数据包含所有 7 个必需字段（title, iconEmoji, author, tags, category, description, updatedAt）
 - [ ] 文件保存在正确目录
 - [ ] 下载链接使用网络地址
 - [ ] 图片使用相对路径 `./assets/`（如果存在）

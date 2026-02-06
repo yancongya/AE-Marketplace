@@ -3,6 +3,7 @@ title: 表达式名称
 iconEmoji: 📐
 author: 烟囱鸭
 tags: [表达式, 动画, 数学]
+category: expressions
 description: 用于平滑动画的强大表达式
 updatedAt: 2026-02-05
 ---

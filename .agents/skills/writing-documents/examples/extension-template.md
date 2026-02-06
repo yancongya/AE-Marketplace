@@ -3,6 +3,7 @@ title: 扩展名称
 iconEmoji: 🔌
 author: 烟囱鸭
 tags: [扩展, 插件, 工具]
+category: extensions
 description: 扩展 After Effects 功能
 updatedAt: 2026-02-05
 ---

@@ -1,6 +1,6 @@
 ---
 name: writing-documents
-description: Use when creating documentation for expressions, scripts, presets, or extensions in the AE scripts market content system
+description: Use when writing documentation with YAML frontmatter, markdown formatting, download links, image references, or managing content manifests for code, scripts, presets, or expressions
 ---
 
 # 文档编写技能
@@ -43,6 +43,7 @@ title: 文档标题
 iconEmoji: 🔧
 author: 烟囱鸭
 tags: [标签1, 标签2, 标签3]
+category: 类别
 description: 简短副标题
 updatedAt: YYYY-MM-DD
 ---
@@ -148,7 +149,7 @@ public/content/
 
 ## 质量检查（必须）
 
-- [ ] 元数据包含所有 6 个必需字段
+- [ ] 元数据包含所有 7 个必需字段（title, iconEmoji, author, tags, category, description, updatedAt）
 - [ ] 文件保存在正确的 `public/content/{模块类型}/` 目录
 - [ ] 下载链接使用网络地址
 - [ ] 图片使用相对路径 `./assets/`

@@ -3,6 +3,7 @@ title: 脚本名称
 iconEmoji: 📜
 author: 烟囱鸭
 tags: [脚本, 自动化, 工具]
+category: scripts
 description: 在 After Effects 中自动化重复任务
 updatedAt: 2026-02-05
 ---

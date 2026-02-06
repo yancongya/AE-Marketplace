@@ -3,6 +3,7 @@ title: 预设名称
 iconEmoji: 🎨
 author: 烟囱鸭
 tags: [预设, 效果, 动画]
+category: presets
 description: 专业动画预设
 updatedAt: 2026-02-05
 ---
