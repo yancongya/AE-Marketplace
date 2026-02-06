@@ -14,11 +14,10 @@ export default defineConfig({
     include: ['sonner', 'react-markdown', 'mermaid', 'rehype-highlight'],
   },
   server: {
-    port: 5173,
+    port: 4173,
     strictPort: false,
     hmr: {
-      port: 5173,
+      port: 4173,
     },
   },
-  logLevel: 'error'
 });

@@ -40,15 +40,15 @@ export function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl bg-[#0D0D0D] border-[#2a2a2a]">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl bg-background border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-12">
           {/* Left: Status badge and path */}
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <img src="/logo.svg" alt="AE Scripts" className="w-8 h-8" />
-              <span className="flex items-center gap-1.5 px-2 py-1 rounded text-xs font-mono bg-[#2D2D2D] text-[#CCCCCC]">
-                <span className="w-2 h-2 rounded-full bg-[#00FF85]" />
+              <span className="flex items-center gap-1.5 px-2 py-1 rounded text-xs font-mono bg-secondary text-muted-foreground">
+                <span className="w-2 h-2 rounded-full bg-success" />
                 ready
               </span>
             </Link>
@@ -56,8 +56,8 @@ export function Navbar() {
               to="/"
               className="flex items-center gap-1 font-mono text-sm hover:opacity-80 transition-opacity"
             >
-              <span className="text-[#CCCCCC]">~</span>
-              <span className="text-[#FFFFFF]">/AE-Marketplace</span>
+              <span className="text-muted-foreground">~</span>
+              <span className="text-foreground">/AE-Marketplace</span>
             </Link>
           </div>
 
@@ -71,15 +71,15 @@ export function Navbar() {
                   to={item.href}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded border font-mono text-xs transition-all duration-200 ${
                     isActive(item.href)
-                      ? 'border-[#00B4D8] bg-[#1E1E1E]'
-                      : 'border-[#444444] bg-[#1E1E1E] hover:border-[#66CCFF] hover:bg-[#2A2A2A]'
+                      ? 'border-primary bg-secondary'
+                      : 'border-border bg-secondary hover:border-primary/50 hover:bg-muted'
                   }`}
                 >
-                  <span className="text-[#00FF85]">$</span>
-                  <span className="text-[#00FF85]">cd</span>
-                  <span className="text-[#FFFFFF]">/{t(`nav.${item.id}`)}</span>
-                  <Icon className={`w-3 h-3 ${isActive(item.href) ? 'text-[#00B4D8]' : 'text-[#666666]'}`} />
-                  <span className={`ml-1 text-xs ${isActive(item.href) ? 'text-[#00B4D8]' : 'text-[#666666]'}`}>
+                  <span className="text-success">$</span>
+                  <span className="text-success">cd</span>
+                  <span className="text-foreground">/{t(`nav.${item.id}`)}</span>
+                  <Icon className={`w-3 h-3 ${isActive(item.href) ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <span className={`ml-1 text-xs ${isActive(item.href) ? 'text-primary' : 'text-muted-foreground'}`}>
                     {item.count}
                   </span>
                 </Link>
@@ -91,18 +91,18 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded hover:bg-[#2A2A2A] transition-colors"
+              className="p-2 rounded hover:bg-muted transition-colors"
               title={isDark ? t('common.themeToggle.light') : t('common.themeToggle.dark')}
             >
               {isDark ? (
-                <Moon className="w-4 h-4 text-[#CCCCCC]" />
+                <Moon className="w-4 h-4 text-muted-foreground" />
               ) : (
-                <Sun className="w-4 h-4 text-[#CCCCCC]" />
+                <Sun className="w-4 h-4 text-muted-foreground" />
               )}
             </button>
             <button
               onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
-              className="flex items-center gap-1 px-2 py-1.5 rounded hover:bg-[#2A2A2A] transition-colors font-mono text-xs text-[#CCCCCC]"
+              className="flex items-center gap-1 px-2 py-1.5 rounded hover:bg-muted transition-colors font-mono text-xs text-muted-foreground"
             >
               <Globe className="w-3.5 h-3.5" />
               <span>{locale.toUpperCase()}</span>
