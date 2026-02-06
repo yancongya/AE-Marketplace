@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
+import { loadContent } from '@/lib/content';
 
 interface StatsData {
   expressions: number;
@@ -18,17 +19,14 @@ export function HeroSection() {
   const hasAnimated = useRef(false);
 
   useEffect(() => {
-    fetch('/stats.json')
-      .then(res => res.json())
-      .then(data => setStatsData(data))
-      .catch(() => {
-        setStatsData({
-          expressions: 3200,
-          scripts: 4500,
-          presets: 2800,
-          extensions: 2347
-        });
+    loadContent().then(data => {
+      setStatsData({
+        expressions: data.expressions.length,
+        scripts: data.scripts.length,
+        presets: data.presets.length,
+        extensions: data.extensions.length,
       });
+    });
   }, []);
 
   // Typing animation for title

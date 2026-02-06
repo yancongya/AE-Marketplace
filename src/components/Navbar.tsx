@@ -2,17 +2,36 @@ import { Link, useLocation } from 'react-router-dom';
 import { Globe, Moon, Sun, Code, FileCode, Layers, Box } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useI18n } from '@/contexts/I18nContext';
+import { useEffect, useState } from 'react';
+import { loadContent } from '@/lib/content';
 
 export function Navbar() {
   const { isDark, toggleTheme } = useTheme();
   const { locale, setLocale, t } = useI18n();
   const location = useLocation();
+  const [itemCounts, setItemCounts] = useState({
+    expressions: 0,
+    scripts: 0,
+    presets: 0,
+    extensions: 0,
+  });
+
+  useEffect(() => {
+    loadContent().then(data => {
+      setItemCounts({
+        expressions: data.expressions.length,
+        scripts: data.scripts.length,
+        presets: data.presets.length,
+        extensions: data.extensions.length,
+      });
+    });
+  }, []);
 
   const navItems = [
-    { id: 'expressions', icon: Code, href: '/expressions' },
-    { id: 'scripts', icon: FileCode, href: '/scripts' },
-    { id: 'presets', icon: Layers, href: '/presets' },
-    { id: 'extensions', icon: Box, href: '/extensions' },
+    { id: 'expressions', icon: Code, href: '/expressions', count: itemCounts.expressions },
+    { id: 'scripts', icon: FileCode, href: '/scripts', count: itemCounts.scripts },
+    { id: 'presets', icon: Layers, href: '/presets', count: itemCounts.presets },
+    { id: 'extensions', icon: Box, href: '/extensions', count: itemCounts.extensions },
   ];
 
   const isActive = (href: string) => {
@@ -60,6 +79,9 @@ export function Navbar() {
                   <span className="text-[#00FF85]">cd</span>
                   <span className="text-[#FFFFFF]">/{t(`nav.${item.id}`)}</span>
                   <Icon className={`w-3 h-3 ${isActive(item.href) ? 'text-[#00B4D8]' : 'text-[#666666]'}`} />
+                  <span className={`ml-1 text-xs ${isActive(item.href) ? 'text-[#00B4D8]' : 'text-[#666666]'}`}>
+                    {item.count}
+                  </span>
                 </Link>
               );
             })}
