@@ -2,6 +2,7 @@ import { ChevronLeft, Copy, Check, ExternalLink, List, X, ZoomIn, ZoomOut, Maxim
 import type { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import mermaid from 'mermaid';
@@ -11,6 +12,51 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { toast } from 'sonner';
 import { CommentSection } from './CommentSection';
+import { visit } from 'unist-util-visit';
+
+// 自定义 remark 插件：将视频链接转换为 HTML 标签
+function remarkVideoLinks() {
+  return (tree: any) => {
+    visit(tree, 'link', (node: any) => {
+      const url = node.url || '';
+      const videoInfo = getVideoInfo(url);
+      
+      if (videoInfo) {
+        // 根据视频类型生成不同的 HTML 标签
+        if (videoInfo.type === 'video') {
+          // 直接视频文件使用 video 标签
+          node.type = 'html';
+          node.value = `<video src="${videoInfo.embedUrl}" controls class="w-full rounded-lg border-0 my-4"></video>`;
+        } else {
+          // 视频网站使用 iframe 标签
+          node.type = 'html';
+          node.value = `<div class="my-4"><iframe src="${videoInfo.embedUrl}" title="${videoInfo.title}" class="w-full rounded-lg border-0" allowfullscreen style="aspect-ratio: 16/9; min-height: 300px;"></iframe></div>`;
+        }
+      }
+    });
+
+    // 处理独立的视频链接（不在链接标签内的）
+    visit(tree, 'paragraph', (node: any) => {
+      if (node.children && node.children.length === 1 && node.children[0].type === 'text') {
+        const text = node.children[0].value;
+        const videoInfo = getVideoInfo(text);
+        
+        if (videoInfo) {
+          // 根据视频类型生成不同的 HTML 标签
+          if (videoInfo.type === 'video') {
+            // 直接视频文件使用 video 标签
+            node.type = 'html';
+            node.value = `<video src="${videoInfo.embedUrl}" controls class="w-full rounded-lg border-0 my-4"></video>`;
+          } else {
+            // 视频网站使用 iframe 标签
+            node.type = 'html';
+            node.value = `<div class="my-4"><iframe src="${videoInfo.embedUrl}" title="${videoInfo.title}" class="w-full rounded-lg border-0" allowfullscreen style="aspect-ratio: 16/9; min-height: 300px;"></iframe></div>`;
+          }
+        }
+      }
+    });
+  };
+}
 
 mermaid.initialize({
   startOnLoad: false,
@@ -58,13 +104,53 @@ mermaid.initialize({
     noteBkgColor: '#1e1e2e',
     noteTextColor: '#f8fafc',
     activationBorderColor: '#3b82f6',
-    activationBkgColor: '#1e1e2e',
-    sequenceNumberColor: '#f8fafc',
-  },
-});
-
-interface TabContentProps {
-  title: string;
+      activationBkgColor: '#1e1e2e',
+      sequenceNumberColor: '#f8fafc',
+      },
+    });
+    
+    // 链接类型检测和处理工具函数
+    function getVideoInfo(url: string) {
+      // YouTube
+      const youtubeMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+      if (youtubeMatch) {
+        return {
+          type: 'youtube' as const,
+          videoId: youtubeMatch[1],
+          embedUrl: `https://www.youtube.com/embed/${youtubeMatch[1]}`,
+          title: 'YouTube 视频'
+        };
+      }
+    
+      // Bilibili
+      const bilibiliMatch = url.match(/(?:bilibili\.com\/video\/)([a-zA-Z0-9]+)/);
+      if (bilibiliMatch) {
+        return {
+          type: 'bilibili' as const,
+          videoId: bilibiliMatch[1],
+          embedUrl: `https://player.bilibili.com/player.html?bvid=${bilibiliMatch[1]}&high_quality=1`,
+          title: 'Bilibili 视频'
+        };
+      }
+    
+      // 直接视频文件
+      const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi'];
+      if (videoExtensions.some(ext => url.toLowerCase().endsWith(ext))) {
+        return {
+          type: 'video' as const,
+          videoId: '',
+          embedUrl: url,
+          title: '视频文件'
+        };
+      }
+    
+      return null;
+    
+      }
+    
+      
+    
+      interface TabContentProps {  title: string;
   icon?: ReactNode;
   iconSrc?: string;
   iconEmoji?: string;
@@ -727,7 +813,8 @@ export function TabContent({
               </div>
               <div className="p-6">
                 <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
+                  remarkPlugins={[remarkGfm, remarkVideoLinks]}
+                  rehypePlugins={[rehypeRaw]}
                   components={{
                     h1: ({ children }) => {
                       const id = slugify(String(children));
@@ -767,6 +854,35 @@ export function TabContent({
                     th: ({ children }) => <th className="border-b border-border px-4 py-3 text-left font-semibold bg-muted/30">{children}</th>,
                     td: ({ children }) => <td className="border-t border-border/50 px-4 py-3 text-muted-foreground">{children}</td>,
                     hr: () => <hr className="border-border my-6" />,
+                    img: ({ src, alt, ...props }) => (
+                      <img
+                        src={src}
+                        alt={alt}
+                        className="rounded-lg max-w-full h-auto border border-border/20 my-4"
+                        loading="lazy"
+                        {...props}
+                      />
+                    ),
+                    video: ({ src, ...props }) => (
+                      <video
+                        src={src}
+                        controls
+                        className="w-full rounded-lg my-4"
+                        {...props}
+                      />
+                    ),
+                    iframe: ({ src, title, ...props }) => (
+                      <iframe
+                        src={src}
+                        title={title}
+                        className="w-full rounded-lg border-0"
+                        allowFullScreen
+                        {...props}
+                      />
+                    ),
+                    div: ({ className, children, ...props }) => (
+                      <div className={className} {...props}>{children}</div>
+                    ),
                   }}
                 >
                   {content}
