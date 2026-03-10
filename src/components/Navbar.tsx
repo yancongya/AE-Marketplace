@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Moon, Sun, Code, FileCode, Layers, Box, Lock, LockOpen } from 'lucide-react';
+import { Globe, Moon, Sun, Code, FileCode, Layers, Box, Lock } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { useAdmin } from '@/contexts/AdminContext';

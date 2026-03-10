@@ -1,7 +1,7 @@
 import { ChevronLeft, Copy, Check, ExternalLink, List, X, ZoomIn, ZoomOut, Maximize, Edit, Save, RotateCcw } from 'lucide-react';
 import type { ReactNode } from 'react';
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -778,7 +778,6 @@ export function TabContent({
 }: TabContentProps) {
   const { translations } = useI18n();
   const { isAdmin } = useAdmin();
-  const navigate = useNavigate();
   const location = useLocation();
   const [isEditing, setIsEditing] = useState(false);
   const slug = propSlug || (filename ? filename.replace('.md', '') : '');
@@ -815,7 +814,8 @@ export function TabContent({
       tags: tags || [],
       description: subtitle,
       updatedAt,
-      content
+      content,
+      slug
     });
     window.location.hash = '';
   };

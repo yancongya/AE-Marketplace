@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 
 /**
  * Vite 插件：提供管理员 API（仅在开发模式）
