@@ -69,7 +69,8 @@ export function TabCard({
     }
   };
 
-  const handleRedDotDoubleClick = (e: React.MouseEvent) => {
+  const handleRedDotRightClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     if (isAdmin && import.meta.env.DEV) {
       setIsDeleteDialogOpen(true);
@@ -85,9 +86,9 @@ export function TabCard({
         <div className="flex items-center gap-2 group-hover:gap-2.5 transition-all duration-300">
           <span
             className="terminal-dot terminal-dot-red"
-            onDoubleClick={handleRedDotDoubleClick}
-            title={isAdmin && import.meta.env.DEV ? '双击删除此文件' : ''}
-            style={isAdmin && import.meta.env.DEV ? { cursor: 'pointer' } : {}}
+            onContextMenu={handleRedDotRightClick}
+            title={isAdmin && import.meta.env.DEV ? '右键删除此文件' : ''}
+            style={isAdmin && import.meta.env.DEV ? { cursor: 'context-menu' } : {}}
           />
           <span className="terminal-dot terminal-dot-yellow" />
           <span className="terminal-dot terminal-dot-green" />

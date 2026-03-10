@@ -11,11 +11,6 @@ export function adminApiPlugin(): Plugin {
     name: 'admin-api-plugin',
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
-        // 只在开发环境下处理 API 请求
-        if (import.meta.env.PROD) {
-          return next();
-        }
-
         // 设置 CORS
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
