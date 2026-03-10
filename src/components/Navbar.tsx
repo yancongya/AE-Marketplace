@@ -135,16 +135,12 @@ export function Navbar() {
 
           {/* Right: Theme toggle, language, admin */}
           <div className="flex items-center gap-2">
-            {import.meta.env.DEV && (
+            {import.meta.env.DEV && isAdmin && (
               <div
                 className="p-2"
-                title={isAdmin ? '管理员模式已启用' : '管理员模式未启用'}
+                title="管理员模式已启用"
               >
-                {isAdmin ? (
-                  <Lock className="w-4 h-4 text-primary" />
-                ) : (
-                  <LockOpen className="w-4 h-4 text-muted-foreground" />
-                )}
+                <Lock className="w-4 h-4 text-primary" />
               </div>
             )}
             <button
