@@ -7,6 +7,7 @@ import { PresetsTab } from '@/components/PresetsTab';
 import { ExtensionsTab } from '@/components/ExtensionsTab';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { I18nProvider } from '@/contexts/I18nContext';
+import { AdminProvider } from '@/contexts/AdminContext';
 import { Toaster } from '@/components/ui/sonner';
 import { Home } from '@/pages/Home';
 
@@ -34,11 +35,12 @@ function AppContent() {
   }, [isDark]);
 
   return (
-    <I18nProvider>
-      <ThemeProvider isDark={isDark} toggleTheme={toggleTheme}>
-        <div className="min-h-screen bg-grid">
-          <Navbar />
-          <main className="relative">
+    <AdminProvider>
+      <I18nProvider>
+        <ThemeProvider isDark={isDark} toggleTheme={toggleTheme}>
+          <div className="min-h-screen bg-grid">
+            <Navbar />
+            <main className="relative">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/expressions" element={
@@ -84,9 +86,10 @@ function AppContent() {
           </Routes>
         </main>
         <Toaster />
-      </div>
-      </ThemeProvider>
-    </I18nProvider>
+          </div>
+        </ThemeProvider>
+      </I18nProvider>
+    </AdminProvider>
   );
 }
 
