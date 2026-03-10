@@ -2,6 +2,12 @@
 
 <div align="center">
 
+![GitHub Stars](https://img.shields.io/github/stars/yancongya/AE-Marketplace?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/yancongya/AE-Marketplace?style=social)
+![GitHub Issues](https://img.shields.io/github/issues/yancongya/AE-Marketplace)
+![GitHub License](https://img.shields.io/github/license/yancongya/AE-Marketplace)
+![Vercel](https://img.shields.io/badge/deployment-verified-success)
+
 [English](#english) | [中文](#中文)
 
 **A modern After Effects script marketplace platform**
