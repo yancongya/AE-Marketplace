@@ -108,7 +108,6 @@ export function PresetsTab() {
             subtitle={item.nameEn}
             description={item.description}
             iconEmoji={item.iconEmoji}
-            count={item.count}
             author={item.author}
             updatedAt={item.updatedAt}
             to={`/presets/${item.slug}`}

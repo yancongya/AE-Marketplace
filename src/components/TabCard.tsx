@@ -5,31 +5,22 @@ interface TabCardProps {
   subtitle?: string;
   description?: string;
   iconEmoji?: string;
-  count?: string | number;
   author?: string;
   updatedAt?: string;
   onClick?: () => void;
   to?: string;
 }
- 
-export function TabCard({ 
-  title, 
-  subtitle, 
-  description, 
+
+export function TabCard({
+  title,
+  subtitle,
+  description,
   iconEmoji,
-  count, 
   author,
   updatedAt,
   onClick,
-  to 
+  to
 }: TabCardProps) {
-  const formatNumber = (num: string | number) => {
-    if (typeof num === 'string') return num;
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'k';
-    }
-    return num.toString();
-  };
  
   const content = (
     <div 
@@ -42,11 +33,6 @@ export function TabCard({
           <span className="terminal-dot terminal-dot-yellow" />
           <span className="terminal-dot terminal-dot-green" />
         </div>
-        {count !== undefined && (
-          <span className="ml-auto text-xs text-muted-foreground font-mono bg-black/20 px-2 py-1 rounded backdrop-blur-sm">
-            {formatNumber(count)}
-          </span>
-        )}
       </div>
       
       <div className="p-4 space-y-3 flex-1 flex flex-col">
