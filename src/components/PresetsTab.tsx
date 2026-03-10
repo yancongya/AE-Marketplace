@@ -111,6 +111,8 @@ export function PresetsTab() {
             author={item.author}
             updatedAt={item.updatedAt}
             to={`/presets/${item.slug}`}
+            category="presets"
+            filename={`${item.slug}.md`}
           />
         ))}
       </div>

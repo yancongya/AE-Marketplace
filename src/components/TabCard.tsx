@@ -1,5 +1,10 @@
 import { Link } from 'react-router-dom';
- 
+import { useState } from 'react';
+import { useAdmin } from '@/contexts/AdminContext';
+import * as Dialog from '@radix-ui/react-dialog';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+
 interface TabCardProps {
   title: string;
   subtitle?: string;
@@ -9,6 +14,8 @@ interface TabCardProps {
   updatedAt?: string;
   onClick?: () => void;
   to?: string;
+  category?: string;
+  filename?: string;
 }
 
 export function TabCard({
@@ -19,9 +26,56 @@ export function TabCard({
   author,
   updatedAt,
   onClick,
-  to
+  to,
+  category,
+  filename
 }: TabCardProps) {
- 
+  const { isAdmin } = useAdmin();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const handleDelete = async () => {
+    if (!import.meta.env.DEV) {
+      toast.error('删除功能仅在开发模式下可用');
+      return;
+    }
+
+    if (!category || !filename) {
+      toast.error('缺少必要参数');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/admin/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ category, filename }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success('删除成功');
+        setIsDeleteDialogOpen(false);
+        // 刷新页面
+        window.location.reload();
+      } else {
+        toast.error(result.error || '删除失败');
+      }
+    } catch (error) {
+      console.error('删除失败:', error);
+      toast.error('删除失败');
+    }
+  };
+
+  const handleRedDotDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isAdmin && import.meta.env.DEV) {
+      setIsDeleteDialogOpen(true);
+    }
+  };
+
   const content = (
     <div 
       className="terminal-window card-hover cursor-pointer group h-full flex flex-col"
@@ -29,7 +83,12 @@ export function TabCard({
     >
       <div className="terminal-header flex-shrink-0">
         <div className="flex items-center gap-2 group-hover:gap-2.5 transition-all duration-300">
-          <span className="terminal-dot terminal-dot-red" />
+          <span
+            className="terminal-dot terminal-dot-red"
+            onDoubleClick={handleRedDotDoubleClick}
+            title={isAdmin && import.meta.env.DEV ? '双击删除此文件' : ''}
+            style={isAdmin && import.meta.env.DEV ? { cursor: 'pointer' } : {}}
+          />
           <span className="terminal-dot terminal-dot-yellow" />
           <span className="terminal-dot terminal-dot-green" />
         </div>
@@ -68,10 +127,40 @@ export function TabCard({
       </div>
     </div>
   );
- 
+
+  // 删除确认弹窗
+  const deleteDialog = isAdmin && import.meta.env.DEV ? (
+    <Dialog.Root open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md p-6 bg-background border border-border rounded-lg shadow-lg">
+          <Dialog.Title className="text-lg font-semibold mb-4">确认删除</Dialog.Title>
+          <Dialog.Description className="text-sm text-muted-foreground mb-4">
+            确定要删除 <strong>{title}</strong> 吗？此操作将删除本地文件并更新 manifest，无法撤销。
+          </Dialog.Description>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              取消
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              确认删除
+            </Button>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  ) : null;
+
+  const wrappedContent = (
+    <>
+      {content}
+      {deleteDialog}
+    </>
+  );
+
   if (to) {
-    return <Link to={to}>{content}</Link>;
+    return <Link to={to}>{wrappedContent}</Link>;
   }
- 
-  return <div onClick={onClick}>{content}</div>;
+
+  return <div onClick={onClick}>{wrappedContent}</div>;
 }

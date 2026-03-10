@@ -110,6 +110,8 @@ export function ExtensionsTab() {
             author={item.author}
             updatedAt={item.updatedAt}
             to={`/extensions/${item.slug}`}
+            category="extensions"
+            filename={`${item.slug}.md`}
           />
         ))}
       </div>

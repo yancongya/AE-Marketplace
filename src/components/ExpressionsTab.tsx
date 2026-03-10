@@ -111,6 +111,8 @@ export function ExpressionsTab() {
             author={item.author}
             updatedAt={item.updatedAt}
             to={`/expressions/${item.slug}`}
+            category="expressions"
+            filename={`${item.slug}.md`}
           />
         ))}
       </div>
@@ -273,6 +275,8 @@ export function ScriptsTab() {
             author={item.author}
             updatedAt={item.updatedAt}
             to={`/scripts/${item.slug}`}
+            category="scripts"
+            filename={`${item.slug}.md`}
           />
         ))}
       </div>
