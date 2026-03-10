@@ -105,9 +105,16 @@ export function adminApiPlugin(): Plugin {
 
             // 写入新文件
             fs.writeFileSync(newFilePath, markdown, 'utf-8');
+            console.log(`[Rename API] 已创建新文件: ${newFilePath}`);
 
             // 删除旧文件
-            fs.unlinkSync(oldFilePath);
+            try {
+              fs.unlinkSync(oldFilePath);
+              console.log(`[Rename API] 已删除旧文件: ${oldFilePath}`);
+            } catch (deleteError) {
+              console.error(`[Rename API] 删除旧文件失败: ${oldFilePath}`, deleteError);
+              // 即使删除失败也继续执行，因为新文件已经创建
+            }
 
             // 更新 manifest
             const manifestPath = path.join(contentPath, '_manifest.json');
@@ -119,6 +126,7 @@ export function adminApiPlugin(): Plugin {
               }
               manifest.push(newFilename);
               fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+              console.log(`[Rename API] 已更新 manifest: ${manifestPath}`);
             }
 
             res.statusCode = 200;
