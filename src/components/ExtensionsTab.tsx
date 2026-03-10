@@ -139,7 +139,7 @@ export function ExtensionsTab() {
                 });
                 const result = await response.json();
                 if (result.success) {
-                  window.location.href = `/extensions/${result.slug}`;
+                  window.location.href = `/extensions/${result.slug}#edit`;
                 } else {
                   alert('创建失败: ' + result.error);
                 }

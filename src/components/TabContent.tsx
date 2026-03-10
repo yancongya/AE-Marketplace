@@ -1,7 +1,7 @@
 import { ChevronLeft, Copy, Check, ExternalLink, List, X, ZoomIn, ZoomOut, Maximize, Edit, Save, RotateCcw } from 'lucide-react';
 import type { ReactNode } from 'react';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -777,6 +777,7 @@ export function TabContent({
 }: TabContentProps) {
   const { translations } = useI18n();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isEditing, setIsEditing] = useState(false);
   const slug = propSlug || (filename ? filename.replace('.md', '') : '');
   const [editData, setEditData] = useState({
@@ -791,8 +792,16 @@ export function TabContent({
   });
   const headings = useMemo(() => extractHeadings(content), [content]);
 
+  // 检测 URL 哈希值，如果有 #edit 就自动进入编辑模式
+  useEffect(() => {
+    if (location.hash === '#edit') {
+      setIsEditing(true);
+    }
+  }, [location.hash]);
+
   const handleEdit = () => {
     setIsEditing(true);
+    window.location.hash = 'edit';
   };
 
   const handleCancel = () => {
@@ -806,6 +815,7 @@ export function TabContent({
       updatedAt,
       content
     });
+    window.location.hash = '';
   };
 
   const handleSave = async () => {
@@ -864,6 +874,7 @@ export function TabContent({
         }
 
         setIsEditing(false);
+        window.location.hash = '';
         window.location.reload();
       }
     } catch (error) {

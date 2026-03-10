@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAdmin } from '@/contexts/AdminContext';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from '@/components/ui/button';
@@ -32,6 +32,7 @@ export function TabCard({
 }: TabCardProps) {
   const { isAdmin } = useAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const shouldBlockClickRef = useRef(false);
 
   const handleDelete = async () => {
     if (!import.meta.env.DEV) {
@@ -72,9 +73,25 @@ export function TabCard({
   const handleRedDotRightClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    shouldBlockClickRef.current = true;  // 阻止点击
     if (isAdmin && import.meta.env.DEV) {
       setIsDeleteDialogOpen(true);
     }
+  };
+
+  const handleLinkClick = (e: React.MouseEvent) => {
+    if (shouldBlockClickRef.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      shouldBlockClickRef.current = false;  // 重置标志
+    }
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    if (!open) {
+      shouldBlockClickRef.current = false;  // 对话框关闭时重置
+    }
+    setIsDeleteDialogOpen(open);
   };
 
   const content = (
@@ -131,7 +148,7 @@ export function TabCard({
 
   // 删除确认弹窗
   const deleteDialog = isAdmin && import.meta.env.DEV ? (
-    <Dialog.Root open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+    <Dialog.Root open={isDeleteDialogOpen} onOpenChange={handleDialogClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
         <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md p-6 bg-background border border-border rounded-lg shadow-lg">
@@ -160,7 +177,7 @@ export function TabCard({
   );
 
   if (to) {
-    return <Link to={to}>{wrappedContent}</Link>;
+    return <Link to={to} onClick={handleLinkClick}>{wrappedContent}</Link>;
   }
 
   return <div onClick={onClick}>{wrappedContent}</div>;

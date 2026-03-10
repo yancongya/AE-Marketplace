@@ -140,7 +140,7 @@ export function PresetsTab() {
                 });
                 const result = await response.json();
                 if (result.success) {
-                  window.location.href = `/presets/${result.slug}`;
+                  window.location.href = `/presets/${result.slug}#edit`;
                 } else {
                   alert('创建失败: ' + result.error);
                 }

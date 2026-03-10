@@ -140,7 +140,7 @@ export function ExpressionsTab() {
                 });
                 const result = await response.json();
                 if (result.success) {
-                  window.location.href = `/expressions/${result.slug}`;
+                  window.location.href = `/expressions/${result.slug}#edit`;
                 } else {
                   alert('创建失败: ' + result.error);
                 }
@@ -348,7 +348,7 @@ export function ScriptsTab() {
                 });
                 const result = await response.json();
                 if (result.success) {
-                  window.location.href = `/scripts/${result.slug}`;
+                  window.location.href = `/scripts/${result.slug}#edit`;
                 } else {
                   alert('创建失败: ' + result.error);
                 }
