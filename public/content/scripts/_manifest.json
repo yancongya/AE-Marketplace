@@ -1,1 +1,9 @@
-["shape-morpher.md", "rotate-and-fit.md", "add-to-render-queue.md", "layer-analysis.md", "solid-layer-creator.md", "media-demo.md", "script-guide.md"]
+[
+  "shape-morpher.md",
+  "rotate-and-fit.md",
+  "add-to-render-queue.md",
+  "layer-analysis.md",
+  "solid-layer-creator.md",
+  "media-demo.md",
+  "script-guide.md"
+]

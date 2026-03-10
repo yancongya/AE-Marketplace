@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box } from 'lucide-react';
+import { Box, Plus } from 'lucide-react';
 import { TabPanel } from './TabPanel';
 import { TabCard } from './TabCard';
 import { TabContent } from './TabContent';
@@ -116,6 +116,48 @@ export function ExtensionsTab() {
             filename={`${item.slug}.md`}
           />
         ))}
+        {/* 新建文档卡片（仅开发模式） */}
+        {import.meta.env.DEV && (
+          <div
+            onClick={async () => {
+              try {
+                const response = await fetch('/api/admin/create', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    category: 'extensions',
+                    data: {
+                      title: '新建文档',
+                      iconEmoji: '📝',
+                      author: '',
+                      tags: [],
+                      description: '',
+                      updatedAt: new Date().toISOString().split('T')[0],
+                      content: '# 新建文档\n\n开始编写你的文档...'
+                    }
+                  }),
+                });
+                const result = await response.json();
+                if (result.success) {
+                  window.location.href = `/extensions/${result.slug}`;
+                } else {
+                  alert('创建失败: ' + result.error);
+                }
+              } catch (error) {
+                console.error('创建失败:', error);
+                alert('创建失败');
+              }
+            }}
+            className="terminal-window cursor-pointer hover:border-primary/50 transition-all min-h-[200px] flex items-center justify-center group"
+          >
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
+                <Plus className="w-8 h-8 text-primary" />
+              </div>
+              <p className="text-sm text-muted-foreground font-mono">新建文档</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 分页控件 */}

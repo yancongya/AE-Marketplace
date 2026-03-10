@@ -139,6 +139,69 @@ export function adminApiPlugin(): Plugin {
           return;
         }
 
+        // 创建新文档 API
+        if (req.url?.startsWith('/api/admin/create') && req.method === 'POST') {
+          try {
+            const body = await getRequestBody(req);
+            const { category, slug, data } = JSON.parse(body);
+
+            if (!category || !data) {
+              res.statusCode = 400;
+              res.end(JSON.stringify({ error: '缺少必要参数' }));
+              return;
+            }
+
+            // 如果没有提供 slug，自动生成临时 slug
+            let finalSlug = slug;
+            if (!finalSlug) {
+              finalSlug = `temp-${Date.now()}`;
+            }
+
+            // 验证 slug（仅限英文）
+            const slugRegex = /^[a-z0-9-]+$/;
+            if (!slugRegex.test(finalSlug)) {
+              res.statusCode = 400;
+              res.end(JSON.stringify({ error: '文档名只能包含英文小写字母、数字和连字符' }));
+              return;
+            }
+
+            const contentPath = path.resolve(__dirname, 'public', 'content', category);
+            const filename = `${finalSlug}.md`;
+            const filePath = path.join(contentPath, filename);
+
+            // 检查文件是否已存在
+            if (fs.existsSync(filePath)) {
+              res.statusCode = 409;
+              res.end(JSON.stringify({ error: '文件已存在' }));
+              return;
+            }
+
+            // 生成 markdown 内容
+            const markdown = generateMarkdown(data);
+
+            // 写入新文件
+            fs.writeFileSync(filePath, markdown, 'utf-8');
+            console.log(`[Create API] 已创建新文件: ${filePath}`);
+
+            // 更新 manifest
+            const manifestPath = path.join(contentPath, '_manifest.json');
+            if (fs.existsSync(manifestPath)) {
+              const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+              manifest.push(filename);
+              fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+              console.log(`[Create API] 已更新 manifest: ${manifestPath}`);
+            }
+
+            res.statusCode = 200;
+            res.end(JSON.stringify({ success: true, slug: finalSlug, message: '创建成功' }));
+          } catch (error) {
+            console.error('创建文档失败:', error);
+            res.statusCode = 500;
+            res.end(JSON.stringify({ error: '创建失败', details: error instanceof Error ? error.message : '未知错误' }));
+          }
+          return;
+        }
+
         // 更新文件 API
         if (req.url?.startsWith('/api/admin/update') && req.method === 'PUT') {
           try {
