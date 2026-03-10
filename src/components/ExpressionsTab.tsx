@@ -84,6 +84,8 @@ export function ExpressionsTab() {
         tags={selectedItem.tags}
         content={selectedItem.content}
         filename={`${selectedItem.slug}.md`}
+        category="expressions"
+        slug={selectedItem.slug}
         onBack={() => navigate('/expressions')}
       />
     );
@@ -248,6 +250,8 @@ export function ScriptsTab() {
         tags={selectedItem.tags}
         content={selectedItem.content}
         filename={`${selectedItem.slug}.md`}
+        category="scripts"
+        slug={selectedItem.slug}
         onBack={() => navigate('/scripts')}
       />
     );

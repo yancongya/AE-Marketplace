@@ -2,32 +2,10 @@
 title: AE脚本开发完全指南
 iconEmoji: 📚
 author: 烟囱鸭
-tags: [脚本, 教程, 高级]
-category: getting-started
-command: import script-dev
-description: 完整的AE脚本开发教程，从基础到高级，涵盖所有核心概念和最佳实践
-updatedAt: 2026-02-05
-toc:
-  - id: 基础概念
-    text: 基础概念
-    level: 2
-  - id: 流程图示例
-    text: 流程图示例
-    level: 2
-  - id: 时序图示例
-    text: 时序图示例
-    level: 2
-  - id: 甘特图示例
-    text: 甘特图示例
-    level: 2
-  - id: 饼图示例
-    text: 饼图示例
-    level: 2
-  - id: 代码示例
-    text: 代码示例
-    level: 2
+tags: ["脚本", "教程", "高级"]
+description: 完整的AE脚本开发教程
+updatedAt: 2026-02-12
 ---
-
 # AE脚本开发完全指南
 
 ## 基础概念

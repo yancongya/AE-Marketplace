@@ -84,6 +84,8 @@ export function ExtensionsTab() {
         updatedAt={selectedItem.updatedAt}
         tags={selectedItem.tags}
         filename={`${selectedItem.slug}.md`}
+        category="extensions"
+        slug={selectedItem.slug}
         onBack={() => navigate('/extensions')}
       />
     );

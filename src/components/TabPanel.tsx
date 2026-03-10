@@ -70,9 +70,9 @@ export function TabPanel({
                 </span>
                 {tags && tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
-                    {tags.map((tag) => (
+                    {tags.map((tag, index) => (
                       <button
-                        key={tag}
+                        key={`${tag}-${index}`}
                         onClick={() => handleTagClick(tag)}
                         className={`px-2 py-0.5 rounded text-xs font-mono border transition-all ${
                           selectedTags.includes(tag)

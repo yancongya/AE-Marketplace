@@ -85,6 +85,8 @@ export function PresetsTab() {
         updatedAt={selectedItem.updatedAt}
         tags={selectedItem.tags}
         filename={`${selectedItem.slug}.md`}
+        category="presets"
+        slug={selectedItem.slug}
       />
     );
   }
