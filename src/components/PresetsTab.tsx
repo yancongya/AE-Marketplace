@@ -6,9 +6,11 @@ import { TabCard } from './TabCard';
 import { TabContent } from './TabContent';
 import { loadContent, type PresetItem } from '@/lib/content';
 import { useI18n } from '@/contexts/I18nContext';
+import { useAdmin } from '@/contexts/AdminContext';
 
 export function PresetsTab() {
   const { translations } = useI18n();
+  const { isAdmin } = useAdmin();
   const [list, setList] = useState<PresetItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -117,8 +119,8 @@ export function PresetsTab() {
             filename={`${item.slug}.md`}
           />
         ))}
-        {/* 新建文档卡片（仅开发模式） */}
-        {import.meta.env.DEV && (
+        {/* 新建文档卡片（仅开发模式和管理员模式） */}
+        {import.meta.env.DEV && isAdmin && (
           <div
             onClick={async () => {
               try {

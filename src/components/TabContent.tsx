@@ -12,6 +12,7 @@ import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useI18n } from '@/contexts/I18nContext';
+import { useAdmin } from '@/contexts/AdminContext';
 import { toast } from 'sonner';
 import { CommentSection } from './CommentSection';
 import { visit } from 'unist-util-visit';
@@ -776,6 +777,7 @@ export function TabContent({
   slug: propSlug
 }: TabContentProps) {
   const { translations } = useI18n();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const location = useLocation();
   const [isEditing, setIsEditing] = useState(false);
@@ -792,12 +794,12 @@ export function TabContent({
   });
   const headings = useMemo(() => extractHeadings(content), [content]);
 
-  // 检测 URL 哈希值，如果有 #edit 就自动进入编辑模式
+  // 检测 URL 哈希值，如果有 #edit 就自动进入编辑模式（仅管理员模式）
   useEffect(() => {
-    if (location.hash === '#edit') {
+    if (location.hash === '#edit' && isAdmin && import.meta.env.DEV) {
       setIsEditing(true);
     }
-  }, [location.hash]);
+  }, [location.hash, isAdmin]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -904,7 +906,7 @@ export function TabContent({
                 <span className="terminal-dot terminal-dot-yellow" />
                 <span className="terminal-dot terminal-dot-green" />
                 <span className="ml-auto flex items-center gap-3">
-                  {import.meta.env.DEV && (
+                  {import.meta.env.DEV && isAdmin && (
                     <>
                       {isEditing ? (
                         <>

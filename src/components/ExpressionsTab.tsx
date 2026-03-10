@@ -6,9 +6,11 @@ import { TabCard } from './TabCard';
 import { TabContent } from './TabContent';
 import { loadContent, type ContentItem } from '@/lib/content';
 import { useI18n } from '@/contexts/I18nContext';
+import { useAdmin } from '@/contexts/AdminContext';
 
 export function ExpressionsTab() {
   const { translations } = useI18n();
+  const { isAdmin } = useAdmin();
   const [list, setList] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -117,8 +119,8 @@ export function ExpressionsTab() {
             filename={`${item.slug}.md`}
           />
         ))}
-        {/* 新建文档卡片（仅开发模式） */}
-        {import.meta.env.DEV && (
+        {/* 新建文档卡片（仅开发模式和管理员模式） */}
+        {import.meta.env.DEV && isAdmin && (
           <div
             onClick={async () => {
               try {
@@ -216,6 +218,7 @@ export function ExpressionsTab() {
 
 export function ScriptsTab() {
   const { translations } = useI18n();
+  const { isAdmin } = useAdmin();
   const [list, setList] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -325,8 +328,8 @@ export function ScriptsTab() {
             filename={`${item.slug}.md`}
           />
         ))}
-        {/* 新建文档卡片（仅开发模式） */}
-        {import.meta.env.DEV && (
+        {/* 新建文档卡片（仅开发模式和管理员模式） */}
+        {import.meta.env.DEV && isAdmin && (
           <div
             onClick={async () => {
               try {
