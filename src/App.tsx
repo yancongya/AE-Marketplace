@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
 import { ExpressionsTab, ScriptsTab } from '@/components/ExpressionsTab';
 import { PresetsTab } from '@/components/PresetsTab';
@@ -17,6 +18,32 @@ function ScrollToTop() {
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
+}
+
+const pageVariants = {
+  initial: { opacity: 0, scale: 0.95, y: 10 },
+  enter: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.95, y: -10 }
+};
+
+const pageTransition = {
+  type: 'tween',
+  ease: [0.4, 0, 0.2, 1],
+  duration: 0.4
+};
+
+function PageWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      initial="initial"
+      animate="enter"
+      exit="exit"
+      variants={pageVariants}
+      transition={pageTransition}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 function AppContent() {
@@ -41,51 +68,57 @@ function AppContent() {
           <div className="min-h-screen bg-grid">
             <Navbar />
             <main className="relative">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/expressions" element={
-              <>
-                <ExpressionsTab />
-              </>
-            } />
-            <Route path="/expressions/:slug" element={
-              <>
-                <ExpressionsTab />
-              </>
-            } />
-            <Route path="/scripts" element={
-              <>
-                <ScriptsTab />
-              </>
-            } />
-            <Route path="/scripts/:slug" element={
-              <>
-                <ScriptsTab />
-              </>
-            } />
-            <Route path="/presets" element={
-              <>
-                <PresetsTab />
-              </>
-            } />
-            <Route path="/presets/:slug" element={
-              <>
-                <PresetsTab />
-              </>
-            } />
-            <Route path="/extensions" element={
-              <>
-                <ExtensionsTab />
-              </>
-            } />
-            <Route path="/extensions/:slug" element={
-              <>
-                <ExtensionsTab />
-              </>
-            } />
-          </Routes>
-        </main>
-        <Toaster />
+              <AnimatePresence mode="wait">
+                <Routes>
+                  <Route path="/" element={
+                    <PageWrapper>
+                      <Home />
+                    </PageWrapper>
+                  } />
+                  <Route path="/expressions" element={
+                    <PageWrapper>
+                      <ExpressionsTab />
+                    </PageWrapper>
+                  } />
+                  <Route path="/expressions/:slug" element={
+                    <PageWrapper>
+                      <ExpressionsTab />
+                    </PageWrapper>
+                  } />
+                  <Route path="/scripts" element={
+                    <PageWrapper>
+                      <ScriptsTab />
+                    </PageWrapper>
+                  } />
+                  <Route path="/scripts/:slug" element={
+                    <PageWrapper>
+                      <ScriptsTab />
+                    </PageWrapper>
+                  } />
+                  <Route path="/presets" element={
+                    <PageWrapper>
+                      <PresetsTab />
+                    </PageWrapper>
+                  } />
+                  <Route path="/presets/:slug" element={
+                    <PageWrapper>
+                      <PresetsTab />
+                    </PageWrapper>
+                  } />
+                  <Route path="/extensions" element={
+                    <PageWrapper>
+                      <ExtensionsTab />
+                    </PageWrapper>
+                  } />
+                  <Route path="/extensions/:slug" element={
+                    <PageWrapper>
+                      <ExtensionsTab />
+                    </PageWrapper>
+                  } />
+                </Routes>
+              </AnimatePresence>
+            </main>
+            <Toaster />
           </div>
         </ThemeProvider>
       </I18nProvider>

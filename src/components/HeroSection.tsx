@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useI18n } from '@/contexts/I18nContext';
 import { loadContent } from '@/lib/content';
 
@@ -16,7 +17,9 @@ export function HeroSection() {
   const [typedText, setTypedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
   const { translations } = useI18n();
+  const navigate = useNavigate();
   const hasAnimated = useRef(false);
+  const isInitialized = useRef(false);
 
   useEffect(() => {
     loadContent().then(data => {
@@ -86,6 +89,9 @@ export function HeroSection() {
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    // 确保数据都加载完成后再执行
+    if (!statsData || !translations) return;
 
     let animationProgress = 0;
     let animationId: number;
@@ -345,8 +351,18 @@ export function HeroSection() {
     const handleMouseUp = () => {
       if (isDragging) {
         isDragging = false;
-        draggedPointIndex = -1;
         canvas.style.cursor = 'default';
+
+        // 定义路由映射
+        const routePaths = ['/expressions', '/scripts', '/presets', '/extensions'];
+
+        // 如果拖拽了某个点，跳转到对应页面
+        if (draggedPointIndex >= 0 && draggedPointIndex < routePaths.length) {
+          const targetPath = routePaths[draggedPointIndex];
+          navigate(targetPath);
+        }
+
+        draggedPointIndex = -1;
         springBack();
       }
     };
@@ -364,7 +380,7 @@ export function HeroSection() {
 
     const animate = () => {
       animationProgress += 0.02;
-      
+
       // Update point positions during initial animation
       if (animationProgress <= 1) {
         pointPositions = radarData.map((_, index) => {
@@ -372,21 +388,21 @@ export function HeroSection() {
           return { x: pos.x, y: pos.y, originalX: pos.x, originalY: pos.y };
         });
       }
-      
+
       drawRadarChart();
-      
+
       if (animationProgress < 1) {
         animationId = requestAnimationFrame(animate);
       } else {
         drawRadarChart();
+        isInitialized.current = true;
       }
     };
 
-    // Only play entrance animation on first render
-    if (!hasAnimated.current) {
+    // Only play entrance animation on first render when both data is ready and not yet initialized
+    if (!isInitialized.current && statsData && translations) {
       animate();
-      hasAnimated.current = true;
-    } else {
+    } else if (isInitialized.current && statsData && translations) {
       // Skip animation on language switch, just render static chart
       animationProgress = 1;
       pointPositions = radarData.map((_, index) => {
@@ -408,8 +424,9 @@ export function HeroSection() {
       canvas.removeEventListener('touchstart', handleMouseDown, { passive: true } as any);
       canvas.removeEventListener('touchmove', handleMouseMove, { passive: true } as any);
       canvas.removeEventListener('touchend', handleMouseUp, { passive: true } as any);
+      isInitialized.current = false;
     };
-  }, [statsData, translations]);
+  }, [statsData, translations, navigate]);
 
   const formatNumber = (num: number) => {
     return num.toLocaleString('en-US');
