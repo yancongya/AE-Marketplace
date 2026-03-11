@@ -905,7 +905,7 @@ export function TabContent({
                 <span className="terminal-dot terminal-dot-red" />
                 <span className="terminal-dot terminal-dot-yellow" />
                 <span className="terminal-dot terminal-dot-green" />
-                <span className="ml-auto flex items-center gap-3">
+                <span className="ml-auto flex items-center gap-2 sm:gap-3">
                   {import.meta.env.DEV && isAdmin && (
                     <>
                       {isEditing ? (
@@ -939,26 +939,26 @@ export function TabContent({
                   <span className="text-xs text-muted-foreground font-mono">{isEditing ? 'editing' : 'readonly'}</span>
                 </span>
               </div>
-              <div className="p-6 space-y-4">
+              <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
                 {isEditing ? (
                   // 编辑模式 - 显示表单
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {/* 标题 */}
                     <div className="space-y-2">
-                      <label className="text-sm text-muted-foreground font-mono">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
                         <span className="text-success">$</span> 标题
                       </label>
                       <input
                         type="text"
                         value={editData.title}
                         onChange={(e) => handleChange('title', e.target.value)}
-                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-lg font-bold text-foreground focus:outline-none focus:border-primary"
+                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-base sm:text-lg font-bold text-foreground focus:outline-none focus:border-primary"
                       />
                     </div>
 
                     {/* 图标 Emoji */}
                     <div className="space-y-2">
-                      <label className="text-sm text-muted-foreground font-mono">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
                         <span className="text-success">$</span> 图标 Emoji
                       </label>
                       <input
@@ -966,13 +966,13 @@ export function TabContent({
                         value={editData.iconEmoji || ''}
                         onChange={(e) => handleChange('iconEmoji', e.target.value)}
                         placeholder="📝"
-                        className="w-20 bg-muted/30 border border-border rounded px-3 py-2 text-2xl text-center text-foreground focus:outline-none focus:border-primary"
+                        className="w-16 sm:w-20 bg-muted/30 border border-border rounded px-3 py-2 text-xl sm:text-2xl text-center text-foreground focus:outline-none focus:border-primary"
                       />
                     </div>
 
                     {/* 文档名（slug） */}
                     <div className="space-y-2">
-                      <label className="text-sm text-muted-foreground font-mono">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
                         <span className="text-success">$</span> 文档名（仅英文）
                       </label>
                       <input
@@ -980,96 +980,96 @@ export function TabContent({
                         value={editData.slug || ''}
                         onChange={(e) => setEditData(prev => ({ ...prev, slug: e.target.value }))}
                         placeholder="my-doc-name"
-                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:border-primary"
+                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-xs sm:text-sm font-mono text-foreground focus:outline-none focus:border-primary"
                       />
                       <p className="text-xs text-muted-foreground">只能包含英文小写字母、数字和连字符，修改后点击保存按钮才会生效</p>
                     </div>
 
                     {/* 作者 */}
                     <div className="space-y-2">
-                      <label className="text-sm text-muted-foreground font-mono">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
                         <span className="text-success">$</span> 作者
                       </label>
                       <input
                         type="text"
                         value={editData.author || ''}
                         onChange={(e) => handleChange('author', e.target.value)}
-                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-xs sm:text-sm text-foreground focus:outline-none focus:border-primary"
                       />
                     </div>
 
                     {/* 描述 */}
                     <div className="space-y-2">
-                      <label className="text-sm text-muted-foreground font-mono">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
                         <span className="text-success">$</span> 描述
                       </label>
                       <input
                         type="text"
                         value={editData.description || ''}
                         onChange={(e) => handleChange('description', e.target.value)}
-                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-xs sm:text-sm text-foreground focus:outline-none focus:border-primary"
                       />
                     </div>
 
                     {/* 更新日期 */}
                     <div className="space-y-2">
-                      <label className="text-sm text-muted-foreground font-mono">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
                         <span className="text-success">$</span> 更新日期
                       </label>
                       <input
                         type="date"
                         value={editData.updatedAt || ''}
                         onChange={(e) => handleChange('updatedAt', e.target.value)}
-                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-xs sm:text-sm text-foreground focus:outline-none focus:border-primary"
                       />
                     </div>
 
                     {/* 标签 */}
                     <div className="space-y-2">
-                      <label className="text-sm text-muted-foreground font-mono">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
                         <span className="text-success">$</span> 标签（用逗号分隔）
                       </label>
                       <input
                         type="text"
                         value={editData.tags.join(', ')}
                         onChange={(e) => handleChange('tags', e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
-                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-xs sm:text-sm text-foreground focus:outline-none focus:border-primary"
                       />
                     </div>
 
                     {/* 正文内容 */}
                     <div className="space-y-2">
-                      <label className="text-sm text-muted-foreground font-mono">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
                         <span className="text-success">$</span> 正文内容（Markdown）
                       </label>
                       <textarea
                         value={editData.content}
                         onChange={(e) => handleChange('content', e.target.value)}
-                        rows={20}
-                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-sm font-mono text-foreground focus:outline-none focus:border-primary resize-y"
+                        rows={15}
+                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-xs sm:text-sm font-mono text-foreground focus:outline-none focus:border-primary resize-y"
                       />
                     </div>
                   </div>
                 ) : (
                   // 查看模式 - 显示内容
                   <>
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        {iconSrc ? <img src={iconSrc} alt={title} className="w-12 h-12 rounded-full" /> : 
-                         icon ? <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">{icon}</div> :
-                         iconEmoji ? <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-2xl">{iconEmoji}</div> : null}
-                        <div>
-                          <h1 className="text-2xl font-bold text-foreground">{title}</h1>
-                          {subtitle && <p className="text-sm text-muted-foreground font-mono">{subtitle}</p>}
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        {iconSrc ? <img src={iconSrc} alt={title} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full" /> :
+                         icon ? <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center">{icon}</div> :
+                         iconEmoji ? <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center text-xl sm:text-2xl">{iconEmoji}</div> : null}
+                        <div className="min-w-0">
+                          <h1 className="text-xl sm:text-2xl font-bold text-foreground break-words">{title}</h1>
+                          {subtitle && <p className="text-xs sm:text-sm text-muted-foreground font-mono truncate">{subtitle}</p>}
                         </div>
                       </div>
-                      <button onClick={onBack} className="px-4 py-2 rounded-lg bg-primary/10 text-primary text-sm font-medium flex items-center gap-2 hover:bg-primary/20 transition-colors">
+                      <button onClick={onBack} className="w-full sm:w-auto px-3 sm:px-4 py-2 rounded-lg bg-primary/10 text-primary text-xs sm:text-sm font-medium flex items-center justify-center gap-2 hover:bg-primary/20 transition-colors">
                         <ChevronLeft className="w-4 h-4" /> 返回
                       </button>
                     </div>
                     {(updatedAt || author) && (
-                      <div className="flex items-center gap-4 p-2 rounded bg-muted/30 border border-border">
-                        <span className="text-sm text-muted-foreground font-mono">
+                      <div className="flex items-center gap-2 sm:gap-4 p-2 rounded bg-muted/30 border border-border">
+                        <span className="text-xs sm:text-sm text-muted-foreground font-mono">
                           <span className="text-success">$</span>
                           {updatedAt && ` 更新日期: ${updatedAt}`}
                           {author && ` 作者: ${author}`}
@@ -1089,9 +1089,9 @@ export function TabContent({
                   <span className="terminal-dot terminal-dot-green" />
                   <span className="ml-2 text-xs text-muted-foreground font-mono">标签</span>
                 </div>
-                <div className="p-4 flex flex-wrap gap-2">
+                <div className="p-3 sm:p-4 flex flex-wrap gap-2">
                   {tags.map((tag, index) => (
-                    <span key={`${tag}-${index}`} className={`px-3 py-1 rounded-full text-xs font-mono border ${getTagColor(index)}`}>{tag}</span>
+                    <span key={`${tag}-${index}`} className={`px-2.5 py-1 rounded-full text-xs font-mono border ${getTagColor(index)}`}>{tag}</span>
                   ))}
                 </div>
               </div>
@@ -1104,7 +1104,7 @@ export function TabContent({
                 <span className="terminal-dot terminal-dot-green" />
                 <span className="ml-2 text-xs text-muted-foreground font-mono">{filename || 'README.md'}</span>
               </div>
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                               {!isEditing && (
                                 <ReactMarkdown
                                   remarkPlugins={[remarkGfm, remarkVideoLinks]}
@@ -1112,31 +1112,31 @@ export function TabContent({
                                   components={{
                                     h1: ({ children }) => {
                                       const id = slugify(String(children));
-                                      return <h1 id={id} className="text-2xl font-bold text-foreground mt-6 mb-4">{children}</h1>;
+                                      return <h1 id={id} className="text-xl sm:text-2xl font-bold text-foreground mt-4 sm:mt-6 mb-3 sm:mb-4">{children}</h1>;
                                     },
                                     h2: ({ children }) => {
                                       const id = slugify(String(children));
-                                      return <h2 id={id} className="text-xl font-semibold text-foreground mt-5 mb-3">{children}</h2>;
+                                      return <h2 id={id} className="text-lg sm:text-xl font-semibold text-foreground mt-3 sm:mt-5 mb-2 sm:mb-3">{children}</h2>;
                                     },
                                     h3: ({ children }) => {
                                       const id = slugify(String(children));
-                                      return <h3 id={id} className="text-lg font-semibold text-foreground mt-4 mb-2">{children}</h3>;
+                                      return <h3 id={id} className="text-base sm:text-lg font-semibold text-foreground mt-3 sm:mt-4 mb-1 sm:mb-2">{children}</h3>;
                                     },
-                                    ul: ({ children }) => <ul className="list-disc list-inside text-muted-foreground ml-4 space-y-1">{children}</ul>,
-                                    ol: ({ children }) => <ol className="list-decimal list-inside text-muted-foreground ml-4 space-y-1">{children}</ol>,
-                                    li: ({ children }) => <li className="text-muted-foreground">{children}</li>,
-                                    p: ({ children }) => <p className="text-muted-foreground leading-relaxed">{children}</p>,
+                                    ul: ({ children }) => <ul className="list-disc list-inside text-muted-foreground ml-4 space-y-1 text-xs sm:text-sm">{children}</ul>,
+                                    ol: ({ children }) => <ol className="list-decimal list-inside text-muted-foreground ml-4 space-y-1 text-xs sm:text-sm">{children}</ol>,
+                                    li: ({ children }) => <li className="text-muted-foreground text-xs sm:text-sm">{children}</li>,
+                                    p: ({ children }) => <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm">{children}</p>,
                                     a: ({ href, children }) => (
                                       <a href={href} className="text-primary hover:underline inline-flex items-center gap-1" target="_blank" rel="noopener noreferrer">
                                         {children}<ExternalLink className="w-3 h-3" />
                                       </a>
                                     ),
                                     blockquote: ({ children }) => (
-                                      <blockquote className="border-l-4 border-primary/50 pl-4 py-1 my-4 text-muted-foreground italic">{children}</blockquote>
+                                      <blockquote className="border-l-4 border-primary/50 pl-4 py-1 my-4 text-muted-foreground italic text-xs sm:text-sm">{children}</blockquote>
                                     ),
                                     code: ({ className, children }) => {
                                       const isInline = !className;
-                                      if (isInline) return <code className="bg-primary/20 text-primary px-1.5 py-0.5 rounded text-sm">{children}</code>;
+                                      if (isInline) return <code className="bg-primary/20 text-primary px-1.5 py-0.5 rounded text-xs sm:text-sm">{children}</code>;
                                       return <code className={className}>{children}</code>;
                                     },
                                     pre: ({ children }) => <CodeBlock translations={translations}>{children}</CodeBlock>,
@@ -1145,9 +1145,9 @@ export function TabContent({
                                         <table className="w-full border-collapse">{children}</table>
                                       </div>
                                     ),
-                                    th: ({ children }) => <th className="border-b border-border px-4 py-3 text-left font-semibold bg-muted/30">{children}</th>,
-                                    td: ({ children }) => <td className="border-t border-border/50 px-4 py-3 text-muted-foreground">{children}</td>,
-                                    hr: () => <hr className="border-border my-6" />,
+                                    th: ({ children }) => <th className="border-b border-border px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold bg-muted/30 text-xs sm:text-sm">{children}</th>,
+                                    td: ({ children }) => <td className="border-t border-border/50 px-2 sm:px-4 py-2 sm:py-3 text-muted-foreground text-xs sm:text-sm">{children}</td>,
+                                    hr: () => <hr className="border-border my-4 sm:my-6" />,
                                     img: ({ src, alt, ...props }) => (
                                       <img
                                         src={src}

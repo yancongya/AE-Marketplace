@@ -103,12 +103,12 @@ export function StatsSection() {
             <span className="terminal-dot terminal-dot-green" />
             <span className="ml-2 text-xs text-gray-500 font-mono">$ git log --oneline --graph</span>
           </div>
-          <div className="p-8 text-center">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <ChevronRight className="w-8 h-8 text-blue-400" />
-              <h1 className="text-4xl font-bold text-white">脚本时间线</h1>
+          <div className="p-6 sm:p-8 text-center">
+            <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+              <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">脚本时间线</h1>
             </div>
-            <p className="text-gray-400 font-mono">
+            <p className="text-gray-400 font-mono text-sm sm:text-base">
               <span className="code-comment">// 可视化脚本活动随时间的变化。查看脚本发布时间，追踪社区增长趋势。</span>
             </p>
           </div>
@@ -119,8 +119,8 @@ export function StatsSection() {
           <div className="terminal-header">
             <span className="text-xs text-gray-500 font-mono">README.md</span>
           </div>
-          <div className="p-6">
-            <h3 className="text-lg font-bold text-white mb-3">
+          <div className="p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-bold text-white mb-3">
               <span className="text-gray-500">###</span> 关于此时间线
             </h3>
             <p className="text-sm text-gray-400 leading-relaxed">
@@ -131,10 +131,10 @@ export function StatsSection() {
         </div>
 
         {/* Controls and stats */}
-        <div className="grid md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           {/* Granularity controls */}
-          <div className="terminal-window p-4">
-            <div className="space-y-3">
+          <div className="terminal-window p-3 sm:p-4">
+            <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-500 font-mono">--granularity</span>
                 <span className="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-xs font-mono">daily</span>
@@ -151,19 +151,19 @@ export function StatsSection() {
           </div>
 
           {/* Stats cards */}
-          <div className="terminal-window p-4 text-center">
+          <div className="terminal-window p-3 sm:p-4 text-center">
             <p className="text-xs text-gray-500 font-mono mb-2">总脚本数</p>
-            <p className="text-3xl font-bold text-green-400">{formatNumber(stats.totalScripts)}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-green-400">{formatNumber(stats.totalScripts)}</p>
           </div>
 
-          <div className="terminal-window p-4 text-center">
+          <div className="terminal-window p-3 sm:p-4 text-center">
             <p className="text-xs text-gray-500 font-mono mb-2">平均每个时间段</p>
-            <p className="text-3xl font-bold text-yellow-400">{stats.dailyGrowth}</p>
+            <p className="text-2xl sm:text-3xl font-bold text-yellow-400">{stats.dailyGrowth}</p>
           </div>
 
-          <div className="terminal-window p-4 text-center">
+          <div className="terminal-window p-3 sm:p-4 text-center">
             <p className="text-xs text-gray-500 font-mono mb-2">峰值时期</p>
-            <p className="text-2xl font-bold text-purple-400">{formatNumber(stats.peakCount)}</p>
+            <p className="text-xl sm:text-2xl font-bold text-purple-400">{formatNumber(stats.peakCount)}</p>
             <p className="text-xs text-gray-500 mt-1">@ {stats.peakDay}</p>
           </div>
         </div>
@@ -177,10 +177,10 @@ export function StatsSection() {
             <span className="ml-2 text-xs text-gray-500 font-mono">$ plot timeline.data --type=area --cumulative</span>
             <span className="ml-auto text-xs text-green-400 font-mono">115 points</span>
           </div>
-          <div className="p-4">
-            <canvas 
+          <div className="p-3 sm:p-4">
+            <canvas
               ref={canvasRef}
-              className="w-full h-80"
+              className="w-full h-60 sm:h-72 md:h-80"
             />
           </div>
         </div>

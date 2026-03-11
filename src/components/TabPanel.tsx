@@ -56,14 +56,14 @@ export function TabPanel({
             <span className="terminal-dot terminal-dot-green" />
             <span className="ml-auto text-xs text-muted-foreground font-mono">ready</span>
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             <div className="flex items-center gap-2">
-              {icon || <ChevronRight className="w-6 h-6 text-primary" />}
-              <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+              {icon || <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />}
+              <h2 className="text-xl sm:text-2xl font-bold text-foreground">{title}</h2>
             </div>
-            
+
             {count !== undefined && (
-              <div className="mt-2 flex flex-wrap items-center gap-4">
+              <div className="mt-2 flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 sm:gap-4">
                 <span className="text-sm text-muted-foreground font-mono">
                   $ count: <span className="text-primary">{formatNumber(count)}</span>
                   {subtitle || translations?.common.itemsCount}
@@ -74,7 +74,7 @@ export function TabPanel({
                       <button
                         key={`${tag}-${index}`}
                         onClick={() => handleTagClick(tag)}
-                        className={`px-2 py-0.5 rounded text-xs font-mono border transition-all ${
+                        className={`px-2.5 py-1 sm:px-2 sm:py-0.5 rounded text-xs font-mono border transition-all active:scale-95 ${
                           selectedTags.includes(tag)
                             ? 'bg-primary/20 text-primary border-primary/50'
                             : 'bg-transparent text-muted-foreground border-border hover:border-primary/50'

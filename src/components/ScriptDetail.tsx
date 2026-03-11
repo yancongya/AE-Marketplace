@@ -28,43 +28,43 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
   const installCommand = `npx ae-scripts add ${script.author}/${script.name.toLowerCase()}`;
 
   return (
-    <section className="pt-20 pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <section className="pt-16 sm:pt-20 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm font-mono">
-          <button 
+        <div className="flex items-center gap-2 text-xs sm:text-sm font-mono">
+          <button
             onClick={onBack}
             className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
           >
             <span className="text-green-400">$</span> pwd: ~ / {script.category} /
           </button>
-          <span className="text-blue-400">{script.name.toLowerCase().replace(/-/g, '_')}</span>
+          <span className="text-blue-400 truncate">{script.name.toLowerCase().replace(/-/g, '_')}</span>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Main content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {/* Header */}
             <div className="terminal-window">
-              <div className="p-6 space-y-4">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h1 className="text-3xl font-bold text-blue-400">{script.name.toLowerCase().replace(/-/g, '_')}</h1>
-                    <p className="mt-2 text-gray-400 text-sm leading-relaxed">
+              <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-blue-400 break-words">{script.name.toLowerCase().replace(/-/g, '_')}</h1>
+                    <p className="mt-2 text-gray-400 text-xs sm:text-sm leading-relaxed">
                       <span className="code-comment">// {script.description}</span>
                     </p>
                   </div>
                   <div className="flex gap-2">
                     <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                      <Heart className="w-5 h-5 text-gray-400" />
+                      <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     </button>
                     <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
-                      <Share2 className="w-5 h-5 text-gray-400" />
+                      <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     </button>
                   </div>
                 </div>
 
-                <button className="px-4 py-2 rounded-lg bg-white text-black font-medium text-sm flex items-center gap-2 hover:bg-gray-100 transition-colors">
+                <button className="w-full sm:w-auto px-4 py-2 rounded-lg bg-white text-black font-medium text-sm flex items-center justify-center sm:justify-start gap-2 hover:bg-gray-100 transition-colors">
                   <Terminal className="w-4 h-4" />
                   在 After Effects 中运行
                 </button>
@@ -79,10 +79,10 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
                 <span className="terminal-dot terminal-dot-green" />
                 <span className="ml-2 text-xs text-gray-500 font-mono">$ git log --oneline --stat</span>
               </div>
-              <div className="p-4 flex flex-wrap gap-6">
+              <div className="p-3 sm:p-4 flex flex-wrap gap-3 sm:gap-6">
                 <div className="flex items-center gap-2">
                   <Star className="w-4 h-4 text-yellow-500" />
-                  <span className="text-sm font-mono">
+                  <span className="text-xs sm:text-sm font-mono">
                     <span className="text-yellow-500">stars:</span>
                     <span className="text-white ml-1">{formatNumber(script.stars)}</span>
                   </span>
@@ -90,7 +90,7 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
                 {script.forks && (
                   <div className="flex items-center gap-2">
                     <GitFork className="w-4 h-4 text-blue-400" />
-                    <span className="text-sm font-mono">
+                    <span className="text-xs sm:text-sm font-mono">
                       <span className="text-blue-400">forks:</span>
                       <span className="text-white ml-1">{formatNumber(script.forks)}</span>
                     </span>
@@ -98,13 +98,13 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
                 )}
                 <div className="flex items-center gap-2">
                   <Download className="w-4 h-4 text-green-400" />
-                  <span className="text-sm font-mono">
+                  <span className="text-xs sm:text-sm font-mono">
                     <span className="text-green-400">downloads:</span>
                     <span className="text-white ml-1">{formatNumber(script.downloads)}</span>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-mono text-gray-500">
+                  <span className="text-xs sm:text-sm font-mono text-gray-500">
                     <span className="text-green-400">updated:</span>
                     <span className="text-white ml-1">{script.updatedAt}</span>
                   </span>
@@ -121,61 +121,61 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
                 <span className="ml-2 text-xs text-gray-500 font-mono">SKILL.md</span>
                 <span className="ml-auto text-xs text-gray-500 font-mono">readonly</span>
               </div>
-              
+
               {/* Tab buttons */}
               <div className="border-b border-gray-800">
-                <div className="flex">
+                <div className="flex overflow-x-auto">
                   <button
                     onClick={() => setActiveTab('readme')}
-                    className={`px-4 py-3 text-sm font-mono border-b-2 transition-colors ${
+                    className={`px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-mono border-b-2 transition-colors whitespace-nowrap ${
                       activeTab === 'readme'
                         ? 'border-blue-400 text-blue-400'
                         : 'border-transparent text-gray-500 hover:text-gray-300'
                     }`}
                   >
-                    <BookOpen className="w-4 h-4 inline mr-2" />
+                    <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
                     README
                   </button>
                   <button
                     onClick={() => setActiveTab('install')}
-                    className={`px-4 py-3 text-sm font-mono border-b-2 transition-colors ${
+                    className={`px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-mono border-b-2 transition-colors whitespace-nowrap ${
                       activeTab === 'install'
                         ? 'border-blue-400 text-blue-400'
                         : 'border-transparent text-gray-500 hover:text-gray-300'
                     }`}
                   >
-                    <Package className="w-4 h-4 inline mr-2" />
+                    <Package className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
                     安装
                   </button>
                   <button
                     onClick={() => setActiveTab('download')}
-                    className={`px-4 py-3 text-sm font-mono border-b-2 transition-colors ${
+                    className={`px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-mono border-b-2 transition-colors whitespace-nowrap ${
                       activeTab === 'download'
                         ? 'border-blue-400 text-blue-400'
                         : 'border-transparent text-gray-500 hover:text-gray-300'
                     }`}
                   >
-                    <Download className="w-4 h-4 inline mr-2" />
+                    <Download className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
                     下载
                   </button>
                 </div>
               </div>
 
               {/* Tab content */}
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 {activeTab === 'readme' && (
-                  <div className="space-y-6">
+                  <div className="space-y-4 sm:space-y-6">
                     {/* Metadata table */}
                     <div className="overflow-hidden rounded-lg border border-gray-800">
-                      <table className="w-full text-sm">
+                      <table className="w-full text-xs sm:text-sm">
                         <tbody>
                           <tr className="border-b border-gray-800">
-                            <td className="px-4 py-3 bg-white/5 text-blue-400 font-mono w-32">name</td>
-                            <td className="px-4 py-3 text-white font-mono">{script.name.toLowerCase().replace(/-/g, '_')}</td>
+                            <td className="px-3 sm:px-4 py-2 sm:py-3 bg-white/5 text-blue-400 font-mono w-24 sm:w-32">name</td>
+                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-white font-mono break-all">{script.name.toLowerCase().replace(/-/g, '_')}</td>
                           </tr>
                           <tr>
-                            <td className="px-4 py-3 bg-white/5 text-blue-400 font-mono">description</td>
-                            <td className="px-4 py-3 text-gray-400">{script.description}</td>
+                            <td className="px-3 sm:px-4 py-2 sm:py-3 bg-white/5 text-blue-400 font-mono">description</td>
+                            <td className="px-3 sm:px-4 py-2 sm:py-3 text-gray-400">{script.description}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -183,24 +183,24 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
 
                     {/* Usage section */}
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-4">Usage</h3>
-                      <p className="text-sm text-gray-400 leading-relaxed">
+                      <h3 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">Usage</h3>
+                      <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
                         Run all {script.name.toLowerCase().replace(/-/g, '_')} operations.
                       </p>
                     </div>
 
                     {/* Arguments */}
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-3">Arguments:</h4>
-                      <ul className="list-disc list-inside text-sm text-gray-400 space-y-1">
+                      <h4 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">Arguments:</h4>
+                      <ul className="list-disc list-inside text-xs sm:text-sm text-gray-400 space-y-1">
                         <li>$ARGUMENTS: Configuration options for the script</li>
                       </ul>
                     </div>
 
                     {/* Instructions */}
                     <div>
-                      <h4 className="text-lg font-semibold text-white mb-3">Instructions:</h4>
-                      <ol className="list-decimal list-inside text-sm text-gray-400 space-y-2">
+                      <h4 className="text-base sm:text-lg font-semibold text-white mb-2 sm:mb-3">Instructions:</h4>
+                      <ol className="list-decimal list-inside text-xs sm:text-sm text-gray-400 space-y-1 sm:space-y-2">
                         <li>Download and install the script using one of the methods below</li>
                         <li>Restart After Effects</li>
                         <li>Access the script from Window {'>'} Extensions menu</li>
@@ -210,7 +210,7 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
 
                     {/* Code preview */}
                     {script.code && (
-                      <div className="rounded-lg bg-black/50 border border-gray-800 p-4">
+                      <div className="rounded-lg bg-black/50 border border-gray-800 p-3 sm:p-4">
                         <pre className="text-xs font-mono text-gray-300 overflow-x-auto">
                           <code>{script.code}</code>
                         </pre>
@@ -220,19 +220,19 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
                 )}
 
                 {activeTab === 'install' && (
-                  <div className="space-y-6">
-                    <div className="space-y-4">
-                      <h4 className="text-sm font-mono text-gray-400">$ install --global</h4>
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="space-y-3 sm:space-y-4">
+                      <h4 className="text-xs sm:text-sm font-mono text-gray-400">$ install --global</h4>
                       <div className="flex gap-2">
-                        <span className="px-3 py-1.5 rounded bg-white/5 text-gray-400 text-xs font-mono">npx</span>
-                        <span className="px-3 py-1.5 rounded bg-white/5 text-gray-400 text-xs font-mono">bunx</span>
-                        <span className="px-3 py-1.5 rounded bg-white/5 text-gray-400 text-xs font-mono">pnpm</span>
+                        <span className="px-2 sm:px-3 py-1 sm:py-1.5 rounded bg-white/5 text-gray-400 text-xs font-mono">npx</span>
+                        <span className="px-2 sm:px-3 py-1 sm:py-1.5 rounded bg-white/5 text-gray-400 text-xs font-mono">bunx</span>
+                        <span className="px-2 sm:px-3 py-1 sm:py-1.5 rounded bg-white/5 text-gray-400 text-xs font-mono">pnpm</span>
                       </div>
                       <div className="flex items-center gap-2 p-3 rounded-lg bg-black/50 border border-gray-800">
-                        <code className="flex-1 text-sm font-mono text-gray-300">{installCommand}</code>
-                        <button 
+                        <code className="flex-1 text-xs sm:text-sm font-mono text-gray-300 break-all">{installCommand}</code>
+                        <button
                           onClick={() => handleCopy(installCommand)}
-                          className="p-2 rounded hover:bg-white/10 transition-colors"
+                          className="p-2 rounded hover:bg-white/10 transition-colors flex-shrink-0"
                         >
                           {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-gray-400" />}
                         </button>
@@ -242,14 +242,14 @@ export function ScriptDetail({ script, onBack }: ScriptDetailProps) {
                 )}
 
                 {activeTab === 'download' && (
-                  <div className="space-y-6">
-                    <div className="space-y-4">
-                      <h4 className="text-sm font-mono text-gray-400">$ download --local</h4>
-                      <button className="w-full px-4 py-3 rounded-lg bg-blue-500 text-white font-medium flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors">
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="space-y-3 sm:space-y-4">
+                      <h4 className="text-xs sm:text-sm font-mono text-gray-400">$ download --local</h4>
+                      <button className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-blue-500 text-white font-medium text-sm flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors">
                         <Download className="w-4 h-4" />
                         wget script.zip
                       </button>
-                      <button className="w-full px-4 py-3 rounded-lg bg-white text-black font-medium flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors">
+                      <button className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg bg-white text-black font-medium text-sm flex items-center justify-center gap-2 hover:bg-gray-100 transition-colors">
                         <Terminal className="w-4 h-4" />
                         在 After Effects 中运行
                       </button>

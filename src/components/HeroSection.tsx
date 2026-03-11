@@ -440,11 +440,11 @@ export function HeroSection() {
               
               {/* Main title with blue prompt - centered on mobile */}
               <div className="flex items-start gap-2 justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-                <span className="text-primary text-3xl sm:text-4xl md:text-[40px] font-bold leading-tight">{'>'}</span>
-                <h1 className="text-3xl sm:text-4xl md:text-[40px] font-bold text-foreground leading-tight whitespace-pre font-mono">
+                <span className="text-primary text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold leading-tight">{'>'}</span>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-bold text-foreground leading-tight whitespace-pre font-mono">
                   {typedText}
-                  <span 
-                    className={`inline-block w-[3px] h-8 sm:h-10 md:h-[40px] bg-primary align-middle ml-0.5 ${!isTyping ? 'animate-caret-blink' : ''}`} 
+                  <span
+                    className={`inline-block w-[2px] sm:w-[3px] h-6 sm:h-8 md:h-10 lg:h-[40px] bg-primary align-middle ml-0.5 ${!isTyping ? 'animate-caret-blink' : ''}`}
                   />
                 </h1>
               </div>
@@ -456,11 +456,11 @@ export function HeroSection() {
 
               {/* Stats code block */}
               <div className="rounded-lg p-3 sm:p-4 space-y-2 border border-border card-hover hover:border-primary/50 cursor-default animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-                <div className="text-base sm:text-lg leading-relaxed">
+                <div className="text-sm sm:text-base md:text-lg leading-relaxed">
                   <span className="code-keyword">const</span>
                   <span className="code-function"> {translations.hero.stats.label}</span>
                   <span className="text-foreground"> =</span>
-                  <span className="code-number text-xl sm:text-2xl md:text-[28px] font-bold ml-2">{formatNumber(animatedCount)}</span>
+                  <span className="code-number text-lg sm:text-xl md:text-2xl lg:text-[28px] font-bold ml-2">{formatNumber(animatedCount)}</span>
                   <span className="text-foreground">;</span>
                 </div>
                 <div className="text-xs sm:text-sm code-comment">

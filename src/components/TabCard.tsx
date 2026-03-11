@@ -95,7 +95,7 @@ export function TabCard({
   };
 
   const content = (
-    <div 
+    <div
       className="terminal-window card-hover cursor-pointer group h-full flex flex-col"
       title={description}
     >
@@ -111,35 +111,35 @@ export function TabCard({
           <span className="terminal-dot terminal-dot-green" />
         </div>
       </div>
-      
-      <div className="p-4 space-y-3 flex-1 flex flex-col">
-        <div className="flex items-center gap-3 flex-shrink-0">
+
+      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3 flex-1 flex flex-col">
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
           {iconEmoji && (
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-lg flex-shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center text-base sm:text-lg flex-shrink-0">
               {iconEmoji}
             </div>
           )}
-          
+
           <div className="flex-1 min-w-0">
-            <h3 className="text-foreground font-medium truncate">{title}</h3>
+            <h3 className="text-sm sm:text-base text-foreground font-medium truncate">{title}</h3>
             {subtitle && (
               <p className="text-xs text-muted-foreground font-mono truncate">{subtitle}</p>
             )}
           </div>
         </div>
- 
+
         {description && (
-          <p className="text-xs text-muted-foreground truncate">
+          <p className="text-xs text-muted-foreground line-clamp-2 sm:line-clamp-1">
             {description}
           </p>
         )}
- 
+
         <div className="mt-auto pt-2 border-t border-border flex-shrink-0">
           <p className="text-xs text-muted-font-foreground font-mono truncate">
             <span className="text-green-400">$</span>
-            {updatedAt && <span> 更新日期: {updatedAt}</span>}
+            {updatedAt && <span> {updatedAt}</span>}
             {(author || updatedAt) && <span className="text-green-400 ml-2">$</span>}
-            {author && <span> 作者: {author}</span>}
+            {author && <span> {author}</span>}
           </p>
         </div>
       </div>

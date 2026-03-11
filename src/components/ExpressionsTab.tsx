@@ -151,13 +151,13 @@ export function ExpressionsTab() {
                 alert('创建失败');
               }
             }}
-            className="terminal-window cursor-pointer hover:border-primary/50 transition-all min-h-[200px] flex items-center justify-center group"
+            className="terminal-window cursor-pointer hover:border-primary/50 transition-all min-h-[160px] sm:min-h-[180px] md:min-h-[200px] flex items-center justify-center group"
           >
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
-                <Plus className="w-8 h-8 text-primary" />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2 sm:mb-3 group-hover:bg-primary/20 transition-colors">
+                <Plus className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary" />
               </div>
-              <p className="text-sm text-muted-foreground font-mono">新建文档</p>
+              <p className="text-xs sm:text-sm text-muted-foreground font-mono">新建文档</p>
             </div>
           </div>
         )}
@@ -360,13 +360,13 @@ export function ScriptsTab() {
                 alert('创建失败');
               }
             }}
-            className="terminal-window cursor-pointer hover:border-primary/50 transition-all min-h-[200px] flex items-center justify-center group"
+            className="terminal-window cursor-pointer hover:border-primary/50 transition-all min-h-[160px] sm:min-h-[180px] md:min-h-[200px] flex items-center justify-center group"
           >
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
-                <Plus className="w-8 h-8 text-primary" />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-2 sm:mb-3 group-hover:bg-primary/20 transition-colors">
+                <Plus className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary" />
               </div>
-              <p className="text-sm text-muted-foreground font-mono">新建文档</p>
+              <p className="text-xs sm:text-sm text-muted-foreground font-mono">新建文档</p>
             </div>
           </div>
         )}

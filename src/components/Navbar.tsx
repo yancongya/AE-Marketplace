@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Moon, Sun, Code, FileCode, Layers, Box, Lock } from 'lucide-react';
+import { Globe, Moon, Sun, Code, FileCode, Layers, Box, Lock, Menu, X } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { useAdmin } from '@/contexts/AdminContext';
@@ -24,6 +24,7 @@ export function Navbar() {
   const [readyClickCount, setReadyClickCount] = useState(0);
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const [password, setPassword] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleReadyBadgeClick = () => {
     if (import.meta.env.DEV) {
@@ -100,7 +101,7 @@ export function Navbar() {
             </Link>
             <Link
               to="/"
-              className="flex items-center gap-1 font-mono text-sm hover:opacity-80 transition-opacity"
+              className="flex items-center gap-1 font-mono text-xs sm:text-sm hover:opacity-80 transition-opacity whitespace-nowrap"
             >
               <span className="text-muted-foreground">~</span>
               <span className="text-foreground">/AE-Marketplace</span>
@@ -133,7 +134,7 @@ export function Navbar() {
             })}
           </div>
 
-          {/* Right: Theme toggle, language, admin */}
+          {/* Right: Mobile menu button, Theme toggle, language, admin */}
           <div className="flex items-center gap-2">
             {import.meta.env.DEV && isAdmin && (
               <div
@@ -160,6 +161,14 @@ export function Navbar() {
             >
               <Globe className="w-3.5 h-3.5" />
               <span>{locale.toUpperCase()}</span>
+            </button>
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="md:hidden p-2 rounded hover:bg-muted transition-colors"
+              title="菜单"
+            >
+              <Menu className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
         </div>
@@ -197,6 +206,63 @@ export function Navbar() {
               <Button onClick={handlePasswordSubmit}>
                 登录
               </Button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {/* Mobile Menu Dialog */}
+      <Dialog.Root open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 md:hidden" />
+          <Dialog.Content className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-sm bg-background border-l border-border shadow-lg md:hidden">
+            <Dialog.Title className="sr-only">导航菜单</Dialog.Title>
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <span className="text-sm font-mono text-muted-foreground">~/AE-Marketplace</span>
+              <Dialog.Close className="p-2 rounded hover:bg-muted transition-colors">
+                <X className="w-5 h-5 text-muted-foreground" />
+              </Dialog.Close>
+            </div>
+            <nav className="p-4 space-y-2">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                      isActive(item.href)
+                        ? 'bg-primary/10 border border-primary/30'
+                        : 'bg-secondary/50 hover:bg-secondary border border-transparent'
+                    }`}
+                  >
+                    <Icon className={`w-5 h-5 ${isActive(item.href) ? 'text-primary' : 'text-muted-foreground'}`} />
+                    <div className="flex-1">
+                      <span className={`font-mono text-sm ${isActive(item.href) ? 'text-primary' : 'text-foreground'}`}>
+                        /{t(`nav.${item.id}`)}
+                      </span>
+                    </div>
+                    <span className={`text-xs font-mono ${isActive(item.href) ? 'text-primary' : 'text-muted-foreground'}`}>
+                      {item.count}
+                    </span>
+                  </Link>
+                );
+              })}
+            </nav>
+            <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border bg-background">
+              <Link
+                to="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  isActive('/')
+                    ? 'bg-primary/10 border border-primary/30'
+                    : 'bg-secondary/50 hover:bg-secondary border border-transparent'
+                }`}
+              >
+                <span className="text-success">$</span>
+                <span className="font-mono text-sm text-foreground">cd /home</span>
+              </Link>
             </div>
           </Dialog.Content>
         </Dialog.Portal>
