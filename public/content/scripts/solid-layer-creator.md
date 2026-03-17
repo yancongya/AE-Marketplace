@@ -5,15 +5,15 @@ author: 烟囱鸭
 tags: [纯色层, 颜色, UI工具]
 category: scripts
 description: 功能强大的纯色层创建工具，支持自定义尺寸、颜色和预设管理
-updatedAt: 2026-02-06
+updatedAt: 2026-03-17
 ---
 
 ## 下载
 
-🔗 [solid-layer-creator.jsx](https://github.com/yancongya/AE----/releases/download/v1.0.0/solid-layer-creator.jsx)
+🔗 [solid-layer-creator.jsx](https://www.123865.com/s/FQvajv-11EnH?pwd=XKRf#)
 
 **配套文件：**
-- 🔗 [solid.preset](https://github.com/yancongya/AE----/releases/download/v1.0.0/solid.preset) - 预设配置文件（可选）
+- 🔗 [solid.preset](https://www.123865.com/s/FQvajv-11EnH?pwd=XKRf#) - 预设配置文件（可选）
 
 **文件信息：**
 - 文件大小：约 90 KB
@@ -42,18 +42,27 @@ updatedAt: 2026-02-06
 | 名称预设 | 管理常用图层名称 | + / - 按钮 |
 | 颜色选择 | 从预设色板选择颜色 | 左键点击 |
 | 高级颜色选择 | 打开系统颜色选择器 | 右键点击 |
-| 批量随机色相 | 随机化所有色块 | Ctrl+左键 |
-| 批量恢复默认 | 恢复默认颜色 | Alt+左键 |
+| 批量随机色相 | 随机化所有彩色块色相 | Ctrl+左键 |
+| 批量恢复默认 | 恢复所有彩色块默认颜色 | Alt+左键 |
+| 参考图层 | 创建不被渲染的参考图层 | 右键点击确定按钮 |
+| 智能默认行为 | 自动应用合理的默认设置 | 自动 |
 
 ### 高级功能
 
 - **智能记忆**：自动保存所有设置，下次打开自动恢复
 - **实时保存**：修改设置后500ms自动保存到 `solid.preset`
-- **AE标签色板**：基于AE标准标签色的预设色板
+- **AE标签色板**：基于AE标准标签色的预设色板（11种预设色）
 - **防抖保存**：避免频繁写入，提高性能
 - **预设管理**：创建、保存、删除自定义预设
 - **自适应布局**：支持不同AE版本的UI适配
 - **快捷键支持**：Enter确认，Escape关闭
+- **参考图层**：右键点击"确定"按钮创建参考图层（Guide Layer），不会被渲染输出
+- **智能默认行为**：
+  - 名称：自动选择名称预设列表的第一个（默认"纯色层"）
+  - 尺寸：自动应用当前活动合成的尺寸
+  - 尺寸预设：自动切换到"自定义"选项
+  - 其他设置（颜色、自定义预设等）保持上次保存的状态
+- **宽高比锁定记忆**：自动保存锁定状态和宽高比值
 
 ## 使用教程
 
@@ -72,12 +81,20 @@ updatedAt: 2026-02-06
 2. 选择 Window → 纯色层创建器
 3. 弹出"纯色层设置"面板
 
+#### 界面预览
+
+![主界面](./assets/main.jpg)
+
+这是脚本的主界面，包含名称设置、尺寸设置、颜色选择和操作按钮四个主要区域。
+
 ### 步骤 3：设置图层名称
 
 1. 从 **名称** 下拉菜单选择预设名称
 2. 或直接在输入框中输入自定义名称
 3. 点击 `+` 按钮保存当前名称为预设
 4. 点击 `-` 按钮删除选中的名称预设
+
+![名称设置演示](./assets/name_settings.gif)
 
 ### 步骤 4：设置尺寸
 
@@ -99,29 +116,60 @@ updatedAt: 2026-02-06
 3. 点击 `+` 按钮保存当前尺寸为自定义预设
 4. 点击 `-` 按钮删除选中的尺寸预设
 
+![尺寸设置演示](./assets/size_settings.gif)
+
 ### 步骤 5：选择颜色
 
 #### 基础选择
 
 1. 左键点击色板中的颜色块
-2. 选中颜色后会高亮显示
+2. 选中颜色后会显示蓝色外描边
 
 #### 高级选择
 
 1. 右键点击任意色板
-2. 打开系统颜色选择器
-3. 选择自定义颜色并确认
+2. 打开高级颜色选择器
+3. 输入RGB值（0-255范围）或调整预览颜色
+4. 选择自定义颜色并确认
 
 #### 批量操作
 
-- **随机色相**：按住 `Ctrl` + 左键点击任意色板
-- **恢复默认**：按住 `Alt` + 左键点击任意色板
+- **批量随机化色相**：按住 `Ctrl` + 左键点击任意色板
+  - 对所有非灰度色块进行色相随机化
+  - 保留灰度色块（黑色、白色、深灰色）不变
+- **批量恢复默认颜色**：按住 `Alt` + 左键点击任意色板
+  - 恢复所有彩色块到AE标准标签色
+  - 灰度色块保持不变
+
+![颜色设置演示](./assets/color_settings.gif)
+
+![颜色面板详情](./assets/color.jpg)
 
 ### 步骤 6：创建图层
 
-1. 点击 **确定** 按钮或按 `Enter` 键
+#### 创建普通纯色层
+
+1. 左键点击 **确定** 按钮或按 `Enter` 键
 2. 纯色层创建在当前合成中
 3. 设置自动保存到 `solid.preset` 文件
+
+#### 创建参考图层（Guide Layer）
+
+1. 右键点击 **确定** 按钮
+2. 创建的纯色层会被标记为参考图层
+3. 参考图层特点：
+   - 不会被渲染输出
+   - 在合成面板中显示为虚线边框
+   - 适合用作对齐参考或设计辅助
+   - 可以在图层面板中随时切换普通/参考状态
+
+**注意**：右键点击创建参考图层后，设置也会被自动保存。
+
+#### 操作提示
+
+![确定按钮悬浮提示](./assets/sample.jpg)
+
+鼠标悬停在"确定"按钮上时，会显示操作提示：左键创建普通纯色层，右键创建参考图层。
 
 ### 步骤 7：关闭面板
 
@@ -170,13 +218,13 @@ var isUpdating = false;              // 防止循环更新标志
 ```javascript
 function createSolidLayerPanel() {
     var win = new Window("dialog", "纯色层设置", undefined, {resizeable: true});
-    
+
     // 创建各个部分
     createNameSection(win);
     createSizeSection(win);
     createColorSection(win);
     createButtonSection(win);
-    
+
     return win;
 }
 ```
@@ -190,14 +238,14 @@ function setupSizeEvents(widthInput, heightInput) {
     widthInput.onChanging = function() {
         if (isUpdating) return;
         var newWidth = parseInt(this.text);
-        
+
         if (isLocked) {
             var newHeight = Math.round(newWidth / aspectRatio);
             heightInput.text = newHeight;
         } else {
             aspectRatio = newWidth / parseInt(heightInput.text);
         }
-        
+
         debouncedAutoSave(); // 防抖保存
     };
 }
@@ -217,7 +265,7 @@ function savePreset() {
         sizePresets: sizePresets,      // 自定义尺寸预设
         lockState: isLocked
     };
-    
+
     var presetFile = new File(presetPath);
     presetFile.open('w');
     presetFile.write(JSON.stringify(settings));
@@ -230,7 +278,7 @@ function loadPreset() {
         presetFile.open('r');
         var settings = JSON.parse(presetFile.read());
         presetFile.close();
-        
+
         // 恢复所有设置
         widthInput.text = settings.width;
         heightInput.text = settings.height;
@@ -241,7 +289,60 @@ function loadPreset() {
 }
 ```
 
-**说明：** 使用JSON格式保存和加载用户设置
+**说明：** 使用JSON格式保存和加载用户设置，内置预设不会写入文件
+
+#### 5. 智能默认行为系统
+
+```javascript
+function applyPresetSettings(panel) {
+    // 恢复所有保存的设置
+    loadPreset();
+
+    // 应用智能默认行为
+    panel.namePresetDropdown.selection = 0; // 选择第一个名称预设
+    panel.nameInput.text = panel.namePresets[0];
+
+    // 获取当前合成尺寸
+    var compSize = getActiveCompSize();
+    panel.widthInput.text = compSize.width;
+    panel.heightInput.text = compSize.height;
+
+    // 切换到"自定义"尺寸预设
+    panel.presetDropdown.selection = panel.presetDropdown.items.length - 1;
+
+    // 更新状态
+    updateLockButtonState();
+    updatePresetButtonStates(panel);
+}
+```
+
+**说明：** 在恢复设置后自动应用合理的默认值，平衡记忆功能和智能体验
+
+#### 6. 批量颜色操作
+
+```javascript
+function batchRandomizeHues() {
+    // 对所有非灰度色块进行色相随机化
+    for (var i = 0; i < aeColors.length; i++) {
+        if (!isGrayscale(aeColors[i])) {
+            aeColors[i] = randomizeHue(aeColors[i]);
+        }
+    }
+    refreshColorButtons();
+}
+
+function batchRestoreDefaultColors() {
+    // 恢复所有彩色块到AE标准标签色
+    for (var i = 0; i < aeColors.length; i++) {
+        if (!isGrayscale(aeColors[i])) {
+            aeColors[i] = defaultAeColors[i];
+        }
+    }
+    refreshColorButtons();
+}
+```
+
+**说明：** 实现批量颜色操作，保留灰度色块不变
 
 ### 数据流程
 
@@ -305,13 +406,55 @@ sequenceDiagram
 
 **A:** 检查是否启用了宽高比锁定。解锁后可以自由输入任意尺寸。
 
+### Q: 参考图层是什么？如何创建？
+
+**A:** 参考图层（Guide Layer）是不会被渲染输出的图层，适合用作对齐参考或设计辅助。右键点击"确定"按钮即可创建参考图层。
+
+### Q: 为什么每次打开脚本，尺寸都会自动变成当前合成尺寸？
+
+**A:** 这是智能默认行为。脚本会自动应用当前活动合成的尺寸作为默认值，方便快速创建。但您之前保存的颜色、预设等设置都会被保留。
+
+### Q: 如何禁用智能默认行为？
+
+**A:** 目前不支持禁用智能默认行为。这是设计上为了提供更好的用户体验而实现的特性。
+
+### Q: 批量随机化颜色会影响灰度色块吗？
+
+**A:** 不会。批量随机化色相和恢复默认颜色功能都会跳过灰度色块（黑色、白色、深灰色），只影响彩色块。
+
+### Q: 为什么内置预设不会被写入 solid.preset 文件？
+
+**A:** 这是为了保持 `solid.preset` 文件的简洁性。内置预设已经硬编码在脚本中，无需重复保存。文件中只保存用户自定义的预设。
+
 ## 更新日志
 
-- v1.0.0 (2025-09-12)：初始版本
-  - 完整的UI面板实现
-  - 预设管理系统
-  - 智能记忆功能
-  - 高级颜色选择器集成
+### v1.3 (2025-09-12)
+
+**新增功能：**
+- 参考图层支持：右键点击"确定"按钮创建参考图层（Guide Layer）
+- 智能默认行为：自动应用合理的默认设置（名称、尺寸、预设）
+- 批量颜色操作：Ctrl+左键随机化色相，Alt+左键恢复默认颜色
+- 宽高比锁定记忆：自动保存锁定状态和宽高比值
+
+**优化改进：**
+- 优化预设保存逻辑，内置预设不再写入文件
+- 改进尺寸预设选择逻辑，自动切换到"自定义"选项
+- 增强颜色选择器功能，支持RGB值精确输入
+- 优化UI布局，提升响应式体验
+
+**Bug修复：**
+- 修复自定义尺寸预设选择后不更新的问题
+- 修复名称预设双向绑定不一致的问题
+
+### v1.0.0 (初始版本)
+
+**核心功能：**
+- 完整的UI面板实现
+- 预设管理系统（名称预设、尺寸预设）
+- 智能记忆功能
+- 高级颜色选择器集成
+- 宽高比锁定功能
+- 使用合成大小功能
 
 ## 相关脚本
 

@@ -3,14 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { useI18n } from '@/contexts/I18nContext';
 import { loadContent } from '@/lib/content';
 
-interface StatsData {
+export interface StatsData {
   expressions: number;
   scripts: number;
   presets: number;
   extensions: number;
 }
 
-export function HeroSection() {
+interface HeroSectionProps {
+  statsData?: StatsData | null;
+}
+
+export function HeroSection({ statsData: externalStatsData }: HeroSectionProps = {}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [animatedCount, setAnimatedCount] = useState(0);
   const [statsData, setStatsData] = useState<StatsData | null>(null);
@@ -18,19 +22,24 @@ export function HeroSection() {
   const [isTyping, setIsTyping] = useState(true);
   const { translations } = useI18n();
   const navigate = useNavigate();
-  const hasAnimated = useRef(false);
   const isInitialized = useRef(false);
+  const hasMounted = useRef(false);
 
+  // 使用外部传入的 statsData 或者自己加载（用于独立使用）
   useEffect(() => {
-    loadContent().then(data => {
-      setStatsData({
-        expressions: data.expressions.length,
-        scripts: data.scripts.length,
-        presets: data.presets.length,
-        extensions: data.extensions.length,
+    if (externalStatsData) {
+      setStatsData(externalStatsData);
+    } else {
+      loadContent().then(data => {
+        setStatsData({
+          expressions: data.expressions.length,
+          scripts: data.scripts.length,
+          presets: data.presets.length,
+          extensions: data.extensions.length,
+        });
       });
-    });
-  }, []);
+    }
+  }, [externalStatsData]);
 
   // Typing animation for title
   useEffect(() => {
@@ -82,7 +91,7 @@ export function HeroSection() {
   }, [statsData]);
 
   useEffect(() => {
-    if (!translations || !statsData) return;
+    if (!statsData || !translations) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -90,8 +99,13 @@ export function HeroSection() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // 确保数据都加载完成后再执行
-    if (!statsData || !translations) return;
+    // 确保在数据准备好后才初始化
+    if (!hasMounted.current) {
+      // 首次初始化，设置 canvas 尺寸
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
 
     let animationProgress = 0;
     let animationId: number;
@@ -104,17 +118,30 @@ export function HeroSection() {
     let springAnimationId: number | null = null;
 
     const resize = () => {
+      // 如果正在动画中，不执行 resize
+      if (animationProgress < 1) return;
+
       canvas.width = canvas.offsetWidth * window.devicePixelRatio;
       canvas.height = canvas.offsetHeight * window.devicePixelRatio;
       ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      // resize 后立即重绘
+      if (hasMounted.current && pointPositions.length > 0) {
+        drawRadarChart();
+      }
     };
-    resize();
+
+    // 只在首次初始化时调用 resize
+    if (!hasMounted.current) {
+      resize();
+    }
     window.addEventListener('resize', resize);
 
     // Theme change listener to redraw chart
     const handleThemeChange = () => {
       if (pointPositions.length > 0) {
-        drawRadarChart();
+        // 获取当前尺寸并重绘
+        const size = getCanvasSize();
+        drawRadarChart(size);
       }
     };
 
@@ -134,9 +161,19 @@ export function HeroSection() {
 
     const maxValue = Math.max(...radarData.map(d => d.count));
 
-    const getPointPosition = (index: number, progress: number) => {
-      const width = canvas.offsetWidth;
-      const height = canvas.offsetHeight;
+    // 缓存 canvas 尺寸，避免在动画过程中重复计算
+    let cachedSize: { width: number; height: number } | null = null;
+
+    const getCanvasSize = () => {
+      const size = {
+        width: canvas.offsetWidth,
+        height: canvas.offsetHeight
+      };
+      return size;
+    };
+
+    const getPointPosition = (index: number, progress: number, size: { width: number; height: number }) => {
+      const { width, height } = size;
       const centerX = width / 2;
       const centerY = height / 2;
       const radius = Math.min(width, height) / 2 - 50;
@@ -149,10 +186,9 @@ export function HeroSection() {
       };
     };
 
-    const drawRadarChart = () => {
-      const width = canvas.offsetWidth;
-      const height = canvas.offsetHeight;
-      
+    const drawRadarChart = (size?: { width: number; height: number }) => {
+      const { width, height } = size || getCanvasSize();
+
       // Check if canvas is visible and has valid dimensions
       if (width === 0 || height === 0) return;
       
@@ -276,7 +312,7 @@ export function HeroSection() {
         pointPositions.forEach((pos) => {
           const dx = pos.originalX - pos.x;
           const dy = pos.originalY - pos.y;
-          
+
           if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
             allBack = false;
             pos.x += dx * springStrength;
@@ -383,30 +419,40 @@ export function HeroSection() {
 
       // Update point positions during initial animation
       if (animationProgress <= 1) {
+        // 首次获取并缓存尺寸
+        if (!cachedSize) {
+          cachedSize = getCanvasSize();
+        }
         pointPositions = radarData.map((_, index) => {
-          const pos = getPointPosition(index, animationProgress);
+          const pos = getPointPosition(index, animationProgress, cachedSize!);
           return { x: pos.x, y: pos.y, originalX: pos.x, originalY: pos.y };
         });
+        // 使用缓存的尺寸绘制
+        drawRadarChart(cachedSize);
+      } else {
+        // 动画结束后，清除缓存
+        cachedSize = null;
+        drawRadarChart();
       }
-
-      drawRadarChart();
 
       if (animationProgress < 1) {
         animationId = requestAnimationFrame(animate);
       } else {
+        cachedSize = null;
         drawRadarChart();
         isInitialized.current = true;
       }
     };
 
-    // Only play entrance animation on first render when both data is ready and not yet initialized
-    if (!isInitialized.current && statsData && translations) {
+    // 只在首次挂载时播放动画
+    if (!hasMounted.current) {
+      hasMounted.current = true;
       animate();
-    } else if (isInitialized.current && statsData && translations) {
-      // Skip animation on language switch, just render static chart
+    } else {
+      // 后续重新渲染时，直接绘制静态图表
       animationProgress = 1;
       pointPositions = radarData.map((_, index) => {
-        const pos = getPointPosition(index, 1);
+        const pos = getPointPosition(index, 1, cachedSize!);
         return { x: pos.x, y: pos.y, originalX: pos.x, originalY: pos.y };
       });
       drawRadarChart();
@@ -424,6 +470,8 @@ export function HeroSection() {
       canvas.removeEventListener('touchstart', handleMouseDown, { passive: true } as any);
       canvas.removeEventListener('touchmove', handleMouseMove, { passive: true } as any);
       canvas.removeEventListener('touchend', handleMouseUp, { passive: true } as any);
+      // 组件卸载时重置状态，允许重新挂载时播放动画
+      hasMounted.current = false;
       isInitialized.current = false;
     };
   }, [statsData, translations, navigate]);

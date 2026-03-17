@@ -114,5 +114,9 @@
         "extendscript": "AE Script Development Guide"
       }
     }
+  },
+  "home": {
+    "recentDocs": "Recent Updates",
+    "recentDocsDesc": "12 most recently updated documents"
   }
 }

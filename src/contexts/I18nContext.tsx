@@ -122,6 +122,10 @@ interface Translations {
   common: CommonTranslations;
   radar: RadarTranslations;
   footer: FooterTranslations;
+  home: {
+    recentDocs: string;
+    recentDocsDesc: string;
+  };
 }
 
 type Locale = 'zh' | 'en';

@@ -1148,23 +1148,55 @@ export function TabContent({
                                     th: ({ children }) => <th className="border-b border-border px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold bg-muted/30 text-xs sm:text-sm">{children}</th>,
                                     td: ({ children }) => <td className="border-t border-border/50 px-2 sm:px-4 py-2 sm:py-3 text-muted-foreground text-xs sm:text-sm">{children}</td>,
                                     hr: () => <hr className="border-border my-4 sm:my-6" />,
-                                    img: ({ src, alt, ...props }) => (
-                                      <img
-                                        src={src}
-                                        alt={alt}
-                                        className="rounded-lg max-w-full h-auto border border-border/20 my-4"
-                                        loading="lazy"
-                                        {...props}
-                                      />
-                                    ),
-                                    video: ({ src, ...props }) => (
-                                      <video
-                                        src={src}
-                                        controls
-                                        className="w-full rounded-lg my-4"
-                                        {...props}
-                                      />
-                                    ),
+                                    img: ({ src, alt, ...props }) => {
+                                      // 转换相对路径为绝对路径
+                                      let imageSrc = src;
+                                      if (src && typeof src === 'string') {
+                                        // 如果是以 ./assets/ 开头的相对路径，转换为绝对路径
+                                        if (src.startsWith('./assets/')) {
+                                          const categoryPath = category || 'scripts';
+                                          imageSrc = `/content/${categoryPath}/${src.replace('./', '')}`;
+                                        }
+                                        // 如果是以 assets/ 开头的相对路径
+                                        else if (src.startsWith('assets/')) {
+                                          const categoryPath = category || 'scripts';
+                                          imageSrc = `/content/${categoryPath}/${src}`;
+                                        }
+                                      }
+                                      return (
+                                        <img
+                                          src={imageSrc}
+                                          alt={alt}
+                                          className="rounded-lg max-w-full h-auto border border-border/20 my-4"
+                                          loading="lazy"
+                                          {...props}
+                                        />
+                                      );
+                                    },
+                                    video: ({ src, ...props }) => {
+                                      // 转换相对路径为绝对路径
+                                      let videoSrc = src;
+                                      if (src && typeof src === 'string') {
+                                        // 如果是以 ./assets/ 开头的相对路径，转换为绝对路径
+                                        if (src.startsWith('./assets/')) {
+                                          const categoryPath = category || 'scripts';
+                                          videoSrc = `/content/${categoryPath}/${src.replace('./', '')}`;
+                                        }
+                                        // 如果是以 assets/ 开头的相对路径
+                                        else if (src.startsWith('assets/')) {
+                                          const categoryPath = category || 'scripts';
+                                          videoSrc = `/content/${categoryPath}/${src}`;
+                                        }
+                                      }
+                                      return (
+                                        <video
+                                          src={videoSrc}
+                                          controls
+                                          className="w-full rounded-lg my-4"
+                                          {...props}
+                                        />
+                                      );
+                                    },
                                     iframe: ({ src, title, ...props }) => (
                                       <iframe
                                         src={src}

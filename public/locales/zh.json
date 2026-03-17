@@ -114,5 +114,9 @@
         "extendscript": "AE 脚本开发指南"
       }
     }
+  },
+  "home": {
+    "recentDocs": "最近更新",
+    "recentDocsDesc": "最近更新的12篇文档"
   }
 }
