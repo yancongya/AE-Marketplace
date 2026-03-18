@@ -42,11 +42,27 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   // 检查 GitHub 认证状态
   useEffect(() => {
     checkGitHubAuth();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // 只在组件挂载时执行一次
+  
+  // 监听 URL 变化（处理 OAuth 回调后的重新检查）
+  useEffect(() => {
+    const handleRouteChange = () => {
+      console.log('Route changed, checking auth...');
+      if (githubAuth.isAuthenticated() && !isAdmin) {
+        checkGitHubAuth();
+      }
+    };
+    
+    handleRouteChange();
+  }, []); // 只执行一次
 
   const checkGitHubAuth = async () => {
     console.log('Checking GitHub authentication...');
-    if (githubAuth.isAuthenticated()) {
+    const isAuthenticated = githubAuth.isAuthenticated();
+    console.log('Authentication status:', isAuthenticated);
+    
+    if (isAuthenticated) {
       try {
         const userInfo = await githubAuth.getUserInfo();
         console.log('GitHub user info:', { login: userInfo.login, id: userInfo.id });
@@ -70,8 +86,10 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           console.warn('Reason:', diagnosis.reason);
           console.warn('Permissions:', diagnosis.permissions);
           
-          // 给用户显示提示
-          toast.error(`没有管理员权限: ${diagnosis.reason}`);
+          // 只显示一次提示
+          if (!diagnosis.hasAccess && diagnosis.permissions) {
+            toast.error(`没有管理员权限: ${diagnosis.reason}`);
+          }
         }
       } catch (error) {
         console.error('GitHub auth check failed:', error);

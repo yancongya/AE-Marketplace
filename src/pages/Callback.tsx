@@ -21,7 +21,11 @@ export function Callback() {
         
         await githubAuth.handleCallback(params);
         toast.success('GitHub 登录成功！');
-        navigate('/');
+        
+        // 等待一小段时间，确保状态更新
+        setTimeout(() => {
+          navigate('/');
+        }, 100);
       } catch (error) {
         console.error('Callback error:', error);
         toast.error('登录失败，请重试');
