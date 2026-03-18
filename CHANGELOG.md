@@ -5,6 +5,17 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.1] - 2026-03-18
+
+### 修复 (Fixed)
+
+#### 严重问题
+- 🐛 修复 SPA 路由下静态资源 404 错误
+  - 问题：访问 `/scripts/`、`/expressions/` 等路由时，浏览器返回 `GET http://localhost:4173/scripts/assets/index-jZABbbTM.js net::ERR_ABORTED 404 (Not Found)`
+  - 原因：vite.config.ts 中使用相对路径 `base: './'`，导致浏览器从当前路由的相对路径加载资源
+  - 解决：将 `base` 配置改为绝对路径 `base: '/'`，确保所有路由都从根路径加载资源
+  - 影响：修复了所有子路由页面的资源加载失败问题
+
 ## [1.0.0] - 2026-02-05
 
 ### 新增 (Added)

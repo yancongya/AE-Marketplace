@@ -4,7 +4,7 @@ import { defineConfig } from "vite"
 import { adminApiPlugin } from "./vite-plugin-admin-api"
 
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [react(), adminApiPlugin()],
   resolve: {
     alias: {
