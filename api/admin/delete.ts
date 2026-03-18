@@ -56,6 +56,48 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     console.log(`[Delete API] 已删除文件: ${path}, commit: ${commitData.commit.sha}`);
 
+    // 更新 manifest
+    try {
+      const manifestPath = `public/content/${category}/_manifest.json`;
+      let manifest: string[] = [];
+
+      // 获取现有的 manifest
+      try {
+        const { data: manifestData } = await octokit.rest.repos.getContent({
+          owner,
+          repo,
+          path: manifestPath,
+        });
+        const manifestContent = Buffer.from((manifestData as any).content, 'base64').toString('utf-8');
+        manifest = JSON.parse(manifestContent);
+      } catch (error: any) {
+        if (error.status !== 404) {
+          throw error;
+        }
+        // manifest 不存在，跳过更新
+      }
+
+      // 从 manifest 中移除文件
+      const index = manifest.indexOf(filename);
+      if (index > -1) {
+        manifest.splice(index, 1);
+
+        // 提交更新的 manifest
+        await octokit.rest.repos.createOrUpdateFileContents({
+          owner,
+          repo,
+          path: manifestPath,
+          message: `docs: update manifest for ${category}`,
+          content: Buffer.from(JSON.stringify(manifest, null, 2)).toString('base64'),
+        });
+
+        console.log(`[Delete API] 已更新 manifest: ${manifestPath}`);
+      }
+    } catch (manifestError) {
+      console.error('[Delete API] 更新 manifest 失败:', manifestError);
+      // manifest 更新失败不影响主功能，继续返回成功
+    }
+
     return res.status(200).json({
       success: true,
       message: '删除成功',
