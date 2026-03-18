@@ -141,8 +141,8 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
             filename={`${item.slug}.md`}
           />
         ))}
-        {/* 新建文档卡片（仅开发模式和管理员模式） */}
-        {import.meta.env.DEV && isAdmin && (
+        {/* 新建文档卡片（管理员模式） */}
+        {isAdmin && (
           <div
             onClick={async () => {
               try {

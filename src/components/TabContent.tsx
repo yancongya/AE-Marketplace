@@ -795,7 +795,7 @@ export function TabContent({
 
   // 检测 URL 哈希值，如果有 #edit 就自动进入编辑模式（仅管理员模式）
   useEffect(() => {
-    if (location.hash === '#edit' && isAdmin && import.meta.env.DEV) {
+    if (location.hash === '#edit' && isAdmin) {
       setIsEditing(true);
     }
   }, [location.hash, isAdmin]);
@@ -906,7 +906,7 @@ export function TabContent({
                 <span className="terminal-dot terminal-dot-yellow" />
                 <span className="terminal-dot terminal-dot-green" />
                 <span className="ml-auto flex items-center gap-2 sm:gap-3">
-                  {import.meta.env.DEV && isAdmin && (
+                  {isAdmin && (
                     <>
                       {isEditing ? (
                         <>
