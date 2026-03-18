@@ -28,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const owner = 'yancongya';
     const repo = 'AE-Marketplace';
     const filename = `${slug}.md`;
-    const path = `content/${category}/${filename}`;
+    const path = `public/content/${category}/${filename}`;
 
     // 获取文件 SHA
     let sha: string;

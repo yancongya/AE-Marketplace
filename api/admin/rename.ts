@@ -30,8 +30,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const oldFilename = `${oldSlug}.md`;
     const newFilename = `${newSlug}.md`;
-    const oldPath = `content/${category}/${oldFilename}`;
-    const newPath = `content/${category}/${newFilename}`;
+    const oldPath = `public/content/${category}/${oldFilename}`;
+    const newPath = `public/content/${category}/${newFilename}`;
 
     // 验证 newSlug（仅限英文）
     const slugRegex = /^[a-z0-9-]+$/;

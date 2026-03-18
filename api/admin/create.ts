@@ -41,7 +41,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const filename = `${finalSlug}.md`;
-    const path = `content/${category}/${filename}`;
+    const path = `public/content/${category}/${filename}`;
 
     // 生成 markdown 内容
     const content = generateMarkdown(data);
