@@ -60,29 +60,35 @@ export class StagingArea {
    * 添加变更到暂存区
    */
   stageChange(change: Omit<StagedChange, 'id' | 'timestamp'>): string {
-    const id = `${change.type}-${change.category}-${change.slug}-${Date.now()}`;
-    const stagedChange: StagedChange = {
-      ...change,
-      id,
-      timestamp: Date.now(),
-    };
-
     // 检查是否已存在相同的变更
     const existingIndex = this.changes.findIndex(
       (c) => c.category === change.category && c.slug === change.slug
     );
 
     if (existingIndex !== -1) {
-      // 更新现有变更
-      this.changes[existingIndex] = stagedChange;
+      // 更新现有变更（保持原有的 id）
+      const existingChange = this.changes[existingIndex];
+      const updatedChange: StagedChange = {
+        ...change,
+        id: existingChange.id, // 保持原有的 id
+        timestamp: Date.now(), // 更新时间戳
+      };
+      this.changes[existingIndex] = updatedChange;
+      console.log(`[StagingArea] 已更新暂存变更: ${updatedChange.id}`);
+      return updatedChange.id;
     } else {
       // 添加新变更
+      const id = `${change.type}-${change.category}-${change.slug}-${Date.now()}`;
+      const stagedChange: StagedChange = {
+        ...change,
+        id,
+        timestamp: Date.now(),
+      };
       this.changes.push(stagedChange);
+      this.saveToStorage();
+      console.log(`[StagingArea] 已暂存变更: ${id}`);
+      return id;
     }
-
-    this.saveToStorage();
-    console.log(`[StagingArea] 已暂存变更: ${id}`);
-    return id;
   }
 
   /**
@@ -240,6 +246,14 @@ export class StagingArea {
 
     if (!response.ok) {
       const error = await response.json();
+      
+      // 如果文件不存在，尝试使用 create API
+      if (error.error === '文件不存在') {
+        console.log(`[StagingArea] 文件不存在，改用 create API: ${change.category}/${change.slug}`);
+        await this.apiCreate(change, headers);
+        return;
+      }
+      
       throw new Error(error.error || '更新失败');
     }
   }

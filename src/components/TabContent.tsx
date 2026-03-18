@@ -783,14 +783,37 @@ export function TabContent({
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const slug = propSlug || (filename ? filename.replace('.md', '') : '');
+  
+  // 检查是否是临时文档
+  const isTempDoc = slug.startsWith('temp-');
+  
+  // 如果是临时文档，从暂存区获取数据
+  let tempDocData: any = null;
+  if (isTempDoc && category) {
+    const stagedChanges = stagingArea.getStagedChangesByCategory(category);
+    const tempChange = stagedChanges.find(c => c.slug === slug && c.type === 'create');
+    if (tempChange) {
+      tempDocData = tempChange.data;
+    }
+  }
+  
+  // 使用临时文档数据或原始数据
+  const displayTitle = tempDocData?.title || title || '未命名文档';
+  const displayIconEmoji = tempDocData?.iconEmoji || iconEmoji;
+  const displayAuthor = tempDocData?.author || author;
+  const displayTags = tempDocData?.tags || tags || [];
+  const displayDescription = tempDocData?.description || subtitle || '';
+  const displayUpdatedAt = tempDocData?.updatedAt || updatedAt || new Date().toISOString().split('T')[0];
+  const displayContent = tempDocData?.content || content || '# 新建文档\n\n开始编写你的文档...';
+  
   const [editData, setEditData] = useState({
-    title,
-    iconEmoji,
-    author,
-    tags: tags || [],
-    description: subtitle,
-    updatedAt,
-    content,
+    title: displayTitle,
+    iconEmoji: displayIconEmoji,
+    author: displayAuthor,
+    tags: displayTags,
+    description: displayDescription,
+    updatedAt: displayUpdatedAt,
+    content: displayContent,
     slug,
     command: '' // 添加 command 属性
   });
