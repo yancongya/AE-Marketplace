@@ -73,6 +73,13 @@ export function TabCard({
         setTimeout(() => {
           window.location.reload();
         }, 1000);
+      } else if (result.error === '文件不存在') {
+        // 文件不存在，视为删除成功
+        toast.success('文件已不存在，请稍后刷新页面');
+        setIsDeleteDialogOpen(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         toast.error(result.error || '删除失败');
       }
