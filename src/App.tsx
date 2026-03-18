@@ -11,6 +11,7 @@ import { I18nProvider } from '@/contexts/I18nContext';
 import { AdminProvider } from '@/contexts/AdminContext';
 import { Toaster } from '@/components/ui/sonner';
 import { Home } from '@/pages/Home';
+import { Callback } from '@/pages/Callback';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -115,6 +116,7 @@ function AppContent() {
                       <ExtensionsTab />
                     </PageWrapper>
                   } />
+                  <Route path="/callback" element={<Callback />} />
                 </Routes>
               </AnimatePresence>
             </main>

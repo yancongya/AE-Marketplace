@@ -1,14 +1,24 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { GitHubAuth } from '@/lib/github-auth';
+import { GitHubAPI } from '@/lib/github-api';
 
 interface AdminContextType {
   isAdmin: boolean;
+  user: any;
   login: (password: string) => boolean;
+  loginWithGitHub: () => void;
   logout: () => void;
+  githubAuth: GitHubAuth;
+  githubAPI: GitHubAPI | null;
 }
 
 const ADMIN_STORAGE_KEY = 'ae-market-admin';
 
 const AdminContext = createContext<AdminContextType | null>(null);
+
+// GitHub 仓库配置
+const GITHUB_REPO_OWNER = 'yancongya';
+const GITHUB_REPO_NAME = 'AE----';
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   // 从 localStorage 读取初始状态（仅在开发模式）
@@ -24,6 +34,36 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   };
 
   const [isAdmin, setIsAdmin] = useState(getInitialAdminState);
+  const [user, setUser] = useState<any>(null);
+  const [githubAuth] = useState(() => new GitHubAuth());
+  const [githubAPI, setGithubAPI] = useState<GitHubAPI | null>(null);
+
+  // 检查 GitHub 认证状态
+  useEffect(() => {
+    checkGitHubAuth();
+  }, []);
+
+  const checkGitHubAuth = async () => {
+    if (githubAuth.isAuthenticated()) {
+      try {
+        const userInfo = await githubAuth.getUserInfo();
+        setUser(userInfo);
+        
+        // 检查是否有仓库权限
+        const hasAccess = await githubAuth.hasRepoAccess(GITHUB_REPO_OWNER, GITHUB_REPO_NAME);
+        
+        if (hasAccess) {
+          setIsAdmin(true);
+          const token = githubAuth.getAccessToken();
+          if (token) {
+            setGithubAPI(new GitHubAPI(token, GITHUB_REPO_OWNER, GITHUB_REPO_NAME));
+          }
+        }
+      } catch (error) {
+        console.error('GitHub auth check failed:', error);
+      }
+    }
+  };
 
   const login = (password: string): boolean => {
     if (password === 'adminadmin') {
@@ -41,8 +81,16 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     return false;
   };
 
+  const loginWithGitHub = () => {
+    githubAuth.login();
+  };
+
   const logout = () => {
     setIsAdmin(false);
+    setUser(null);
+    setGithubAPI(null);
+    githubAuth.logout();
+    
     // 从 localStorage 移除（仅在开发模式）
     if (import.meta.env.DEV) {
       try {
@@ -54,7 +102,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AdminContext.Provider value={{ isAdmin, login, logout }}>
+    <AdminContext.Provider value={{ isAdmin, user, login, loginWithGitHub, logout, githubAuth, githubAPI }}>
       {children}
     </AdminContext.Provider>
   );

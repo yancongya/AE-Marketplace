@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Moon, Sun, Code, FileCode, Layers, Box, Lock, Menu, X } from 'lucide-react';
+import { Globe, Moon, Sun, Code, FileCode, Layers, Box, Lock, Menu, X, Github } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { useAdmin } from '@/contexts/AdminContext';
@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 export function Navbar() {
   const { isDark, toggleTheme } = useTheme();
   const { locale, setLocale, t } = useI18n();
-  const { isAdmin, login, logout } = useAdmin();
+  const { isAdmin, user, login, loginWithGitHub, logout } = useAdmin();
   const location = useLocation();
   const [itemCounts, setItemCounts] = useState({
     expressions: 0,
@@ -136,6 +136,25 @@ export function Navbar() {
 
           {/* Right: Mobile menu button, Theme toggle, language, admin */}
           <div className="flex items-center gap-2">
+            {user ? (
+              <div
+                className="flex items-center gap-2 px-3 py-1.5 rounded bg-primary/10 border border-primary/30"
+                title={`GitHub 用户: ${user.login}`}
+              >
+                <Github className="w-4 h-4 text-primary" />
+                <span className="text-xs font-mono text-primary">{user.login}</span>
+                {isAdmin && <Lock className="w-3 h-3 text-primary" />}
+              </div>
+            ) : (
+              <button
+                onClick={loginWithGitHub}
+                className="flex items-center gap-2 px-3 py-1.5 rounded bg-primary/10 hover:bg-primary/20 border border-primary/30 transition-colors"
+                title="使用 GitHub 登录"
+              >
+                <Github className="w-4 h-4 text-primary" />
+                <span className="text-xs font-mono text-primary">GitHub</span>
+              </button>
+            )}
             {import.meta.env.DEV && isAdmin && (
               <div
                 className="p-2"
