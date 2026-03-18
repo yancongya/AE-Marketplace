@@ -56,46 +56,54 @@ export class GitHubAuth {
   async handleCallback(params: URLSearchParams): Promise<string | null> {
     const code = params.get('code');
     const state = params.get('state');
-    
+
     // 验证 state
     const storedState = sessionStorage.getItem('oauth_state');
     if (state !== storedState) {
       throw new Error('Invalid state parameter');
     }
-    
+
     const codeVerifier = sessionStorage.getItem('code_verifier');
     if (!codeVerifier) {
       throw new Error('Code verifier not found');
     }
-    
-    // 交换 access token
-    const response = await fetch('https://github.com/login/oauth/access_token', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        client_id: this.clientId,
-        code: code,
-        code_verifier: codeVerifier,
-      }),
-    });
-    
-    const data = await response.json();
-    
-    if (data.error) {
-      throw new Error(data.error_description || data.error);
+
+    try {
+      // 尝试通过 Vercel Serverless Function 代理调用
+      const response = await fetch('/api/github-callback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          code: code,
+          code_verifier: codeVerifier,
+          client_id: this.clientId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error_description || data.error);
+      }
+
+      // 存储 access token
+      localStorage.setItem('github_access_token', data.access_token);
+
+      // 清理 sessionStorage
+      sessionStorage.removeItem('code_verifier');
+      sessionStorage.removeItem('oauth_state');
+
+      return data.access_token;
+    } catch (error) {
+      console.error('Token exchange failed:', error);
+      throw new Error('Failed to exchange access token');
     }
-    
-    // 存储 access token
-    localStorage.setItem('github_access_token', data.access_token);
-    
-    // 清理 sessionStorage
-    sessionStorage.removeItem('code_verifier');
-    sessionStorage.removeItem('oauth_state');
-    
-    return data.access_token;
   }
   
   // 获取 access token
