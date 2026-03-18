@@ -88,6 +88,25 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
     );
   }
 
+  // 检查是否是临时文档（新建文档）
+  const isTempDoc = slug?.startsWith('temp-');
+
+  // 如果是临时文档，渲染 TabContent（从暂存区加载数据）
+  if (isTempDoc && category) {
+    return (
+      <TabContent
+        title=""
+        iconEmoji="📝"
+        subtitle=""
+        content=""
+        onBack={() => navigate(`/${category}`)}
+        category={category}
+        slug={slug}
+      />
+    );
+  }
+
+  // 如果是已存在的文档，显示详情
   if (selectedItem) {
     return (
       <TabContent
