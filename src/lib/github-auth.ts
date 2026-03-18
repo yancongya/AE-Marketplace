@@ -153,16 +153,97 @@ export class GitHubAuth {
   // 检查用户是否有权限
   async hasRepoAccess(owner: string, repo: string): Promise<boolean> {
     const octokit = this.getOctokit();
-    if (!octokit) return false;
+    if (!octokit) {
+      console.warn('No Octokit instance available');
+      return false;
+    }
     
     try {
-      await octokit.rest.repos.get({
+      // 尝试获取仓库信息
+      const { data: repoData } = await octokit.rest.repos.get({
         owner,
         repo,
       });
-      return true;
-    } catch (error) {
+      
+      console.log('Repository found:', {
+        name: repoData.name,
+        visibility: repoData.visibility,
+        permissions: repoData.permissions,
+        owner: repoData.owner.login,
+      });
+      
+      // 检查用户是否有写入权限
+      const hasWritePermission = repoData.permissions?.push === true || 
+                                  repoData.permissions?.admin === true;
+      
+      console.log('Write permission check:', hasWritePermission);
+      
+      if (!hasWritePermission) {
+        console.warn('User does not have write permission. Permissions:', repoData.permissions);
+      }
+      
+      return hasWritePermission;
+    } catch (error: any) {
+      console.error('Repo access check failed:', {
+        owner,
+        repo,
+        error: error.message,
+        status: error.status,
+      });
       return false;
+    }
+  }
+  
+  // 诊断权限问题
+  async diagnosePermissions(owner: string, repo: string): Promise<{
+    authenticated: boolean;
+    user: any;
+    repoExists: boolean;
+    permissions: any;
+    hasAccess: boolean;
+    reason: string;
+  }> {
+    const octokit = this.getOctokit();
+    if (!octokit) {
+      return {
+        authenticated: false,
+        user: null,
+        repoExists: false,
+        permissions: null,
+        hasAccess: false,
+        reason: 'Not authenticated'
+      };
+    }
+    
+    try {
+      // 获取用户信息
+      const { data: user } = await octokit.rest.users.getAuthenticated();
+      
+      // 获取仓库信息
+      const { data: repoData } = await octokit.rest.repos.get({ owner, repo });
+      
+      return {
+        authenticated: true,
+        user: { login: user.login, id: user.id },
+        repoExists: true,
+        permissions: repoData.permissions,
+        hasAccess: repoData.permissions?.push === true || 
+                  repoData.permissions?.admin === true,
+        reason: repoData.permissions?.push === true ? 
+          'User has push permission' : 
+          repoData.permissions?.admin === true ?
+          'User is admin' :
+          'User only has read permission'
+      };
+    } catch (error: any) {
+      return {
+        authenticated: true,
+        user: null,
+        repoExists: false,
+        permissions: null,
+        hasAccess: false,
+        reason: `Error: ${error.message} (${error.status})`
+      };
     }
   }
 }

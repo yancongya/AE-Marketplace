@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { GitHubAuth } from '@/lib/github-auth';
 import { GitHubAPI } from '@/lib/github-api';
+import { toast } from 'sonner';
 
 interface AdminContextType {
   isAdmin: boolean;
@@ -51,24 +52,30 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         console.log('GitHub user info:', { login: userInfo.login, id: userInfo.id });
         setUser(userInfo);
         
-        // 检查是否有仓库权限
-        console.log('Checking repo access:', GITHUB_REPO_OWNER, GITHUB_REPO_NAME);
-        const hasAccess = await githubAuth.hasRepoAccess(GITHUB_REPO_OWNER, GITHUB_REPO_NAME);
-        console.log('Repo access result:', hasAccess);
+        // 诊断权限
+        console.log('Starting permission diagnosis...');
+        const diagnosis = await githubAuth.diagnosePermissions(GITHUB_REPO_OWNER, GITHUB_REPO_NAME);
+        console.log('Permission diagnosis result:', diagnosis);
         
-        if (hasAccess) {
-          console.log('User has admin access, setting isAdmin to true');
+        if (diagnosis.hasAccess) {
+          console.log('✅ User has admin access, setting isAdmin to true');
           setIsAdmin(true);
           const token = githubAuth.getAccessToken();
           if (token) {
             setGithubAPI(new GitHubAPI(token, GITHUB_REPO_OWNER, GITHUB_REPO_NAME));
-            console.log('GitHub API initialized successfully');
+            console.log('✅ GitHub API initialized successfully');
           }
         } else {
-          console.warn('User does not have access to the repository');
+          console.warn('❌ User does not have admin access');
+          console.warn('Reason:', diagnosis.reason);
+          console.warn('Permissions:', diagnosis.permissions);
+          
+          // 给用户显示提示
+          toast.error(`没有管理员权限: ${diagnosis.reason}`);
         }
       } catch (error) {
         console.error('GitHub auth check failed:', error);
+        toast.error('GitHub 认证检查失败');
       }
     } else {
       console.log('User not authenticated');
