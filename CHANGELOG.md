@@ -5,6 +5,89 @@
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.3] - 2026-03-18
+
+### 新增 (Added)
+
+#### 管理员功能
+- ✨ 实现 GitHub OAuth 登录系统
+  - 使用 OAuth 2.0 PKCE 流程，无需暴露 Client Secret
+  - 通过 Vercel Serverless Function 作为代理，绕过 CORS 限制
+  - 支持完整的 GitHub 用户认证和授权
+  - Access Token 存储在 localStorage，有效期 8 小时
+
+- ✨ 实现管理员权限验证
+  - 检查用户对 GitHub 仓库的 push 或 admin 权限
+  - 通过 GitHub REST API 验证用户权限
+  - 导航栏显示管理员状态（锁图标 🔒）
+  - 支持用户登出功能
+
+- ✨ 实现管理员文档管理功能
+  - 新建文档：创建新的 Markdown 文档
+  - 编辑文档：在线编辑现有文档内容
+  - 保存文档：将修改保存到 GitHub 仓库
+  - 文档重命名：支持修改文档 slug
+  - 所有操作通过 GitHub API 完成
+
+#### 文档
+- ✨ 创建 GitHub OAuth 应用设置指南
+  - 详细的 OAuth App 创建步骤
+  - Vercel 环境变量配置说明
+  - 常见问题和故障排查
+  - 安全注意事项和最佳实践
+
+### 修复 (Fixed)
+
+#### 严重问题
+- 🐛 修复 OAuth 登录状态同步问题
+  - 问题：OAuth 回调页面和 AdminProvider 状态检查存在时序竞争，导致登录成功后无法进入管理员模式
+  - 原因：Callback 页面的异步 `handleCallback()` 和 AdminProvider 的 `checkGitHubAuth()` 同时执行，AdminProvider 在 token 存储之前就完成检查
+  - 解决：使用浏览器原生 CustomEvent API，在 token 存储后触发 `github_auth_success` 事件，AdminContext 监听事件并重新检查认证状态
+  - 影响：修复了 GitHub 登录后无法激活管理员模式的问题
+  - 相关文档：`docs/debug/oauth-state-sync.md`
+
+- 🐛 修复生产环境管理员功能不可见问题
+  - 问题：本地开发环境可以看到管理员功能（新建、编辑按钮），但生产环境登录成功后看不到
+  - 原因：代码中有 `import.meta.env.DEV` 限制，导致管理员功能只在开发环境显示，生产环境中 `import.meta.env.DEV` 为 false
+  - 解决：移除 `TabList.tsx` 和 `TabContent.tsx` 中的 `import.meta.env.DEV` 限制，只保留 `isAdmin` 权限检查
+  - 影响：管理员功能（新建、编辑、删除文档）现在在生产环境可用
+  - 安全保证：仍然保留完整的 GitHub OAuth 认证和权限检查，确保只有授权用户可以访问
+  - 相关文档：`docs/debug/admin-mode-production.md`
+
+### 改进 (Improved)
+
+#### 代码质量
+- 🔧 添加详细的调试日志
+  - OAuth 流程每个步骤都有日志输出
+  - 事件触发和接收都有追踪
+  - 权限诊断有详细的 JSON 输出
+  - 便于问题排查和调试
+
+#### 安全性
+- 🔧 增强 OAuth 状态管理
+  - 使用自定义事件确保同一标签页内的状态同步
+  - 添加 100ms 延迟确保 token 存储完成
+  - 清理事件监听器避免内存泄漏
+
+#### 文档
+- 🔧 创建详细的调试文档
+  - `docs/debug/oauth-state-sync.md` - OAuth 状态同步问题排查
+  - `docs/debug/admin-mode-production.md` - 生产环境管理员功能不可见问题排查
+  - 包含问题描述、根本原因分析、解决方案和验证方法
+
+### 安全 (Security)
+
+- 🔒 GitHub OAuth 实现安全增强
+  - 使用 PKCE (Proof Key for Code Exchange) 流程
+  - Client Secret 只在服务器端使用，不暴露给前端
+  - OAuth state 参数防止 CSRF 攻击
+  - Access Token 有有效期（8 小时）
+
+- 🔒 权限验证机制
+  - 检查用户对仓库的 push 或 admin 权限
+  - 所有操作通过 GitHub API 验证
+  - Token 失效后需要重新登录
+
 ## [1.0.2] - 2026-03-18
 
 ### 改进 (Improved)

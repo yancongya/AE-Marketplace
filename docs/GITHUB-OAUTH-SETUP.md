@@ -153,6 +153,122 @@ Environment: Production, Preview, Development
 2. 重新部署项目
 3. 检查 `vite.config.ts` 中的 `envPrefix` 配置
 
+### 问题 5：OAuth 登录成功但无法进入管理员模式
+
+**症状**：
+- GitHub 登录成功，控制台显示 "GitHub 登录成功！"
+- 权限检查通过："✅ User has admin access"
+- 但导航栏显示 X 图标而不是锁图标 🔒
+- 无法看到新建、编辑等管理员功能
+
+**原因**：
+OAuth 回调页面和 AdminProvider 的状态检查存在时序竞争问题：
+
+```
+时间线：
+T0: Callback 页面 useEffect 启动 → 调用 handleCallback()（异步）
+T0: AdminProvider useEffect 启动 → 调用 checkGitHubAuth()
+T0: checkGitHubAuth 调用 isAuthenticated() → 返回 false（token 未存储）
+T1: handleCallback 完成 → 存储 token 到 localStorage
+T1: AdminProvider 已经完成检查 → 不会重新检查 → isAdmin 保持 false
+```
+
+**解决方案**：
+使用自定义事件确保 Callback 页面和 AdminProvider 在同一标签页内同步状态：
+
+1. **在 `src/lib/github-auth.ts` 中触发事件**：
+```typescript
+// 存储 access token
+localStorage.setItem('github_access_token', data.access_token);
+
+// 触发自定义事件（同标签页通信）
+const authEvent = new CustomEvent('github_auth_success', {
+  detail: { accessToken: data.access_token }
+});
+window.dispatchEvent(authEvent);
+```
+
+2. **在 `src/contexts/AdminContext.tsx` 中监听事件**：
+```typescript
+useEffect(() => {
+  const handleAuthSuccess = (event: Event) => {
+    const customEvent = event as CustomEvent<{ accessToken: string }>;
+    setTimeout(() => {
+      checkGitHubAuth(); // 重新检查认证状态
+    }, 100);
+  };
+  
+  window.addEventListener('github_auth_success', handleAuthSuccess);
+  return () => {
+    window.removeEventListener('github_auth_success', handleAuthSuccess);
+  };
+}, []);
+```
+
+**为什么不用 storage 事件？**
+- `storage` 事件只在跨标签页触发
+- Callback 页面和 AdminProvider 在同一标签页
+- 自定义事件可以在同一标签页内触发
+
+**验证方法**：
+查看控制台日志，应该看到：
+```
+handleCallback: Event created, dispatching...
+handleCallback: Event dispatched successfully
+Received github_auth_success event (raw)
+Received github_auth_success event: { accessToken: "gho_xxx..." }
+Re-checking authentication after auth success event
+Authentication status: true  // ← 这次应该是 true
+✅ User has admin access, setting isAdmin to true
+```
+
+### 问题 6：生产环境管理员功能不可见
+
+**症状**：
+- 本地开发环境（`npm run dev`）可以看到管理员功能（新建、编辑按钮）
+- 生产环境（Vercel 部署后）登录成功但看不到管理员功能
+- 即使 `isAdmin` 为 true，界面也不显示管理员控制
+
+**原因**：
+代码中有 `import.meta.env.DEV` 限制，导致管理员功能只在开发环境显示：
+
+```typescript
+// TabList.tsx - 新建文档卡片
+{import.meta.env.DEV && isAdmin && (
+  <div>新建文档</div>
+)}
+
+// TabContent.tsx - 编辑按钮
+{import.meta.env.DEV && isAdmin && (
+  <button>编辑</button>
+)}
+```
+
+**解决方案**：
+移除 `import.meta.env.DEV` 限制，只保留 `isAdmin` 权限检查：
+
+```typescript
+// 修改前
+{import.meta.env.DEV && isAdmin && ( ... )}
+
+// 修改后
+{isAdmin && ( ... )}
+```
+
+**需要修改的文件**：
+1. `src/components/TabList.tsx` - 新建文档卡片
+2. `src/components/TabContent.tsx` - 编辑/保存/取消按钮
+
+**安全保证**：
+- 仍然保留 `isAdmin` 权限检查
+- 只有通过 GitHub 验证且有仓库权限的用户才能使用
+- Token 存储在 localStorage，登录后才会设置 `isAdmin = true`
+
+**验证方法**：
+1. 登录 GitHub 后，导航栏应显示 🔒 锁图标
+2. 在任意标签页，可以看到"新建文档"卡片（带 + 图标）
+3. 点击任意文档，右上角应显示"编辑"按钮
+
 ## 注意事项
 
 ### 安全相关
