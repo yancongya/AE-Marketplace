@@ -6,6 +6,18 @@ import { Octokit } from 'octokit';
  * POST /api/admin/rename
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // 设置 CORS 头
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+
+  // 处理 OPTIONS 预检请求
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
