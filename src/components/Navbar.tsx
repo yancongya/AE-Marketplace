@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Globe, Moon, Sun, Code, FileCode, Layers, Box, Lock, Menu, X, Github } from 'lucide-react';
+import { Globe, Moon, Sun, Code, FileCode, Layers, Box, Lock, Menu, X, Github, LogOut } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { useAdmin } from '@/contexts/AdminContext';
@@ -137,19 +137,28 @@ export function Navbar() {
           {/* Right: Mobile menu button, Theme toggle, language, admin */}
           <div className="flex items-center gap-2">
             {user ? (
-              <div
-                className="flex items-center gap-2 px-3 py-1.5 rounded bg-primary/10 border border-primary/30"
-                title={`GitHub 用户: ${user.login}${isAdmin ? ' (管理员)' : ' (无权限)'}`}
-              >
-                <Github className="w-4 h-4 text-primary" />
-                <span className="text-xs font-mono text-primary">{user.login}</span>
-                {isAdmin ? (
-                  <Lock className="w-3 h-3 text-primary" />
-                ) : (
-                  <span className="text-xs text-muted-foreground">
-                    <X className="w-3 h-3" />
-                  </span>
-                )}
+              <div className="flex items-center gap-2">
+                <div
+                  className="flex items-center gap-2 px-3 py-1.5 rounded bg-primary/10 border border-primary/30"
+                  title={`GitHub 用户: ${user.login}${isAdmin ? ' (管理员)' : ' (无权限)'}`}
+                >
+                  <Github className="w-4 h-4 text-primary" />
+                  <span className="text-xs font-mono text-primary">{user.login}</span>
+                  {isAdmin ? (
+                    <Lock className="w-3 h-3 text-primary" />
+                  ) : (
+                    <span className="text-xs text-muted-foreground">
+                      <X className="w-3 h-3" />
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1 px-2 py-1.5 rounded bg-secondary/50 hover:bg-secondary border border-border transition-colors"
+                  title="退出登录"
+                >
+                  <LogOut className="w-4 h-4 text-muted-foreground" />
+                </button>
               </div>
             ) : (
               <button
