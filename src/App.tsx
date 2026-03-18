@@ -6,6 +6,7 @@ import { Navbar } from '@/components/Navbar';
 import { ExpressionsTab, ScriptsTab } from '@/components/ExpressionsTab';
 import { PresetsTab } from '@/components/PresetsTab';
 import { ExtensionsTab } from '@/components/ExtensionsTab';
+import { StagingPanel } from '@/components/StagingPanel';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { I18nProvider } from '@/contexts/I18nContext';
 import { AdminProvider } from '@/contexts/AdminContext';
@@ -121,6 +122,7 @@ function AppContent() {
               </AnimatePresence>
             </main>
             <Toaster />
+            <StagingPanel />
           </div>
         </ThemeProvider>
       </I18nProvider>

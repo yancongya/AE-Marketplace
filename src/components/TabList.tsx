@@ -6,6 +6,8 @@ import { TabContent } from './TabContent';
 import { useI18n } from '@/contexts/I18nContext';
 import { useAdmin } from '@/contexts/AdminContext';
 import { Plus } from 'lucide-react';
+import { stagingArea } from '@/lib/staging';
+import { toast } from 'sonner';
 import type { ContentItem, PresetItem, ExtensionItem } from '@/lib/content';
 
 export interface TabListProps<T extends ContentItem | PresetItem | ExtensionItem> {
@@ -146,31 +148,35 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
           <div
             onClick={async () => {
               try {
-                const response = await fetch('/api/admin/create', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    category,
-                    data: {
-                      title: '新建文档',
-                      iconEmoji: '📝',
-                      author: '',
-                      tags: [],
-                      description: '',
-                      updatedAt: new Date().toISOString().split('T')[0],
-                      content: '# 新建文档\n\n开始编写你的文档...'
-                    }
-                  }),
+                const tempSlug = `temp-${Date.now()}`;
+                const newDoc: ContentItem = {
+                  title: '新建文档',
+                  iconEmoji: '📝',
+                  author: '',
+                  tags: [],
+                  description: '',
+                  updatedAt: new Date().toISOString().split('T')[0],
+                  content: '# 新建文档\n\n开始编写你的文档...',
+                  slug: tempSlug,
+                  category,
+                  command: '' // 添加 command 属性
+                };
+
+                // 暂存变更
+                stagingArea.stageChange({
+                  type: 'create',
+                  category,
+                  slug: tempSlug,
+                  data: newDoc,
                 });
-                const result = await response.json();
-                if (result.success) {
-                  window.location.href = `/${category}/${result.slug}#edit`;
-                } else {
-                  alert('创建失败: ' + result.error);
-                }
+
+                toast.success('文档已添加到暂存区，请稍后提交');
+
+                // 跳转到编辑页面
+                navigate(`/${category}/${tempSlug}#edit`);
               } catch (error) {
                 console.error('创建失败:', error);
-                alert('创建失败');
+                toast.error('创建失败');
               }
             }}
             className="terminal-window cursor-pointer hover:border-primary/50 transition-all min-h-[160px] sm:min-h-[180px] md:min-h-[200px] flex items-center justify-center group"

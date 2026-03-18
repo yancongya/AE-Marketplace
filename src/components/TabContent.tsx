@@ -1,7 +1,7 @@
 import { ChevronLeft, Copy, Check, ExternalLink, List, X, ZoomIn, ZoomOut, Maximize, Edit, Save, RotateCcw } from 'lucide-react';
 import type { ReactNode } from 'react';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -14,6 +14,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useI18n } from '@/contexts/I18nContext';
 import { useAdmin } from '@/contexts/AdminContext';
 import { toast } from 'sonner';
+import { stagingArea } from '@/lib/staging';
 import { CommentSection } from './CommentSection';
 import { visit } from 'unist-util-visit';
 
@@ -779,6 +780,7 @@ export function TabContent({
   const { translations } = useI18n();
   const { isAdmin } = useAdmin();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const slug = propSlug || (filename ? filename.replace('.md', '') : '');
   const [editData, setEditData] = useState({
@@ -789,7 +791,8 @@ export function TabContent({
     description: subtitle,
     updatedAt,
     content,
-    slug
+    slug,
+    command: '' // 添加 command 属性
   });
   const headings = useMemo(() => extractHeadings(content), [content]);
 
@@ -812,24 +815,25 @@ export function TabContent({
       iconEmoji,
       author,
       tags: tags || [],
-      description: subtitle,
+      description: subtitle || '',
       updatedAt,
       content,
-      slug
+      slug,
+      command: ''
     });
     window.location.hash = '';
   };
 
   const handleSave = async () => {
     if (!category || !slug) {
-      alert('缺少必要参数');
+      toast.error('缺少必要参数');
       return;
     }
 
     // 验证 slug（仅限英文）
     const slugRegex = /^[a-z0-9-]+$/;
     if (editData.slug && !slugRegex.test(editData.slug)) {
-      alert('文档名只能包含英文小写字母、数字和连字符');
+      toast.error('文档名只能包含英文小写字母、数字和连字符');
       return;
     }
 
@@ -838,50 +842,44 @@ export function TabContent({
       const slugChanged = editData.slug && editData.slug !== slug;
 
       if (slugChanged) {
-        // 如果 slug 改变了，使用 rename API（包含保存内容和改名）
-        const response = await fetch('/api/admin/rename', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            category,
-            oldSlug: slug,
-            newSlug: editData.slug,
-            data: editData
-          }),
+        // 如果 slug 改变了，暂存为 rename 操作
+        stagingArea.stageChange({
+          type: 'rename',
+          category,
+          slug: editData.slug!,
+          oldSlug: slug,
+          data: {
+            ...editData,
+            description: editData.description || '',
+          },
         });
 
-        const result = await response.json();
-        if (!result.success) {
-          throw new Error(result.error || '保存失败');
-        }
+        toast.success('文档重命名已添加到暂存区，请稍后提交');
 
-        // 改名成功后，跳转到新的 URL 并刷新页面
-        window.location.href = `/${category}/${editData.slug}`;
+        // 跳转到新的 URL 并刷新页面
+        setIsEditing(false);
+        window.location.hash = '';
+        navigate(`/${category}/${editData.slug}`);
       } else {
-        // 如果 slug 没有改变，只保存内容
-        const response = await fetch('/api/admin/update', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            category,
-            slug,
-            data: editData
-          }),
+        // 如果 slug 没有改变，暂存为 update 操作
+        stagingArea.stageChange({
+          type: 'update',
+          category,
+          slug,
+          data: {
+            ...editData,
+            description: editData.description || '',
+          },
         });
 
-        const result = await response.json();
-
-        if (!result.success) {
-          throw new Error(result.error || '保存失败');
-        }
+        toast.success('文档更新已添加到暂存区，请稍后提交');
 
         setIsEditing(false);
         window.location.hash = '';
-        window.location.reload();
       }
     } catch (error) {
       console.error('保存失败:', error);
-      alert('保存失败: ' + (error instanceof Error ? error.message : '未知错误'));
+      toast.error('保存失败: ' + (error instanceof Error ? error.message : '未知错误'));
     }
   };
 
