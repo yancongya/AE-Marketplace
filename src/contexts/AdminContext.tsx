@@ -45,23 +45,26 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 只在组件挂载时执行一次
   
-  // 监听 localStorage 变化（处理 OAuth 回调后的状态更新）
+  // 监听自定义事件（处理 OAuth 回调后的状态更新）
   useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'github_access_token') {
-        console.log('Storage changed: github_access_token updated');
-        // 延迟检查，确保状态稳定
-        setTimeout(() => {
-          console.log('Re-checking authentication after storage change');
-          checkGitHubAuth();
-        }, 100);
-      }
+    const handleAuthSuccess = (event: Event) => {
+      console.log('Received github_auth_success event (raw)', event);
+      const customEvent = event as CustomEvent<{ accessToken: string }>;
+      console.log('Received github_auth_success event:', customEvent.detail);
+      
+      // 延迟检查，确保状态稳定
+      setTimeout(() => {
+        console.log('Re-checking authentication after auth success event');
+        checkGitHubAuth();
+      }, 100);
     };
     
-    window.addEventListener('storage', handleStorageChange);
+    console.log('Setting up github_auth_success event listener');
+    window.addEventListener('github_auth_success', handleAuthSuccess);
     
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      console.log('Cleaning up github_auth_success event listener');
+      window.removeEventListener('github_auth_success', handleAuthSuccess);
     };
   }, []); // 只设置一次监听器
 

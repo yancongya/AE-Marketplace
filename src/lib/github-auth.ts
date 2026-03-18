@@ -120,6 +120,15 @@ export class GitHubAuth {
       console.log('handleCallback: Storing access token to localStorage');
       localStorage.setItem('github_access_token', data.access_token);
       console.log('handleCallback: Access token stored successfully');
+      
+      // 触发自定义事件通知其他组件
+      console.log('handleCallback: Dispatching github_auth_success event');
+      const authEvent = new CustomEvent('github_auth_success', {
+        detail: { accessToken: data.access_token }
+      });
+      console.log('handleCallback: Event created, dispatching...');
+      window.dispatchEvent(authEvent);
+      console.log('handleCallback: Event dispatched successfully');
 
       // 清理 sessionStorage
       sessionStorage.removeItem('code_verifier');
