@@ -72,6 +72,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       const manifestPath = `public/content/${category}/_manifest.json`;
       let manifest: string[] = [];
+      let manifestSha: string | undefined = undefined;
 
       // 获取现有的 manifest
       try {
@@ -82,11 +83,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
         const manifestContent = Buffer.from((manifestData as any).content, 'base64').toString('utf-8');
         manifest = JSON.parse(manifestContent);
+        manifestSha = (manifestData as any).sha;
       } catch (error: any) {
         if (error.status !== 404) {
           throw error;
         }
-        // manifest 不存在，跳过更新
+        // manifest 不存在，创建新的
       }
 
       // 从 manifest 中移除文件
@@ -95,13 +97,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         manifest.splice(index, 1);
 
         // 提交更新的 manifest
-        await octokit.rest.repos.createOrUpdateFileContents({
-          owner,
-          repo,
-          path: manifestPath,
-          message: `docs: update manifest for ${category}`,
-          content: Buffer.from(JSON.stringify(manifest, null, 2)).toString('base64'),
-        });
+        if (manifestSha) {
+          // 文件已存在，需要提供 SHA
+          await octokit.rest.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path: manifestPath,
+            message: `docs: update manifest for ${category}`,
+            content: Buffer.from(JSON.stringify(manifest, null, 2)).toString('base64'),
+            sha: manifestSha,
+          });
+        } else {
+          // 文件不存在，创建新文件
+          await octokit.rest.repos.createOrUpdateFileContents({
+            owner,
+            repo,
+            path: manifestPath,
+            message: `docs: create manifest for ${category}`,
+            content: Buffer.from(JSON.stringify(manifest, null, 2)).toString('base64'),
+          });
+        }
 
         console.log(`[Delete API] 已更新 manifest: ${manifestPath}`);
       }
