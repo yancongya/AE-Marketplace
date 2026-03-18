@@ -1,34 +1,11 @@
 ---
-title: 高级动画预设合集
+title: 高级动画预设合集修改
 iconEmoji: 🎬
 author: 烟囱鸭
-tags: [预设, 动画, 高级]
-category: animation
-command: import presets
+tags: ["预设", "动画", "高级"]
 description: 精心制作的AE动画预设集合，包含多种风格的动画效果和过渡
 updatedAt: 2026-02-05
-count: 50
-toc:
-  - id: 预设分类
-    text: 预设分类
-    level: 2
-  - id: 流程图示例
-    text: 流程图示例
-    level: 2
-  - id: 时序图示例
-    text: 时序图示例
-    level: 2
-  - id: 甘特图示例
-    text: 甘特图示例
-    level: 2
-  - id: 饼图示例
-    text: 饼图示例
-    level: 2
-  - id: 代码示例
-    text: 代码示例
-    level: 2
 ---
-
 # 高级动画预设合集
 
 ## 预设分类
