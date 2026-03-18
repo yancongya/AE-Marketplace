@@ -144,9 +144,9 @@ export function Navbar() {
                 <Github className="w-4 h-4 text-primary" />
                 <span className="text-xs font-mono text-primary">{user.login}</span>
                 {isAdmin ? (
-                  <Lock className="w-3 h-3 text-primary" title="管理员权限" />
+                  <Lock className="w-3 h-3 text-primary" />
                 ) : (
-                  <span className="text-xs text-muted-foreground" title="无仓库访问权限">
+                  <span className="text-xs text-muted-foreground">
                     <X className="w-3 h-3" />
                   </span>
                 )}
