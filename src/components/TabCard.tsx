@@ -4,6 +4,7 @@ import { useAdmin } from '@/contexts/AdminContext';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { clearContentCache } from '@/lib/content';
 
 interface TabCardProps {
   title: string;
@@ -67,19 +68,24 @@ export function TabCard({
       const result = await response.json();
 
       if (result.success) {
-        toast.success('删除成功，请稍后刷新页面');
+        toast.success('删除成功');
         setIsDeleteDialogOpen(false);
-        // 刷新页面以更新列表
+        // 清除缓存
+        clearContentCache();
+        // 通过回调刷新列表
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 500);
       } else if (result.error === '文件不存在') {
         // 文件不存在，视为删除成功
-        toast.success('文件已不存在，请稍后刷新页面');
+        toast.success('文件已不存在');
         setIsDeleteDialogOpen(false);
+        // 清除缓存
+        clearContentCache();
+        // 通过回调刷新列表
         setTimeout(() => {
           window.location.reload();
-        }, 1000);
+        }, 500);
       } else {
         toast.error(result.error || '删除失败');
       }

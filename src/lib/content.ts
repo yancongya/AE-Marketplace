@@ -231,3 +231,8 @@ export function getPresets(): PresetItem[] {
 export function getExtensions(): ExtensionItem[] {
   return cachedContent?.extensions || [];
 }
+
+export function clearContentCache(): void {
+  cachedContent = null;
+  loadingPromise = null;
+}
