@@ -1,7 +1,7 @@
 import { Octokit } from 'octokit';
 
 export class GitHubAuth {
-  private clientId = import.meta.env.VITE_GITHUB_CLIENT_ID || 'Ov23ctbnN11TFhlROjMr';
+  private clientId = import.meta.env.GITHUB_CLIENT_ID || import.meta.env.VITE_GITHUB_CLIENT_ID || 'Ov23ctbnN11TFhlROjMr';
   private redirectUri = `${window.location.origin}/callback`;
   private scope = 'public_repo user:email';
   
@@ -57,6 +57,9 @@ export class GitHubAuth {
     const code = params.get('code');
     const state = params.get('state');
 
+    console.log('OAuth callback params:', { code: code?.substring(0, 10) + '...', state });
+    console.log('Client ID:', this.clientId);
+
     // 验证 state
     const storedState = sessionStorage.getItem('oauth_state');
     if (state !== storedState) {
@@ -67,6 +70,8 @@ export class GitHubAuth {
     if (!codeVerifier) {
       throw new Error('Code verifier not found');
     }
+
+    console.log('Code verifier:', codeVerifier?.substring(0, 10) + '...');
 
     try {
       // 尝试通过 Vercel Serverless Function 代理调用
@@ -82,13 +87,18 @@ export class GitHubAuth {
         }),
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Response error:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
 
       if (data.error) {
+        console.error('OAuth error:', data);
         throw new Error(data.error_description || data.error);
       }
 

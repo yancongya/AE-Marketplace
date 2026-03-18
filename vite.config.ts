@@ -11,6 +11,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  envPrefix: ['VITE_', 'GITHUB_'],
   optimizeDeps: {
     include: ['sonner', 'react-markdown', 'mermaid', 'rehype-highlight'],
   },
