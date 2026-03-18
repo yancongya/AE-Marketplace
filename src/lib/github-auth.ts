@@ -54,27 +54,36 @@ export class GitHubAuth {
   
   // 处理回调
   async handleCallback(params: URLSearchParams): Promise<string | null> {
+    console.log('handleCallback: Starting callback handling');
+    
     const code = params.get('code');
     const state = params.get('state');
-
-    console.log('OAuth callback params:', { code: code?.substring(0, 10) + '...', state });
-    console.log('Client ID:', this.clientId);
-
+    
+    console.log('handleCallback: Parameters:', {
+      code: code ? `${code.substring(0, 10)}...` : 'missing',
+      state: state ? `${state.substring(0, 10)}...` : 'missing',
+    });
+    
     // 验证 state
     const storedState = sessionStorage.getItem('oauth_state');
+    console.log('handleCallback: State verification:', {
+      provided: state ? `${state.substring(0, 10)}...` : 'missing',
+      stored: storedState ? `${storedState.substring(0, 10)}...` : 'missing',
+      match: state === storedState
+    });
+    
     if (state !== storedState) {
       throw new Error('Invalid state parameter');
     }
-
+    
     const codeVerifier = sessionStorage.getItem('code_verifier');
     if (!codeVerifier) {
+      console.error('handleCallback: Code verifier not found in sessionStorage');
       throw new Error('Code verifier not found');
     }
-
-    console.log('Code verifier:', codeVerifier?.substring(0, 10) + '...');
-
+    
+    console.log('handleCallback: Calling GitHub API via proxy');
     try {
-      // 尝试通过 Vercel Serverless Function 代理调用
       const response = await fetch('/api/github-callback', {
         method: 'POST',
         headers: {
@@ -87,15 +96,20 @@ export class GitHubAuth {
         }),
       });
 
-      console.log('Response status:', response.status);
+      console.log('handleCallback: Response status:', response.status);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Response error:', errorText);
+        console.error('handleCallback: Response error:', errorText);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('handleCallback: GitHub response:', {
+        hasError: !!data.error,
+        error: data.error || null,
+        hasAccessToken: !!data.access_token,
+      });
 
       if (data.error) {
         console.error('OAuth error:', data);
@@ -103,7 +117,9 @@ export class GitHubAuth {
       }
 
       // 存储 access token
+      console.log('handleCallback: Storing access token to localStorage');
       localStorage.setItem('github_access_token', data.access_token);
+      console.log('handleCallback: Access token stored successfully');
 
       // 清理 sessionStorage
       sessionStorage.removeItem('code_verifier');
@@ -111,7 +127,7 @@ export class GitHubAuth {
 
       return data.access_token;
     } catch (error) {
-      console.error('Token exchange failed:', error);
+      console.error('handleCallback: Fetch error:', error);
       throw new Error('Failed to exchange access token');
     }
   }

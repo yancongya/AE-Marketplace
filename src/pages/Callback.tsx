@@ -9,27 +9,42 @@ export function Callback() {
   
   useEffect(() => {
     const handleCallback = async () => {
+      console.log('Callback: Starting OAuth callback handling');
+      
       try {
         const params = new URLSearchParams(window.location.search);
+        console.log('Callback: URL params received:', {
+          hasCode: !!params.get('code'),
+          hasState: !!params.get('state'),
+          hasError: !!params.get('error'),
+        });
+        
         const error = params.get('error');
         
         if (error) {
+          console.error('Callback: OAuth error received:', error);
           toast.error(`GitHub 登录失败: ${error}`);
           navigate('/');
           return;
         }
         
-        await githubAuth.handleCallback(params);
+        console.log('Callback: Calling handleCallback');
+        const accessToken = await githubAuth.handleCallback(params);
+        console.log('Callback: Access token received:', accessToken ? `${accessToken.substring(0, 10)}...` : 'null');
+        
         toast.success('GitHub 登录成功！');
         
         // 等待一小段时间，确保状态更新
         setTimeout(() => {
+          console.log('Callback: Navigating to home');
           navigate('/');
-        }, 100);
+        }, 200);
       } catch (error) {
         console.error('Callback error:', error);
         toast.error('登录失败，请重试');
-        navigate('/');
+        setTimeout(() => {
+          navigate('/');
+        }, 1000);
       }
     };
     
