@@ -1,7 +1,7 @@
 import { Octokit } from 'octokit';
 
 export class GitHubAuth {
-  private clientId = import.meta.env.GITHUB_CLIENT_ID || import.meta.env.VITE_GITHUB_CLIENT_ID || 'Ov23ctbnN11TFhlROjMr';
+  private clientId = import.meta.env.GITHUB_CLIENT_ID || import.meta.env.VITE_GITHUB_CLIENT_ID || import.meta.env.github_client_id || 'Ov23ctbnN11TFhlROjMr';
   private redirectUri = `${window.location.origin}/callback`;
   private scope = 'public_repo user:email';
   
