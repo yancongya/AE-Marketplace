@@ -37,8 +37,8 @@ export function TabCard({
   const shouldBlockClickRef = useRef(false);
 
   const handleDelete = async () => {
-    if (!import.meta.env.DEV) {
-      toast.error('删除功能仅在开发模式下可用');
+    if (!isAdmin) {
+      toast.error('需要管理员权限');
       return;
     }
 
@@ -48,10 +48,18 @@ export function TabCard({
     }
 
     try {
+      // 获取 GitHub token
+      const accessToken = localStorage.getItem('github_access_token');
+      if (!accessToken) {
+        toast.error('请先登录 GitHub');
+        return;
+      }
+
       const response = await fetch('/api/admin/delete', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ category, filename }),
       });
@@ -59,32 +67,46 @@ export function TabCard({
       const result = await response.json();
 
       if (result.success) {
-        toast.success('删除成功');
+        toast.success('删除成功，请稍后刷新页面');
         setIsDeleteDialogOpen(false);
-        // 刷新页面
-        window.location.reload();
+        // 刷新页面以更新列表
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         toast.error(result.error || '删除失败');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('删除失败:', error);
-      toast.error('删除失败');
+      toast.error('删除失败: ' + (error.message || '未知错误'));
     }
   };
 
   const handleRedDotRightClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    shouldBlockClickRef.current = true;  // 阻止点击
-    if (isAdmin && import.meta.env.DEV) {
-      setIsDeleteDialogOpen(true);
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      shouldBlockClickRef.current = true;  // 阻止点击
+      if (isAdmin) {
+        setIsDeleteDialogOpen(true);
+      }
+    } catch (error) {
+      console.error('右键菜单错误:', error);
+      // 即使出现错误，也阻止默认行为
+      e.preventDefault();
+      e.stopPropagation();
     }
   };
 
   const handleLinkClick = (e: React.MouseEvent) => {
-    if (shouldBlockClickRef.current) {
-      e.preventDefault();
-      e.stopPropagation();
+    try {
+      if (shouldBlockClickRef.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        shouldBlockClickRef.current = false;  // 重置标志
+      }
+    } catch (error) {
+      console.error('链接点击错误:', error);
       shouldBlockClickRef.current = false;  // 重置标志
     }
   };
@@ -106,8 +128,8 @@ export function TabCard({
           <span
             className="terminal-dot terminal-dot-red"
             onContextMenu={handleRedDotRightClick}
-            title={isAdmin && import.meta.env.DEV ? '右键删除此文件' : ''}
-            style={isAdmin && import.meta.env.DEV ? { cursor: 'context-menu' } : {}}
+            title={isAdmin ? '右键删除此文件' : ''}
+            style={isAdmin ? { cursor: 'context-menu' } : {}}
           />
           <span className="terminal-dot terminal-dot-yellow" />
           <span className="terminal-dot terminal-dot-green" />
@@ -166,14 +188,14 @@ export function TabCard({
   );
 
   // 删除确认弹窗
-  const deleteDialog = isAdmin && import.meta.env.DEV ? (
+  const deleteDialog = isAdmin ? (
     <Dialog.Root open={isDeleteDialogOpen} onOpenChange={handleDialogClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
         <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md p-6 bg-background border border-border rounded-lg shadow-lg">
           <Dialog.Title className="text-lg font-semibold mb-4">确认删除</Dialog.Title>
           <Dialog.Description className="text-sm text-muted-foreground mb-4">
-            确定要删除 <strong>{title}</strong> 吗？此操作将删除本地文件并更新 manifest，无法撤销。
+            确定要删除 <strong>{title}</strong> 吗？此操作将删除文件并更新 manifest，无法撤销。
           </Dialog.Description>
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
