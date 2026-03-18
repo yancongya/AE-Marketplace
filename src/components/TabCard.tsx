@@ -12,6 +12,7 @@ interface TabCardProps {
   iconEmoji?: string;
   author?: string;
   updatedAt?: string;
+  tags?: string[];
   onClick?: () => void;
   to?: string;
   category?: string;
@@ -25,6 +26,7 @@ export function TabCard({
   iconEmoji,
   author,
   updatedAt,
+  tags,
   onClick,
   to,
   category,
@@ -96,7 +98,7 @@ export function TabCard({
 
   const content = (
     <div
-      className="terminal-window card-hover cursor-pointer group h-full flex flex-col"
+      className="terminal-window card-hover cursor-pointer group flex flex-col min-h-[200px]"
       title={description}
     >
       <div className="terminal-header flex-shrink-0">
@@ -135,12 +137,29 @@ export function TabCard({
         )}
 
         <div className="mt-auto pt-2 border-t border-border flex-shrink-0">
-          <p className="text-xs text-muted-font-foreground font-mono truncate">
+          <p className="text-xs text-muted-font-foreground font-mono truncate mb-2">
             <span className="text-green-400">$</span>
             {updatedAt && <span> {updatedAt}</span>}
             {(author || updatedAt) && <span className="text-green-400 ml-2">$</span>}
             {author && <span> {author}</span>}
           </p>
+          {tags && tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {tags.slice(0, 3).map((tag, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-mono bg-primary/10 text-primary border border-primary/20"
+                >
+                  {tag}
+                </span>
+              ))}
+              {tags.length > 3 && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-mono bg-secondary/50 text-muted-foreground">
+                  +{tags.length - 3}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
