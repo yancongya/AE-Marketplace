@@ -18,7 +18,7 @@ const AdminContext = createContext<AdminContextType | null>(null);
 
 // GitHub 仓库配置
 const GITHUB_REPO_OWNER = 'yancongya';
-const GITHUB_REPO_NAME = 'AE----';
+const GITHUB_REPO_NAME = 'AE-Marketplace';
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   // 从 localStorage 读取初始状态（仅在开发模式）
@@ -44,24 +44,34 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const checkGitHubAuth = async () => {
+    console.log('Checking GitHub authentication...');
     if (githubAuth.isAuthenticated()) {
       try {
         const userInfo = await githubAuth.getUserInfo();
+        console.log('GitHub user info:', { login: userInfo.login, id: userInfo.id });
         setUser(userInfo);
         
         // 检查是否有仓库权限
+        console.log('Checking repo access:', GITHUB_REPO_OWNER, GITHUB_REPO_NAME);
         const hasAccess = await githubAuth.hasRepoAccess(GITHUB_REPO_OWNER, GITHUB_REPO_NAME);
+        console.log('Repo access result:', hasAccess);
         
         if (hasAccess) {
+          console.log('User has admin access, setting isAdmin to true');
           setIsAdmin(true);
           const token = githubAuth.getAccessToken();
           if (token) {
             setGithubAPI(new GitHubAPI(token, GITHUB_REPO_OWNER, GITHUB_REPO_NAME));
+            console.log('GitHub API initialized successfully');
           }
+        } else {
+          console.warn('User does not have access to the repository');
         }
       } catch (error) {
         console.error('GitHub auth check failed:', error);
       }
+    } else {
+      console.log('User not authenticated');
     }
   };
 

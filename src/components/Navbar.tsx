@@ -139,11 +139,17 @@ export function Navbar() {
             {user ? (
               <div
                 className="flex items-center gap-2 px-3 py-1.5 rounded bg-primary/10 border border-primary/30"
-                title={`GitHub 用户: ${user.login}`}
+                title={`GitHub 用户: ${user.login}${isAdmin ? ' (管理员)' : ' (无权限)'}`}
               >
                 <Github className="w-4 h-4 text-primary" />
                 <span className="text-xs font-mono text-primary">{user.login}</span>
-                {isAdmin && <Lock className="w-3 h-3 text-primary" />}
+                {isAdmin ? (
+                  <Lock className="w-3 h-3 text-primary" title="管理员权限" />
+                ) : (
+                  <span className="text-xs text-muted-foreground" title="无仓库访问权限">
+                    <X className="w-3 h-3" />
+                  </span>
+                )}
               </div>
             ) : (
               <button
