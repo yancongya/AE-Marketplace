@@ -45,17 +45,25 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 只在组件挂载时执行一次
   
-  // 监听 URL 变化（处理 OAuth 回调后的重新检查）
+  // 监听 localStorage 变化（处理 OAuth 回调后的状态更新）
   useEffect(() => {
-    const handleRouteChange = () => {
-      console.log('Route changed, checking auth...');
-      if (githubAuth.isAuthenticated() && !isAdmin) {
-        checkGitHubAuth();
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'github_access_token') {
+        console.log('Storage changed: github_access_token updated');
+        // 延迟检查，确保状态稳定
+        setTimeout(() => {
+          console.log('Re-checking authentication after storage change');
+          checkGitHubAuth();
+        }, 100);
       }
     };
     
-    handleRouteChange();
-  }, []); // 只执行一次
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []); // 只设置一次监听器
 
   const checkGitHubAuth = async () => {
     console.log('Checking GitHub authentication...');
