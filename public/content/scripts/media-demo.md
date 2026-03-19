@@ -2,12 +2,11 @@
 title: 媒体内容演示
 iconEmoji: 🎬
 author: 烟囱鸭
-tags: [演示, 媒体, 视频]
-category: scripts
+tags: ["演示", "媒体", "视频"]
 description: 演示如何使用视频链接和媒体内容
 updatedAt: 2026-02-06
+isFavorite: true
 ---
-
 # 媒体内容演示
 
 本文档展示了 AE 脚本市场支持的媒体内容功能。
