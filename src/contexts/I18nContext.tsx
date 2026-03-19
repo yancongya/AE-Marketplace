@@ -26,6 +26,10 @@ interface HeroTranslations {
   description: HeroDescriptionTranslations;
   fileHeader: string;
   fileComment: string;
+  lastUpdate: {
+    label: string;
+    ago: string;
+  };
 }
 
 interface AboutLeftPanelTranslations {
