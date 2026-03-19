@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { useAdmin } from '@/contexts/AdminContext';
 import * as Dialog from '@radix-ui/react-dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { clearContentCache } from '@/lib/content';
@@ -326,6 +327,10 @@ export function TabCard({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
         <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90vw] h-[85vh] max-w-6xl bg-background border border-border rounded-lg shadow-2xl overflow-hidden">
+          <VisuallyHidden.Root>
+            <Dialog.Title>{title}</Dialog.Title>
+            <Dialog.Description>文档预览</Dialog.Description>
+          </VisuallyHidden.Root>
           <div className="flex flex-col h-full">
             {/* 模态窗口头部 */}
             <div className="terminal-header flex items-center justify-between px-4 py-2">
