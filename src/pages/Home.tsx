@@ -91,6 +91,7 @@ export function Home() {
                   author={doc.author}
                   updatedAt={doc.updatedAt}
                   tags={doc.tags}
+                  content={doc.content}
                   to={`/${doc.category}/${doc.slug}`}
                   category={doc.category}
                   filename={`${doc.slug}.md`}

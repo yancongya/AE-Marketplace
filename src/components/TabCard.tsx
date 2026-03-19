@@ -19,6 +19,7 @@ interface TabCardProps {
   to?: string;
   category?: string;
   filename?: string;
+  content?: string;
 }
 
 export function TabCard({
@@ -32,7 +33,8 @@ export function TabCard({
   onClick,
   to,
   category,
-  filename
+  filename,
+  content
 }: TabCardProps) {
   const { isAdmin } = useAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -337,57 +339,83 @@ export function TabCard({
 
             {/* 模态窗口内容 */}
             <div className="flex-1 overflow-y-auto p-6">
-              <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
+              {/* 文章标题 */}
+              <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
                 {iconEmoji && <span>{iconEmoji}</span>}
                 {title}
               </h1>
-              {subtitle && (
-                <p className="text-sm text-muted-foreground font-mono mb-4">{subtitle}</p>
-              )}
-              {tags && tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-primary/10 text-primary border border-primary/20"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+
+              {/* 文章正文内容 */}
+              {content && (
+                <div className="prose prose-invert max-w-none">
+                  {/* 简单渲染 markdown 内容 */}
+                  {content.split('\n').map((line, index) => {
+                    const trimmedLine = line.trim();
+
+                    // 跳过 frontmatter (--- 之间的内容)
+                    if (trimmedLine === '---') return null;
+
+                    // 处理标题
+                    if (trimmedLine.startsWith('#')) {
+                      const level = trimmedLine.match(/^#+/)?.[0].length || 1;
+                      const text = trimmedLine.replace(/^#+\s*/, '');
+                      const Tag = `h${Math.min(level, 6)}` as keyof JSX.IntrinsicElements;
+                      return (
+                        <Tag key={index} className={`font-bold ${level === 1 ? 'text-2xl mt-8 mb-4' : level === 2 ? 'text-xl mt-6 mb-3' : level === 3 ? 'text-lg mt-4 mb-2' : 'text-base mt-3 mb-2'}`}>
+                          {text}
+                        </Tag>
+                      );
+                    }
+
+                    // 处理代码块
+                    if (trimmedLine.startsWith('```')) {
+                      return null; // 跳过代码块标记
+                    }
+
+                    // 处理列表项
+                    if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+                      const text = trimmedLine.replace(/^[-*]\s*/, '');
+                      return (
+                        <li key={index} className="ml-6 mb-2 list-disc">
+                          {text}
+                        </li>
+                      );
+                    }
+
+                    // 处理有序列表
+                    if (/^\d+\.\s/.test(trimmedLine)) {
+                      const text = trimmedLine.replace(/^\d+\.\s*/, '');
+                      return (
+                        <li key={index} className="ml-6 mb-2 list-decimal">
+                          {text}
+                        </li>
+                      );
+                    }
+
+                    // 处理空行
+                    if (!trimmedLine) {
+                      return <br key={index} />;
+                    }
+
+                    // 处理普通段落
+                    if (trimmedLine) {
+                      return (
+                        <p key={index} className="mb-4 leading-relaxed">
+                          {trimmedLine}
+                        </p>
+                      );
+                    }
+
+                    return null;
+                  })}
                 </div>
               )}
-              {description && (
-                <p className="text-muted-foreground mb-6 pb-4 border-b border-border">
-                  {description}
+
+              {!content && (
+                <p className="text-muted-foreground text-center py-12">
+                  暂无内容
                 </p>
               )}
-              {author && (
-                <div className="text-xs text-muted-foreground mb-2">
-                  作者: <span className="font-mono">{author}</span>
-                </div>
-              )}
-              {updatedAt && (
-                <div className="text-xs text-muted-foreground mb-4">
-                  更新时间: <span className="font-mono">{updatedAt}</span>
-                </div>
-              )}
-              <div className="mt-6">
-                <p className="text-sm text-muted-foreground text-center">
-                  完整内容将在全屏模式下显示
-                </p>
-                {to && (
-                  <div className="text-center mt-4">
-                    <Link
-                      to={to}
-                      onClick={() => setIsPreviewOpen(false)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                    >
-                      <Maximize2 className="w-4 h-4" />
-                      全屏查看完整内容
-                    </Link>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </Dialog.Content>
