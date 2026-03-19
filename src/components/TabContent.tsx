@@ -863,6 +863,42 @@ export function TabContent({
     }
 
     try {
+      // 开发环境：直接保存到文件系统
+      if (import.meta.env.DEV) {
+        const response = await fetch('/api/admin/update', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            category,
+            slug: editData.slug || slug,
+            data: {
+              ...editData,
+              description: editData.description || '',
+            },
+          }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          toast.success('保存成功');
+          setIsEditing(false);
+          window.location.hash = '';
+          // 清除缓存并刷新
+          const { clearContentCache } = await import('@/lib/content');
+          clearContentCache();
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
+        } else {
+          toast.error(result.error || '保存失败');
+        }
+        return;
+      }
+
+      // 生产环境：使用暂存区
       // 检查 slug 是否改变
       const slugChanged = editData.slug && editData.slug !== slug;
 

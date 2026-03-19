@@ -1,5 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Octokit } from 'octokit';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 /**
  * 更新文档 API
@@ -30,6 +32,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: '缺少必要参数: category, slug, data' });
     }
 
+    // 开发环境：直接保存到文件系统
+    if (import.meta.env.DEV || process.env.NODE_ENV === 'development') {
+      const filename = `${slug}.md`;
+      const filePath = path.join(process.cwd(), 'public/content', category, filename);
+      const content = generateMarkdown(data);
+
+      // 确保目录存在
+      const dir = path.dirname(filePath);
+      await fs.mkdir(dir, { recursive: true });
+
+      // 写入文件
+      await fs.writeFile(filePath, content, 'utf-8');
+
+      console.log(`[Update API] 已保存文件到本地: ${filePath}`);
+
+      return res.status(200).json({
+        success: true,
+        message: '更新成功',
+      });
+    }
+
+    // 生产环境：通过 GitHub API 保存
     // 验证 GitHub token
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
@@ -98,6 +122,7 @@ function generateMarkdown(data: any): string {
     data.category ? `category: ${data.category}` : '',
     data.description ? `description: ${data.description}` : '',
     data.updatedAt ? `updatedAt: ${data.updatedAt}` : '',
+    data.isFavorite !== undefined ? `isFavorite: ${data.isFavorite}` : '',
     '---',
     '',
     data.content || '',

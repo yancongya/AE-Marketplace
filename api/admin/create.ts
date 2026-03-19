@@ -1,5 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Octokit } from 'octokit';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 /**
  * 创建新文档 API
@@ -30,6 +32,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: '缺少必要参数: category, data' });
     }
 
+    // 如果没有提供 slug，自动生成
+    let finalSlug = slug;
+    if (!finalSlug) {
+      finalSlug = `temp-${Date.now()}`;
+    }
+
+    // 验证 slug（仅限英文）
+    const slugRegex = /^[a-z0-9-]+$/;
+    if (!slugRegex.test(finalSlug)) {
+      return res.status(400).json({ error: 'slug 只能包含英文小写字母、数字和连字符' });
+    }
+
+    // 开发环境：直接保存到文件系统
+    if (import.meta.env.DEV || process.env.NODE_ENV === 'development') {
+      const filename = `${finalSlug}.md`;
+      const filePath = path.join(process.cwd(), 'public/content', category, filename);
+      const content = generateMarkdown(data);
+
+      // 确保目录存在
+      const dir = path.dirname(filePath);
+      await fs.mkdir(dir, { recursive: true });
+
+      // 检查文件是否已存在
+      try {
+        await fs.access(filePath);
+        return res.status(400).json({ error: '文件已存在' });
+      } catch {
+        // 文件不存在，可以创建
+      }
+
+      // 写入文件
+      await fs.writeFile(filePath, content, 'utf-8');
+
+      console.log(`[Create API] 已创建文件到本地: ${filePath}`);
+
+      return res.status(200).json({
+        success: true,
+        message: '创建成功',
+        slug: finalSlug,
+      });
+    }
+
+    // 生产环境：通过 GitHub API 创建
     // 验证 GitHub token
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) {
@@ -40,14 +85,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const owner = 'yancongya';
     const repo = 'AE-Marketplace';
 
-    // 如果没有提供 slug，自动生成
-    let finalSlug = slug;
-    if (!finalSlug) {
-      finalSlug = `temp-${Date.now()}`;
-    }
-
-    // 验证 slug（仅限英文）
-    const slugRegex = /^[a-z0-9-]+$/;
+    const filename = `${finalSlug}.md`;
+    const path = `public/content/${category}/${filename}`;
+    const content = generateMarkdown(data);
     if (!slugRegex.test(finalSlug)) {
       return res.status(400).json({ error: '文档名只能包含英文小写字母、数字和连字符' });
     }
@@ -166,6 +206,7 @@ function generateMarkdown(data: any): string {
     data.category ? `category: ${data.category}` : '',
     data.description ? `description: ${data.description}` : '',
     data.updatedAt ? `updatedAt: ${data.updatedAt}` : '',
+    data.isFavorite !== undefined ? `isFavorite: ${data.isFavorite}` : '',
     '---',
     '',
     data.content || '',
