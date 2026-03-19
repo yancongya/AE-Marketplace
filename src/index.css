@@ -279,6 +279,79 @@
   :root:not(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:active {
     background: linear-gradient(180deg, hsl(217, 91%, 55%) 0%, hsl(217, 91%, 45%) 100%);
   }
+
+  /* iframe 内部滚动条样式 */
+  iframe.custom-scrollbar {
+    scrollbar-width: auto;
+    scrollbar-color: var(--primary) transparent;
+  }
+
+  iframe.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  iframe.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  iframe.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: 10px;
+    border: 2px solid var(--background);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  iframe.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  iframe.custom-scrollbar::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  /* iframe 内部滚动条 - 深色模式 */
+  iframe.custom-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  iframe.custom-scrollbar::-webkit-scrollbar-button {
+    background: transparent;
+  }
+
+  iframe.custom-scrollbar::-webkit-scrollbar-button:hover {
+    background: transparent;
+  }
+
+  /* 浅色模式下的 iframe 滚动条 */
+  :root:not(.dark) iframe.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(217, 91%, 55%) 0%, hsl(217, 91%, 45%) 100%);
+    border-color: #ffffff;
+  }
+
+  :root:not(.dark) iframe.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(217, 91%, 60%) 0%, hsl(217, 91%, 50%) 100%);
+  }
+
+  :root:not(.dark) iframe.custom-scrollbar::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, hsl(217, 91%, 55%) 0%, hsl(217, 91%, 45%) 100%);
+  }
+
+  :root:not(.dark) iframe.custom-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  :root:not(.dark) iframe.custom-scrollbar::-webkit-scrollbar-button {
+    background: transparent;
+  }
+
+  :root:not(.dark) iframe.custom-scrollbar::-webkit-scrollbar-button:hover {
+    background: transparent;
+  }
 }
 
 @layer utilities {
