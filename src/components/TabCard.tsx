@@ -45,7 +45,6 @@ export function TabCard({
   const [isTempDeleted, setIsTempDeleted] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  const [iframeLoaded, setIframeLoaded] = useState(false);
   const shouldBlockClickRef = useRef(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -365,49 +364,50 @@ export function TabCard({
                     ref={(el) => {
                       if (el) {
                         el.onload = () => {
-                          setIframeLoaded(true);
                           // 注入自定义滚动条样式到 iframe
                           try {
-                            const style = document.createElement('style');
-                            style.textContent = `
-                              html {
-                                scrollbar-width: thin;
-                                scrollbar-color: hsl(217 91% 60%) transparent;
-                              }
-                              html::-webkit-scrollbar {
-                                width: 10px;
-                                height: 10px;
-                              }
-                              html::-webkit-scrollbar-track {
-                                background: transparent;
-                                border-radius: 10px;
-                              }
-                              html::-webkit-scrollbar-thumb {
-                                background: linear-gradient(180deg, hsl(217 91% 60%) 0%, hsl(217 91% 50%) 100%);
-                                border-radius: 10px;
-                                border: 2px solid transparent;
-                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-                                transition: all 0.3s ease;
-                              }
-                              html::-webkit-scrollbar-thumb:hover {
-                                background: linear-gradient(180deg, hsl(217 91% 65%) 0%, hsl(217 91% 55%) 100%);
-                                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
-                              }
-                              html::-webkit-scrollbar-thumb:active {
-                                background: linear-gradient(180deg, hsl(217 91% 60%) 0%, hsl(217 91% 50%) 100%);
-                                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-                              }
-                              html::-webkit-scrollbar-corner {
-                                background: transparent;
-                              }
-                              html::-webkit-scrollbar-button {
-                                background: transparent;
-                              }
-                              html::-webkit-scrollbar-button:hover {
-                                background: transparent;
-                              }
-                            `;
-                            el.contentDocument.head.appendChild(style);
+                            if (el.contentDocument) {
+                              const style = document.createElement('style');
+                              style.textContent = `
+                                html {
+                                  scrollbar-width: thin;
+                                  scrollbar-color: hsl(217 91% 60%) transparent;
+                                }
+                                html::-webkit-scrollbar {
+                                  width: 10px;
+                                  height: 10px;
+                                }
+                                html::-webkit-scrollbar-track {
+                                  background: transparent;
+                                  border-radius: 10px;
+                                }
+                                html::-webkit-scrollbar-thumb {
+                                  background: linear-gradient(180deg, hsl(217 91% 60%) 0%, hsl(217 91% 50%) 100%);
+                                  border-radius: 10px;
+                                  border: 2px solid transparent;
+                                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                                  transition: all 0.3s ease;
+                                }
+                                html::-webkit-scrollbar-thumb:hover {
+                                  background: linear-gradient(180deg, hsl(217 91% 65%) 0%, hsl(217 91% 55%) 100%);
+                                  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+                                }
+                                html::-webkit-scrollbar-thumb:active {
+                                  background: linear-gradient(180deg, hsl(217 91% 60%) 0%, hsl(217 91% 50%) 100%);
+                                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                                }
+                                html::-webkit-scrollbar-corner {
+                                  background: transparent;
+                                }
+                                html::-webkit-scrollbar-button {
+                                  background: transparent;
+                                }
+                                html::-webkit-scrollbar-button:hover {
+                                  background: transparent;
+                                }
+                              `;
+                              el.contentDocument.head.appendChild(style);
+                            }
                           } catch (e) {
                             console.error('无法注入 iframe 样式:', e);
                           }

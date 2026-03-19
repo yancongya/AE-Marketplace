@@ -5,7 +5,6 @@ import { Footer } from '@/components/Footer';
 import { TabCard } from '@/components/TabCard';
 import { loadContent, type ContentItem } from '@/lib/content';
 import { useI18n } from '@/contexts/I18nContext';
-import { toast } from 'sonner';
 
 export function Home() {
   const [recentDocs, setRecentDocs] = useState<ContentItem[]>([]);
