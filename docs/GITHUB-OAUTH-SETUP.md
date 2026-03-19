@@ -269,6 +269,261 @@ Authentication status: true  // ← 这次应该是 true
 2. 在任意标签页，可以看到"新建文档"卡片（带 + 图标）
 3. 点击任意文档，右上角应显示"编辑"按钮
 
+### 问题 7：删除功能返回 404 错误
+
+**症状**：
+- 右键点击卡片上的红点（删除按钮）
+- 确认删除后，控制台显示：`DELETE https://aemarketplace.vercel.app/api/admin/delete 404 (Not Found)`
+- 删除操作失败
+
+**原因**：
+Vercel Serverless Functions 需要明确设置 CORS 头才能让前端正常调用。所有 API 文件都缺少 CORS 头设置。
+
+**解决方案**：
+在所有 Vercel API 文件中添加 CORS 头支持：
+
+```typescript
+// api/admin/delete.ts, create.ts, update.ts, rename.ts, github-callback.ts
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // 设置 CORS 头
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'DELETE,OPTIONS'); // 根据实际方法调整
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+
+  // 处理 OPTIONS 预检请求
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  // 原有的 API 逻辑...
+}
+```
+
+**需要修改的文件**：
+1. `api/admin/delete.ts` - DELETE 方法
+2. `api/admin/create.ts` - POST 方法
+3. `api/admin/update.ts` - PUT 方法
+4. `api/admin/rename.ts` - POST 方法
+5. `api/github-callback.ts` - POST 方法
+
+**验证方法**：
+1. 右键点击卡片上的红点
+2. 点击"确认删除"
+3. 应该显示"删除成功"提示，并刷新页面
+
+### 问题 8：删除后提示"文件已不存在"
+
+**症状**：
+- 第一次删除成功
+- 页面刷新后，已删除的文件仍然显示
+- 再次点击删除，提示"文件已不存在，请稍后刷新页面"
+
+**原因**：
+前端使用了缓存机制，即使删除成功并刷新页面，数据可能还是从缓存中读取。删除 API 虽然更新了 manifest，但前端缓存未清除。
+
+**解决方案**：
+
+1. **添加缓存清除功能**：
+```typescript
+// src/lib/content.ts
+export function clearContentCache(): void {
+  cachedContent = null;
+  loadingPromise = null;
+}
+```
+
+2. **在删除成功后清除缓存**：
+```typescript
+// src/components/TabCard.tsx
+import { clearContentCache } from '@/lib/content';
+
+const handleDelete = async () => {
+  // ... 删除逻辑 ...
+
+  if (result.success) {
+    toast.success('删除成功');
+    setIsDeleteDialogOpen(false);
+    // 清除缓存
+    clearContentCache();
+    // 刷新页面
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  }
+};
+```
+
+**验证方法**：
+1. 删除文件后应该立即刷新列表
+2. 不会看到"文件已不存在"的提示
+
+### 问题 9：新创建的文档不显示
+
+**症状**：
+- 新建文档并提交成功
+- 刷新页面后看不到新创建的文档
+
+**原因**：
+1. manifest 文件未正确更新
+2. API 更新 manifest 时没有提供 SHA 值
+3. 前端缓存未清除
+
+**解决方案**：
+
+1. **修复 API 的 manifest 更新逻辑**：
+```typescript
+// api/admin/create.ts
+// 获取现有的 manifest
+let manifestSha: string | undefined = undefined;
+try {
+  const { data: manifestData } = await octokit.rest.repos.getContent({
+    owner,
+    repo,
+    path: manifestPath,
+  });
+  manifest = JSON.parse(manifestContent);
+  manifestSha = (manifestData as any).sha; // ← 关键：获取 SHA 值
+} catch (error: any) {
+  if (error.status !== 404) throw error;
+}
+
+// 提交更新的 manifest
+if (manifestSha) {
+  // 文件已存在，需要提供 SHA
+  await octokit.rest.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: manifestPath,
+    content: Buffer.from(JSON.stringify(manifest, null, 2)).toString('base64'),
+    sha: manifestSha, // ← 必须提供 SHA
+  });
+} else {
+  // 文件不存在，创建新文件
+  await octokit.rest.repos.createOrUpdateFileContents({
+    owner,
+    repo,
+    path: manifestPath,
+    content: Buffer.from(JSON.stringify(manifest, null, 2)).toString('base64'),
+  });
+}
+```
+
+2. **需要修复的 API 文件**：
+   - `api/admin/create.ts` - 创建文件时更新 manifest
+   - `api/admin/update.ts` - 更新文件时（如果需要）
+   - `api/admin/delete.ts` - 删除文件时更新 manifest
+   - `api/admin/rename.ts` - 重命名文件时更新 manifest
+
+**验证方法**：
+1. 创建新文档
+2. 刷新页面
+3. 新文档应该立即显示
+
+### 问题 10：Repository 名称配置错误
+
+**症状**：
+- 登录成功
+- 权限检查失败
+- 控制台显示：`Repository not found` 或 `权限诊断失败`
+
+**原因**：
+代码中配置的仓库名称与实际仓库名称不匹配。
+
+**历史问题**：
+- 原仓库名称：`AE----`（错误的名称）
+- 实际仓库名称：`AE-Marketplace`（正确的名称）
+
+**解决方案**：
+检查并更新以下文件中的仓库名称：
+
+```typescript
+// src/contexts/AdminContext.tsx
+const GITHUB_REPO_OWNER = 'yancongya';
+const GITHUB_REPO_NAME = 'AE-Marketplace'; // ← 确保名称正确
+```
+
+**验证方法**：
+1. 登录 GitHub
+2. 控制台应显示：`✅ User has admin access`
+3. 导航栏显示 🔒 锁图标
+
+### 问题 11：权限检查逻辑错误
+
+**症状**：
+- 明明有仓库权限，但权限检查失败
+- 控制台显示：`❌ User does not have admin access`
+
+**原因**：
+代码检查了 GitHub API 不存在的权限类型（如 `write`）。
+
+**正确的 GitHub API 权限**：
+GitHub API 的仓库权限只包括：
+- `admin` - 完全控制
+- `push` - 可推送
+- `pull` - 可拉取
+- `triage` - 可管理问题和 PR
+- `maintain` - 可维护
+
+**不存在**：
+- `write` - ❌ 不存在
+- `read` - ❌ 不存在
+
+**解决方案**：
+修改权限检查逻辑：
+
+```typescript
+// src/contexts/AdminContext.tsx
+const permissions = repoData.permissions;
+const hasAdminAccess = permissions.admin || permissions.push; // ← 只检查存在的权限
+```
+
+**验证方法**：
+1. 登录 GitHub
+2. 控制台应显示：`Permission diagnosis result: {..., permissions: {admin: true, ...}, ...}`
+3. 权限检查通过，进入管理员模式
+
+### 问题 12：Vercel 环境变量命名限制
+
+**症状**：
+- 在 Vercel 中设置环境变量时出错
+- 错误信息：`Only lowercase letters, digits, dashes, and underscores are allowed`
+
+**原因**：
+Vercel 环境变量名称只允许：
+- 小写字母（a-z）
+- 数字（0-9）
+- 连字符（-）
+- 下划线（_）
+
+**不允许**：
+- 大写字母
+- 特殊字符
+
+**解决方案**：
+使用小写的环境变量名称：
+
+```typescript
+// ❌ 错误（包含大写字母）
+VITE_GITHUB_CLIENT_SECRET
+
+// ✅ 正确（全部小写）
+github_client_secret
+```
+
+**前端代码适配**：
+```typescript
+// src/lib/github-auth.ts
+// 从环境变量获取 client_secret（支持两种格式）
+const client_secret = process.env.GITHUB_CLIENT_SECRET || process.env.VITE_GITHUB_CLIENT_SECRET;
+```
+
+**验证方法**：
+1. 在 Vercel 中设置环境变量
+2. 名称全部使用小写
+3. 成功保存
+
 ## 注意事项
 
 ### 安全相关
@@ -387,5 +642,55 @@ Authentication status: true  // ← 这次应该是 true
 
 ---
 
-**最后更新**: 2026-03-18
+## 最近更新记录
+
+### 2026-03-19
+
+**新增问题和解决方案**：
+
+1. **问题 7：删除功能返回 404 错误**
+   - 添加 CORS 头支持到所有 Vercel API
+   - 支持预检请求（OPTIONS）
+   - 提交：b787974
+
+2. **问题 8：删除后提示"文件已不存在"**
+   - 添加缓存清除功能 `clearContentCache()`
+   - 删除成功后自动清除缓存
+   - 提交：359c8d4
+
+3. **问题 9：新创建的文档不显示**
+   - 修复所有 API 的 manifest 更新逻辑
+   - 正确处理 SHA 值
+   - 提交：862e343, 467a14f
+
+4. **问题 10：Repository 名称配置错误**
+   - 从 `AE----` 改为 `AE-Marketplace`
+   - 更新所有配置文件
+
+5. **问题 11：权限检查逻辑错误**
+   - 修正 GitHub API 权限检查
+   - 只检查 `admin` 和 `push` 权限
+
+6. **问题 12：Vercel 环境变量命名限制**
+   - 环境变量名称必须全部小写
+   - 适配前端代码支持两种格式
+
+**功能改进**：
+
+- 右键删除功能（TabCard 红点）
+- 删除确认对话框
+- 删除成功后自动刷新
+- 错误处理优化
+
+**已提交记录**：
+- `a223f2f` - fix: 添加新创建的文档到 manifest
+- `467a14f` - fix: 修复所有 API 的 manifest 更新逻辑，正确处理 SHA 值
+- `862e343` - fix: 清理 manifest 中的无效文件，修复 SHA 值处理
+- `359c8d4` - fix: 改进删除功能，添加缓存清除机制
+- `659a3d6` - fix: 改进删除错误处理，文件不存在时也视为删除成功
+- `b787974` - fix: 为所有 Vercel API 添加 CORS 头支持
+
+---
+
+**最后更新**: 2026-03-19
 **维护者**: AE Marketplace Team
