@@ -10,9 +10,7 @@ import { X, Maximize2, Star } from 'lucide-react';
 
 interface TabCardProps {
   title: string;
-  subtitle?: string;
   description?: string;
-  iconEmoji?: string;
   author?: string;
   updatedAt?: string;
   tags?: string[];
@@ -21,16 +19,13 @@ interface TabCardProps {
   category?: string;
   filename?: string;
   onTempDelete?: () => void; // 添加临时删除回调
-  registerCardRef?: (slug: string, element: HTMLDivElement | null) => void; // 添加 ref 注册函数
-  slug?: string; // 添加 slug
   isFavorite?: boolean; // 添加收藏标记
+  coverImage?: string; // 添加封面图片
 }
 
 export function TabCard({
   title,
-  subtitle,
   description,
-  iconEmoji,
   author,
   updatedAt,
   tags,
@@ -39,9 +34,8 @@ export function TabCard({
   category,
   filename,
   onTempDelete,
-  registerCardRef,
-  slug,
-  isFavorite
+  isFavorite,
+  coverImage
 }: TabCardProps) {
   const { isAdmin } = useAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -49,14 +43,82 @@ export function TabCard({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const shouldBlockClickRef = useRef(false);
-  const cardRef = useRef<HTMLDivElement>(null);
 
-  // 注册 card ref 到父组件
-  useEffect(() => {
-    if (registerCardRef && slug) {
-      registerCardRef(slug, cardRef.current);
+  // 生成默认封面
+  const generateDefaultCover = (title: string, description?: string) => {
+    // 使用 Canvas 生成封面（高清尺寸 640x360，720p 的一半）
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 640;
+    canvas.height = 360;
+
+    if (!ctx) return null;
+
+    // 绘制背景
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, '#1e3a5f');
+    gradient.addColorStop(1, '#0d1b2a');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 绘制网格线
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < canvas.width; i += 20) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i, canvas.height);
+      ctx.stroke();
     }
-  }, [registerCardRef, slug]);
+    for (let i = 0; i < canvas.height; i += 20) {
+      ctx.beginPath();
+      ctx.moveTo(0, i);
+      ctx.lineTo(canvas.width, i);
+      ctx.stroke();
+    }
+
+    // 绘制边框
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.lineWidth = 4;  // 边框也加粗
+    ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+
+    // 绘制标题（字体大小也相应增大）
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 36px monospace';  // 从 18px 增加到 36px
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // 截断标题
+    const maxTitleLength = 25;
+    const displayTitle = title.length > maxTitleLength
+      ? title.substring(0, maxTitleLength) + '...'
+      : title;
+
+    // 绘制标题（稍微向上）
+    ctx.fillText(displayTitle, canvas.width / 2, canvas.height / 2 - 30);
+
+    // 绘制描述（标题下方，字体大小也相应增大）
+    if (description && description.length > 0) {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.font = '24px monospace';  // 从 12px 增加到 24px
+      const maxDescLength = 40;
+      const displayDesc = description.length > maxDescLength
+        ? description.substring(0, maxDescLength) + '...'
+        : description;
+      ctx.fillText(displayDesc, canvas.width / 2, canvas.height / 2 + 30);
+    }
+
+    return canvas.toDataURL();
+  };
+
+  const [defaultCover, setDefaultCover] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!coverImage) {
+      const generatedCover = generateDefaultCover(title, description);
+      setDefaultCover(generatedCover);
+    }
+  }, [title, description, coverImage]);
 
   // 检测是否是电脑环境
   useEffect(() => {
@@ -256,20 +318,23 @@ export function TabCard({
         </div>
       </div>
 
-      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3 flex-1 flex flex-col">
-        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-          {iconEmoji && (
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center text-base sm:text-lg flex-shrink-0">
-              {iconEmoji}
-            </div>
-          )}
+      {/* 封面图片区域 */}
+      {(coverImage || defaultCover) ? (
+        <div className="terminal-cover w-full flex-shrink-0">
+          <img
+            src={coverImage || defaultCover || ''}
+            alt={title}
+            loading="lazy"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ) : (
+        <div className="terminal-cover placeholder w-full flex-shrink-0" />
+      )}
 
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm sm:text-base text-foreground font-medium truncate">{title}</h3>
-            {subtitle && (
-              <p className="text-xs text-muted-foreground font-mono truncate">{subtitle}</p>
-            )}
-          </div>
+      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3 flex-1 flex flex-col">
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm sm:text-base text-foreground font-medium truncate">{title}</h3>
         </div>
 
         {description && (

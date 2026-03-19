@@ -149,9 +149,7 @@ export function Home() {
                 <TabCard
                   key={`${doc.category}-${doc.slug}`}
                   title={doc.title}
-                  subtitle={`${doc.author}/${doc.slug}`}
                   description={doc.description}
-                  iconEmoji={doc.iconEmoji}
                   author={doc.author}
                   updatedAt={doc.updatedAt}
                   tags={doc.tags}
@@ -159,15 +157,8 @@ export function Home() {
                   category={doc.category}
                   filename={`${doc.slug}.md`}
                   onTempDelete={() => handleTempDelete(doc.slug)}
-                  registerCardRef={(slug, element) => {
-                    if (element) {
-                      cardRefs.current.set(slug, element);
-                    } else {
-                      cardRefs.current.delete(slug);
-                    }
-                  }}
-                  slug={doc.slug}
                   isFavorite={doc.isFavorite}
+                  coverImage={doc.coverImage}
                 />
               ))}
             </div>

@@ -161,7 +161,6 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
     return (
       <TabContent
         title=""
-        iconEmoji="📝"
         subtitle=""
         content=""
         onBack={() => navigate(`/${category}`)}
@@ -176,7 +175,6 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
     return (
       <TabContent
         title={selectedItem.title}
-        iconEmoji={selectedItem.iconEmoji}
         subtitle={selectedItem.description}
         content={selectedItem.content}
         onBack={() => navigate(`/${category}`)}
@@ -187,18 +185,9 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
         category={category}
         slug={selectedItem.slug}
         isFavorite={selectedItem.isFavorite}
+        coverImage={selectedItem.coverImage}
       />
     );
-  }
-
-  const getSubtitle = (item: T) => {
-    if ('nameEn' in item && item.nameEn) {
-      return item.nameEn;
-    }
-    if (item.author) {
-      return `${item.author}/${item.slug}`;
-    }
-    return undefined;
   };
 
   return (
@@ -217,9 +206,7 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
           <TabCard
             key={item.slug}
             title={item.title}
-            subtitle={getSubtitle(item)}
             description={item.description}
-            iconEmoji={item.iconEmoji}
             author={item.author}
             updatedAt={item.updatedAt}
             tags={item.tags}
@@ -227,15 +214,8 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
             category={category}
             filename={`${item.slug}.md`}
             onTempDelete={() => handleTempDelete(item.slug)}
-            registerCardRef={(slug, element) => {
-              if (element) {
-                cardRefs.current.set(slug, element);
-              } else {
-                cardRefs.current.delete(slug);
-              }
-            }}
-            slug={item.slug}
             isFavorite={item.isFavorite}
+            coverImage={item.coverImage}
           />
         ))}
         {/* 新建文档卡片（管理员模式） */}
@@ -246,7 +226,6 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
                 const tempSlug = `temp-${Date.now()}`;
                 const newDoc: ContentItem = {
                   title: '新建文档',
-                  iconEmoji: '📝',
                   author: '',
                   tags: [],
                   description: '',

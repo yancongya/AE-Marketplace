@@ -192,12 +192,12 @@ function generateMarkdown(data: any): string {
   const frontmatter = [
     '---',
     `title: ${data.title || ''}`,
-    data.iconEmoji ? `iconEmoji: ${data.iconEmoji}` : '',
     data.author ? `author: ${data.author}` : '',
     data.tags && data.tags.length > 0 ? `tags: [${data.tags.map((t: string) => `"${t}"`).join(', ')}]` : '',
     data.description ? `description: ${data.description}` : '',
     data.updatedAt ? `updatedAt: ${data.updatedAt}` : '',
     data.isFavorite !== undefined ? `isFavorite: ${data.isFavorite}` : '',
+    data.coverImage ? `coverImage: ${data.coverImage}` : '',
     '---',
     '',
     data.content || '',

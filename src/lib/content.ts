@@ -1,7 +1,6 @@
 export interface ContentItem {
   slug: string;
   title: string;
-  iconEmoji?: string;
   author?: string;
   tags?: string[];
   category?: string;
@@ -11,12 +10,12 @@ export interface ContentItem {
   content: string;
   date?: string;
   isFavorite?: boolean;
+  coverImage?: string;
 }
 
 export interface PresetItem {
   slug: string;
   title: string;
-  iconEmoji?: string;
   count: number;
   nameEn?: string;
   author?: string;
@@ -27,12 +26,12 @@ export interface PresetItem {
   updatedAt?: string;
   content: string;
   isFavorite?: boolean;
+  coverImage?: string;
 }
 
 export interface ExtensionItem {
   slug: string;
   title: string;
-  iconEmoji?: string;
   author?: string;
   tags?: string[];
   category?: string;
@@ -41,6 +40,7 @@ export interface ExtensionItem {
   updatedAt?: string;
   content: string;
   isFavorite?: boolean;
+  coverImage?: string;
 }
 
 function parseFrontmatter(text: string): { frontmatter: Record<string, any>; content: string } {
@@ -150,7 +150,6 @@ async function loadFromFetch(): Promise<ContentData> {
     data.expressions.push({
       slug,
       title: frontmatter.title || slug,
-      iconEmoji: frontmatter.iconEmoji,
       author: frontmatter.author,
       tags: frontmatter.tags,
       category: frontmatter.category,
@@ -159,7 +158,8 @@ async function loadFromFetch(): Promise<ContentData> {
       updatedAt: frontmatter.updatedAt,
       date: frontmatter.date,
       content: content.trim(),
-      isFavorite: frontmatter.isFavorite
+      isFavorite: frontmatter.isFavorite,
+      coverImage: frontmatter.coverImage
     });
   });
 
@@ -167,7 +167,6 @@ async function loadFromFetch(): Promise<ContentData> {
     data.scripts.push({
       slug,
       title: frontmatter.title || slug,
-      iconEmoji: frontmatter.iconEmoji,
       author: frontmatter.author,
       tags: frontmatter.tags,
       category: frontmatter.category,
@@ -176,7 +175,8 @@ async function loadFromFetch(): Promise<ContentData> {
       updatedAt: frontmatter.updatedAt,
       date: frontmatter.date,
       content: content.trim(),
-      isFavorite: frontmatter.isFavorite
+      isFavorite: frontmatter.isFavorite,
+      coverImage: frontmatter.coverImage
     });
   });
 
@@ -184,7 +184,6 @@ async function loadFromFetch(): Promise<ContentData> {
     data.presets.push({
       slug,
       title: frontmatter.title || slug,
-      iconEmoji: frontmatter.iconEmoji,
       count: parseInt(frontmatter.count) || 0,
       nameEn: frontmatter.nameEn,
       author: frontmatter.author,
@@ -194,7 +193,8 @@ async function loadFromFetch(): Promise<ContentData> {
       description: frontmatter.description || '',
       updatedAt: frontmatter.updatedAt,
       content: content.trim(),
-      isFavorite: frontmatter.isFavorite
+      isFavorite: frontmatter.isFavorite,
+      coverImage: frontmatter.coverImage
     });
   });
 
@@ -202,7 +202,6 @@ async function loadFromFetch(): Promise<ContentData> {
     data.extensions.push({
       slug,
       title: frontmatter.title || slug,
-      iconEmoji: frontmatter.iconEmoji,
       author: frontmatter.author,
       tags: frontmatter.tags,
       category: frontmatter.category,
@@ -210,7 +209,8 @@ async function loadFromFetch(): Promise<ContentData> {
       description: frontmatter.description || '',
       updatedAt: frontmatter.updatedAt,
       content: content.trim(),
-      isFavorite: frontmatter.isFavorite
+      isFavorite: frontmatter.isFavorite,
+      coverImage: frontmatter.coverImage
     });
   });
 

@@ -183,22 +183,66 @@ mermaid.initialize({
       
     
       interface TabContentProps {
+    
+      
+    
         title: string;
+    
+      
+    
         icon?: ReactNode;
+    
+      
+    
         iconSrc?: string;
-        iconEmoji?: string;
+    
+      
+    
         subtitle?: string;
+    
+      
+    
         content: string;
+    
+      
+    
         onBack: () => void;
+    
+      
+    
         author?: string;
+    
+      
+    
         updatedAt?: string;
+    
+      
+    
         tags?: string[];
+    
+      
+    
         filename?: string;
+    
+      
+    
         category?: string;
+    
+      
+    
         slug?: string;
+    
+      
+    
         isFavorite?: boolean; // 添加收藏标记
-      }
-interface Heading {
+    
+      
+    
+        coverImage?: string; // 添加封面图片
+    
+      
+    
+      }interface Heading {
   id: string;
   text: string;
   level: number;
@@ -763,11 +807,10 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
 }
 
 export function TabContent({
-  title, 
-  icon, 
+  title,
+  icon,
   iconSrc,
-  iconEmoji,
-  subtitle, 
+  subtitle,
   content,
   onBack,
   author,
@@ -776,7 +819,8 @@ export function TabContent({
   filename,
   category,
   slug: propSlug,
-  isFavorite: propIsFavorite
+  isFavorite: propIsFavorite,
+  coverImage: propCoverImage
 }: TabContentProps) {  const { translations } = useI18n();
   const { isAdmin } = useAdmin();
   const location = useLocation();
@@ -799,24 +843,23 @@ export function TabContent({
   
   // 使用临时文档数据或原始数据
   const displayTitle = tempDocData?.title || title || '未命名文档';
-  const displayIconEmoji = tempDocData?.iconEmoji || iconEmoji;
   const displayAuthor = tempDocData?.author || author;
   const displayTags = tempDocData?.tags || tags || [];
   const displayDescription = tempDocData?.description || subtitle || '';
   const displayUpdatedAt = tempDocData?.updatedAt || updatedAt || new Date().toISOString().split('T')[0];
   const displayContent = tempDocData?.content || content || '# 新建文档\n\n开始编写你的文档...';
-  
+
   const [editData, setEditData] = useState({
     title: displayTitle,
-    iconEmoji: displayIconEmoji,
     author: displayAuthor,
     tags: displayTags,
     description: displayDescription,
     updatedAt: displayUpdatedAt,
     content: displayContent,
     slug,
-    command: '', // 添加 command 属性
-    isFavorite: propIsFavorite || false // 添加收藏标记
+    command: '',
+    isFavorite: propIsFavorite || false,
+    coverImage: propCoverImage || ''
   });
   const headings = useMemo(() => extractHeadings(content), [content]);
 
@@ -836,7 +879,6 @@ export function TabContent({
     setIsEditing(false);
     setEditData({
       title,
-      iconEmoji,
       author,
       tags: tags || [],
       description: subtitle || '',
@@ -844,7 +886,8 @@ export function TabContent({
       content,
       slug,
       command: '',
-      isFavorite: propIsFavorite || false
+      isFavorite: propIsFavorite || false,
+      coverImage: propCoverImage || ''
     });
     window.location.hash = '';
   };
@@ -1015,20 +1058,6 @@ export function TabContent({
                       />
                     </div>
 
-                    {/* 图标 Emoji */}
-                    <div className="space-y-2">
-                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
-                        <span className="text-success">$</span> 图标 Emoji
-                      </label>
-                      <input
-                        type="text"
-                        value={editData.iconEmoji || ''}
-                        onChange={(e) => handleChange('iconEmoji', e.target.value)}
-                        placeholder="📝"
-                        className="w-16 sm:w-20 bg-muted/30 border border-border rounded px-3 py-2 text-xl sm:text-2xl text-center text-foreground focus:outline-none focus:border-primary"
-                      />
-                    </div>
-
                     {/* 收藏选项 */}
                     <div className="space-y-2">
                       <label className="text-xs sm:text-sm text-muted-foreground font-mono flex items-center gap-2 cursor-pointer">
@@ -1044,6 +1073,21 @@ export function TabContent({
                         />
                         <span className="text-xs sm:text-sm text-foreground">设为收藏（收藏的文章会优先显示在列表和首页推荐中）</span>
                       </label>
+                    </div>
+
+                    {/* 封面图片 */}
+                    <div className="space-y-2">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono">
+                        <span className="text-success">$</span> 封面图片 URL
+                      </label>
+                      <input
+                        type="text"
+                        value={editData.coverImage || ''}
+                        onChange={(e) => handleChange('coverImage', e.target.value)}
+                        placeholder="https://example.com/cover.jpg"
+                        className="w-full bg-muted/30 border border-border rounded px-3 py-2 text-xs sm:text-sm font-mono text-foreground focus:outline-none focus:border-primary"
+                      />
+                      <p className="text-xs text-muted-foreground">输入封面图片的 URL，留空则不显示封面（16:9 比例）</p>
                     </div>
 
                     {/* 文档名（slug） */}
@@ -1132,8 +1176,7 @@ export function TabContent({
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                       <div className="flex items-center gap-2 sm:gap-3">
                         {iconSrc ? <img src={iconSrc} alt={title} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full" /> :
-                         icon ? <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center">{icon}</div> :
-                         iconEmoji ? <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center text-xl sm:text-2xl">{iconEmoji}</div> : null}
+                         icon ? <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary/10 flex items-center justify-center">{icon}</div> : null}
                         <div className="min-w-0">
                           <h1 className="text-xl sm:text-2xl font-bold text-foreground break-words">{title}</h1>
                           {subtitle && <p className="text-xs sm:text-sm text-muted-foreground font-mono truncate">{subtitle}</p>}
