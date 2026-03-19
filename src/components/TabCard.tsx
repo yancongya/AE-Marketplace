@@ -337,11 +337,11 @@ export function TabCard({
             </div>
 
             {/* 模态窗口内容 - 使用 iframe 加载完整文档 */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden bg-background">
               {to && (
                 <iframe
                   src={to}
-                  className="w-full h-full border-0"
+                  className="w-full h-full border-0 custom-scrollbar"
                   title={title}
                 />
               )}
