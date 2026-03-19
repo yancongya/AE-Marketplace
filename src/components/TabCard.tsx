@@ -198,7 +198,7 @@ export function TabCard({
     setIsDeleteDialogOpen(open);
   };
 
-  const content = (
+  const cardContent = (
     <div
       className={`terminal-window card-hover cursor-pointer group flex flex-col min-h-[200px] ${
         isTempDeleted ? 'shrink-disappear' : ''
@@ -425,7 +425,7 @@ export function TabCard({
 
   const wrappedContent = (
     <>
-      {content}
+      {cardContent}
       {deleteDialog}
       {previewDialog}
     </>
