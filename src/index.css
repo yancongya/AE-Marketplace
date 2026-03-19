@@ -428,64 +428,98 @@
     opacity: 1;
     transform: scale(1) rotate(0deg);
   }
-  15% {
-    opacity: 0.85;
-    transform: scale(0.85) rotate(-8deg);
+  25% {
+    opacity: 0.8;
+    transform: scale(0.8) rotate(-5deg);
   }
-  30% {
-    opacity: 0.7;
-    transform: scale(0.7) rotate(8deg);
-  }
-  45% {
-    opacity: 0.55;
-    transform: scale(0.55) rotate(-12deg);
-  }
-  60% {
-    opacity: 0.4;
-    transform: scale(0.4) rotate(12deg);
+  50% {
+    opacity: 0.5;
+    transform: scale(0.5) rotate(5deg);
   }
   75% {
-    opacity: 0.25;
-    transform: scale(0.25) rotate(-15deg);
-  }
-  90% {
-    opacity: 0.1;
-    transform: scale(0.1) rotate(18deg);
+    opacity: 0.2;
+    transform: scale(0.2) rotate(-8deg);
   }
   100% {
     opacity: 0;
-    transform: scale(0) rotate(-20deg);
+    transform: scale(0) rotate(-12deg);
   }
 }
 
   .shrink-disappear {
-  animation: shrinkDisappear 1.0s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
 
-  .shrink-disappear-complete {
-  opacity: 0;
-  height: 0;
-  min-height: 0;
-  width: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  pointer-events: none;
-  transform: scale(0);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    animation: shrinkDisappear 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
-/* 确保网格布局的卡片容器支持过渡 */
-.grid {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  }
 
-.grid > div {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  
 
-/* 为卡片添加布局过渡 */
-.terminal-window {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-}
+  /* 为网格布局添加过渡效果 - 使用 view-transition-name 启用平滑布局动画 */
+
+  
+
+  .grid {
+
+  
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  
+
+  }
+
+  
+
+  
+
+  
+
+  .grid > div {
+
+  
+
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+
+  
+
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  
+
+    will-change: transform, opacity;
+
+  
+
+  }
+
+  
+
+  
+
+  
+
+  /* 卡片本身的过渡 */
+
+  
+
+  .terminal-window {
+
+  
+
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+
+  
+
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+
+  
+
+                all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  
+
+    will-change: transform, opacity;
+
+  
+
+  }}

@@ -19,6 +19,9 @@ interface TabCardProps {
   to?: string;
   category?: string;
   filename?: string;
+  onTempDelete?: () => void; // 添加临时删除回调
+  registerCardRef?: (slug: string, element: HTMLDivElement | null) => void; // 添加 ref 注册函数
+  slug?: string; // 添加 slug
 }
 
 export function TabCard({
@@ -32,16 +35,26 @@ export function TabCard({
   onClick,
   to,
   category,
-  filename
+  filename,
+  onTempDelete,
+  registerCardRef,
+  slug
 }: TabCardProps) {
   const { isAdmin } = useAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isTempDeleted, setIsTempDeleted] = useState(false);
-  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const shouldBlockClickRef = useRef(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // 注册 card ref 到父组件
+  useEffect(() => {
+    if (registerCardRef && slug) {
+      registerCardRef(slug, cardRef.current);
+    }
+  }, [registerCardRef, slug]);
 
   // 检测是否是电脑环境
   useEffect(() => {
@@ -139,15 +152,12 @@ export function TabCard({
       setIsTempDeleted(true);
       toast.success('文章已临时隐藏，刷新页面后恢复');
 
-      // 动画完成后（1.0秒）设置高度为0，让其他卡片平滑补位
+      // 动画进行到一半时（0.3秒）通知父组件移除卡片，开始补位
       setTimeout(() => {
-        setIsAnimationComplete(true);
-      }, 1000);
-
-      // 平滑过渡完成后（1.5秒）完全移除元素
-      setTimeout(() => {
-        // 这里可以添加额外的逻辑，比如通知父组件更新列表
-      }, 1500);
+        if (onTempDelete) {
+          onTempDelete();
+        }
+      }, 300);
     } catch (error) {
       console.error('红色圆点点击错误:', error);
       e.preventDefault();
@@ -212,8 +222,6 @@ export function TabCard({
     <div
       className={`terminal-window card-hover cursor-pointer group flex flex-col min-h-[200px] ${
         isTempDeleted ? 'shrink-disappear' : ''
-      } ${
-        isAnimationComplete ? 'shrink-disappear-complete' : ''
       }`}
       title={description}
     >

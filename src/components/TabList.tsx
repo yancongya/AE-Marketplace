@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TabPanel } from './TabPanel';
 import { TabCard } from './TabCard';
@@ -34,6 +34,64 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
   const { slug } = useParams();
   const navigate = useNavigate();
 
+  // 临时删除的卡片列表
+  const [tempDeletedSlugs, setTempDeletedSlugs] = useState<Set<string>>(new Set());
+
+  // FLIP 动画相关
+  const cardRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const isAnimatingRef = useRef(false);
+
+  // 处理临时删除，使用 FLIP 动画
+  const handleTempDelete = (itemSlug: string) => {
+    // 记录所有剩余卡片的初始位置（First）
+    const positions = new Map<string, { x: number; y: number }>();
+    cardRefs.current.forEach((element, slug) => {
+      if (slug !== itemSlug) {
+        const rect = element.getBoundingClientRect();
+        positions.set(slug, { x: rect.left, y: rect.top });
+      }
+    });
+
+    // 标记正在动画中
+    isAnimatingRef.current = true;
+
+    // 删除卡片
+    setTempDeletedSlugs(prev => new Set(prev).add(itemSlug));
+
+    // 等待 React 重新渲染，然后执行 FLIP 动画
+    setTimeout(() => {
+      // 获取所有卡片的新位置（Last）
+      cardRefs.current.forEach((element, slug) => {
+        if (positions.has(slug)) {
+          const oldPos = positions.get(slug)!;
+          const newPos = element.getBoundingClientRect();
+          const deltaX = oldPos.x - newPos.left;
+          const deltaY = oldPos.y - newPos.top;
+
+          // 应用反向 transform（Invert）
+          if (deltaX !== 0 || deltaY !== 0) {
+            element.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+            element.style.transition = 'none';
+
+            // 在下一帧移除 transform，让卡片平滑移动（Play）
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                element.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                element.style.transform = '';
+
+                // 动画完成后清理
+                setTimeout(() => {
+                  element.style.transition = '';
+                  isAnimatingRef.current = false;
+                }, 300);
+              });
+            });
+          }
+        }
+      });
+    }, 50);
+  };
+
   useEffect(() => {
     setList(data);
     setLoading(false);
@@ -56,7 +114,9 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
         item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.author?.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesTag && matchesSearch;
+      // 过滤掉临时删除的卡片
+      const notTempDeleted = !tempDeletedSlugs.has(item.slug);
+      return matchesTag && matchesSearch && notTempDeleted;
     });
 
     // 按更新时间降序排序（最新的在前）
@@ -67,7 +127,7 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
     });
 
     return result;
-  }, [list, selectedTags, searchTerm]);
+  }, [list, selectedTags, searchTerm, tempDeletedSlugs]);
 
   // 分页逻辑
   const totalPages = Math.ceil(filteredList.length / itemsPerPage);
@@ -160,6 +220,15 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
             to={`/${category}/${item.slug}`}
             category={category}
             filename={`${item.slug}.md`}
+            onTempDelete={() => handleTempDelete(item.slug)}
+            registerCardRef={(slug, element) => {
+              if (element) {
+                cardRefs.current.set(slug, element);
+              } else {
+                cardRefs.current.delete(slug);
+              }
+            }}
+            slug={item.slug}
           />
         ))}
         {/* 新建文档卡片（管理员模式） */}
