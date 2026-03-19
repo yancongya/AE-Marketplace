@@ -152,7 +152,8 @@ async function loadFromFetch(): Promise<ContentData> {
       description: frontmatter.description || '',
       updatedAt: frontmatter.updatedAt,
       date: frontmatter.date,
-      content: content.trim()
+      content: content.trim(),
+      isFavorite: frontmatter.isFavorite
     });
   });
 
@@ -168,7 +169,8 @@ async function loadFromFetch(): Promise<ContentData> {
       description: frontmatter.description || '',
       updatedAt: frontmatter.updatedAt,
       date: frontmatter.date,
-      content: content.trim()
+      content: content.trim(),
+      isFavorite: frontmatter.isFavorite
     });
   });
 
@@ -185,7 +187,8 @@ async function loadFromFetch(): Promise<ContentData> {
       command: frontmatter.command || '',
       description: frontmatter.description || '',
       updatedAt: frontmatter.updatedAt,
-      content: content.trim()
+      content: content.trim(),
+      isFavorite: frontmatter.isFavorite
     });
   });
 
@@ -200,7 +203,8 @@ async function loadFromFetch(): Promise<ContentData> {
       command: frontmatter.command || '',
       description: frontmatter.description || '',
       updatedAt: frontmatter.updatedAt,
-      content: content.trim()
+      content: content.trim(),
+      isFavorite: frontmatter.isFavorite
     });
   });
 
