@@ -1,233 +1,263 @@
 ---
 name: writing-documents
-description: Use when writing documentation with YAML frontmatter, markdown formatting, download links, image references, or managing content manifests for code, scripts, presets, or expressions
+description: Create AE scripts documentation with interactive guidance
 ---
 
 # 文档编写技能
 
-## 概述
+创建 AE 脚本、表达式、预设、扩展文档。
 
-为 AE 脚本市场内容系统创建文档。
+## 交互式文档创建
 
-**核心规则：**
-- 统一的元数据格式
-- 正确的目录和图片路径
-- 网络地址作为下载链接
-- 更新对应的 manifest.json
-- 支持封面图片和收藏功能
+**工作流程**：通过对话式交互创建文档，每步提供选项。
 
-**必需前置技能：** 使用 `superpowers:test-driven-development` 确保文档质量
+---
 
-## 工作流程
+## 第 1 步：确定文档类型
 
-```mermaid
-graph TD
-    A[需要创建文档?] --> B{文档类型?}
-    B -->|表达式| C[参考 expressions.md]
-    B -->|脚本| D[参考 scripts.md]
-    B -->|预设| E[参考 presets.md]
-    B -->|扩展| F[参考 extensions.md]
-    C --> G[创建文档]
-    D --> G
-    E --> G
-    F --> G
-    G --> H[更新 manifest.json]
-```
+**系统询问**："你要创建什么类型的文档？"
 
-## 标准元数据（必须）
+**选项**：
+- [ ] 脚本 - 自动化工具和脚本
+- [ ] 表达式 - AE 表达式和公式
+- [ ] 预设 - 动画和效果预设
+- [ ] 扩展 - 扩展插件和工具
 
-所有文档必须包含以下 YAML 前置元数据：
+**用户选择**：选择一个类型
+
+---
+
+## 第 2 步：基本信息
+
+**系统询问**："请提供以下信息："
+
+**必需信息**：
+- **标题**：文档标题（必填）
+- **作者**：作者名称（必填）
+- **标签**：相关标签（必填，多个用逗号分隔）
+- **描述**：简短描述（必填）
+
+**可选信息**：
+- **收藏**：是否设为收藏文章？（默认：否）
+- **封面**：是否添加封面图片？（默认：否，自动生成）
+
+---
+
+## 第 3 步：内容结构
+
+**系统询问**："需要哪些内容部分？"
+
+**选项**（可多选）：
+- [ ] 下载链接
+- [ ] 使用场景
+- [ ] 功能特性
+- [ ] 使用教程
+- [ ] 效果展示
+- [ ] 常见问题
+- [ ] 更新日志
+
+**默认选择**：下载链接、使用场景、功能特性
+
+---
+
+## 第 4 步：高级功能
+
+**系统询问**："需要以下功能吗？"
+
+**选项**：
+- [ ] 生成流程图（Mermaid）
+- [ ] 查找相关图片
+- [ ] 添加代码示例
+- [ ] 创建可视化图表
+- [ ] 添加相关文档链接
+
+**用户选择**：根据需要选择
+
+---
+
+## 第 5 步：图片处理
+
+**如果选择了"查找相关图片"**：
+
+**系统询问**："需要什么类型的图片？"
+
+**选项**：
+- [ ] 效果截图
+- [ ] 界面截图
+- [ ] 功能示意图
+- [ ] 对比图
+- [ ] 流程图
+
+**系统执行**：
+- 根据标题和描述搜索相关图片
+- 提供 3-5 个候选图片
+- 让用户选择或提供自定义图片 URL
+
+---
+
+## 第 6 步：图表生成
+
+**如果选择了"创建可视化图表"**：
+
+**系统询问**："需要什么类型的图表？"
+
+**选项**：
+- [ ] 流程图（graph TD）
+- [ ] 关系图（graph LR）
+- [ ] 时序图（sequenceDiagram）
+- [ ] 架构图（classDiagram）
+- [ ] 状态图（stateDiagram）
+
+**系统执行**：
+- 根据文档内容自动生成图表
+- 提供预览和修改选项
+
+---
+
+## 第 7 步：相关文档
+
+**如果选择了"添加相关文档链接"**：
+
+**系统询问**："需要链接哪些相关文档？"
+
+**系统执行**：
+- 搜索同类别文档
+- 显示相关文档列表
+- 让用户选择要链接的文档
+
+---
+
+## 第 8 步：预览和调整
+
+**系统询问**："文档已生成，需要调整吗？"
+
+**选项**：
+- [ ] 修改标题
+- [ ] 修改描述
+- [ ] 添加/删除内容部分
+- [ ] 调整图片
+- [ ] 修改图表
+- [ ] 完成
+
+---
+
+## 第 9 步：保存
+
+**系统询问**："文档准备保存，确认信息："
+
+**显示**：
+- 文件名：自动生成（基于标题）
+- 保存位置：`public/content/{类型}/`
+- manifest.json：需要更新
+
+**选项**：
+- [ ] 确认保存
+- [ ] 返回修改
+- [ ] 取消
+
+**系统执行**：
+- 创建 Markdown 文件
+- 更新 manifest.json
+- 显示保存成功信息
+
+---
+
+## 元数据格式
+
+生成的文档包含以下元数据：
 
 ```yaml
 ---
 title: 文档标题
-author: 烟囱鸭
-tags: [标签1, 标签2, 标签3]
-description: 简短副标题
+author: 作者
+tags: [标签1, 标签2]
+description: 简短描述
 updatedAt: YYYY-MM-DD
-isFavorite: false  # 可选，默认 false
+isFavorite: false  # 可选
 coverImage: https://example.com/cover.jpg  # 可选
 ---
 ```
 
-**元数据说明**：
-- `title`：文档标题（必填）
-- `author`：作者（必填）
-- `tags`：标签数组（必填）
-- `description`：简短描述（必填）
-- `updatedAt`：更新日期（必填，格式：YYYY-MM-DD）
-- `isFavorite`：收藏标记（可选，布尔值，默认 false）
-- `coverImage`：封面图片 URL（可选）
+## 快速模式
 
-**注意**：
-- ❌ 不再使用 `iconEmoji` 字段
-- ❌ 不再使用 `category` 字段（由文件所在目录决定）
+**如果用户选择快速模式**：
 
-## 目录结构
+**系统询问**："提供标题和描述，其他使用默认值"
 
-```
-public/content/
-├── expressions/
-│   ├── manifest.json
-│   ├── *.md
-│   └── assets/          # 图片资源
-├── scripts/
-│   ├── manifest.json
-│   ├── *.md
-│   └── assets/
-├── presets/
-│   ├── manifest.json
-│   ├── *.md
-│   └── assets/
-└── extensions/
-    ├── manifest.json
-    ├── *.md
-    └── assets/
-```
+**执行**：
+- 自动生成元数据
+- 使用默认内容结构
+- 自动生成封面
+- 直接保存
 
-## 子文档
-
-- **expressions.md** - 表达式文档要点
-- **scripts.md** - 脚本文档要点
-- **presets.md** - 预设文档要点
-- **extensions.md** - 扩展文档要点
-- **shared/image-resources.md** - 图片资源管理
-- **shared/download-links.md** - 下载链接规范
-- **shared/cover-guide.md** - 封面使用指南
-- **examples/** - 文档示例（参考）
-
-## 重要注意事项
-
-### 1. 图片引用
-
-**只引用实际存在的图片：**
-- 不要添加不存在的图片链接
-- 如果没有实际图片，使用文字描述代替
-- 图片路径格式：`./assets/filename.png`
-
-### 2. 相关文档链接
-
-**链接格式（前端路由）：**
-```markdown
-✅ [文档名称](./document-name)   # 不包含 .md
-❌ [文档名称](./document-name.md) # 包含 .md 会导致无法打开
-```
-
-**只引用实际存在的文档：**
-- 表达式：检查 `public/content/expressions/manifest.json`
-- 脚本：检查 `public/content/scripts/manifest.json`
-- 预设：检查 `public/content/presets/manifest.json`
-- 扩展：检查 `public/content/extensions/manifest.json`
-
-### 3. 封面图片
-
-**封面优先级：**
-1. 自定义封面 (`coverImage`)
-2. 自动生成封面（基于标题和描述）
-3. 占位符
-
-**自动生成封面：**
-- 如果不设置 `coverImage`，系统会自动生成默认封面
-- 封面会显示标题和描述
-- 使用蓝色渐变背景和终端风格
-
-**封面尺寸：**
-- 自动生成：640×360（16:9 比例）
-- 自定义：建议使用 16:9 比例
-- 支持常见格式：JPG、PNG、GIF、WebP
-
-### 4. 收藏功能
-
-**使用场景：**
-- 推荐文章设置为收藏
-- 收藏文章会优先显示在列表和首页推荐
-- 收藏文章会显示星星图标
-
-## 核心规则（必须）
-
-### 1. 图片路径
-
-**规则：** 图片使用相对路径 `./assets/filename.png`
-
-```markdown
-✅ ![描述](./assets/image.png)
-❌ ![描述](/path/to/image.png)
-```
-
-### 2. 下载链接
-
-**规则：** 使用网络地址，不使用本地路径
-
-```markdown
-✅ 🔗 [下载](https://github.com/.../file.ext)
-❌ 🔗 [下载](/downloads/file.ext)
-```
-
-### 3. 清单更新
-
-**规则：** 在对应目录的 `manifest.json` 数组中添加文件名
-
-```json
-["existing-doc.md", "new-doc.md"]
-```
-
-### 4. 元数据格式
-
-**规则：** 使用最新的元数据格式
-
-```yaml
 ---
-title: 标题
-author: 作者
-tags: [标签]
-description: 描述
-updatedAt: 2026-03-19
-isFavorite: false
-coverImage: https://example.com/cover.jpg
+
+## 示例对话
+
+**用户**：创建一个脚本文档
+
+**系统**：好的，我们来创建一个脚本文档。
+
+**系统**：请提供标题
+**用户**：色彩调色板
+
+**系统**：请提供作者
+**用户**：烟囱鸭
+
+**系统**：请提供标签（多个用逗号分隔）
+**用户**：颜色,调色板,工具
+
+**系统**：请提供简短描述
+**用户**：快速创建和管理色彩方案
+
+**系统**：需要添加封面图片吗？（是/否）
+**用户**：是
+
+**系统**：需要哪些内容部分？（下载链接/使用场景/功能特性/使用教程/效果展示/常见问题/更新日志）
+**用户**：下载链接, 使用场景, 功能特性
+
+**系统**：需要生成流程图吗？（是/否）
+**用户**：是
+
+**系统**：需要查找相关图片吗？（是/否）
+**用户**：是
+
+**系统**：需要什么类型的图片？（效果截图/界面截图/功能示意图/对比图/流程图）
+**用户**：效果截图
+
+**系统**：正在搜索相关图片...找到 3 张候选图片，请选择：
+- [1] 图片 A
+- [2] 图片 B
+- [3] 图片 C
+- [4] 使用自定义 URL
+
+**用户**：1
+
+**系统**：正在生成文档...已生成，需要调整吗？（修改标题/修改描述/添加内容/调整图片/修改图表/完成）
+**用户**：完成
+
+**系统**：确认保存到 `public/content/scripts/color-palette.md`？（是/否）
+**用户**：是
+
+**系统**：✅ 文档已保存！已更新 manifest.json。
+
 ---
-```
 
-## 快速参考
+## 注意事项
 
-| 文档类型 | 参考文档 | 示例文件 |
-|----------|----------|----------|
-| 表达式 | expressions.md | examples/expression-template.md |
-| 脚本 | scripts.md | examples/script-template.md |
-| 预设 | presets.md | examples/preset-template.md |
-| 扩展 | extensions.md | examples/extension-template.md |
+- 文件名自动生成（基于标题，小写，连字符分隔）
+- manifest.json 自动更新
+- 图片使用相对路径 `./assets/`
+- 下载链接使用网络地址
+- 相关文档链接格式：`[文档名](./doc-name)`
 
-## 参考资源
+---
 
-- **shared/image-resources.md** - 图片资源管理
-- **shared/download-links.md** - 下载链接规范
-- **shared/cover-guide.md** - 封面使用指南
-- **examples/** - 文档示例（参考，非模板）
-
-## 质量检查（必须）
-
-- [ ] 元数据包含所有 5 个必需字段（title, author, tags, description, updatedAt）
-- [ ] 元数据格式正确（移除 iconEmoji 和 category）
-- [ ] 文件保存在正确的 `public/content/{模块类型}/` 目录
-- [ ] 下载链接使用网络地址
-- [ ] 图片使用相对路径 `./assets/`
-- [ ] 已更新对应的 `manifest.json`
-- [ ] 封面图片 URL 有效（如果设置了 coverImage）
-- [ ] isFavorite 为布尔值（如果设置了 isFavorite）
-
-## 参考示例
-
-查看现有文档：
-- `public/content/expressions/auto-keyframe.md`
-- `public/content/scripts/script-complete-guide.md`
-- `public/content/presets/animation.md`
-- `public/content/extensions/extension-dev-guide.md`
-
-## 版本更新
+## 版本信息
 
 **v2.0 (2026-03-19)**：
-- 移除 `iconEmoji` 字段
-- 移除 `category` 字段
-- 添加 `isFavorite` 字段支持收藏功能
-- 添加 `coverImage` 字段支持封面图片
-- 实现自动生成默认封面功能
-- 更新所有模板和指南文档
+- 交互式文档创建
+- 简化流程
+- 添加选项支持
+- 支持自动生成封面
+- 支持收藏功能
