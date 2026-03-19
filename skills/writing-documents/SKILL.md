@@ -154,17 +154,17 @@ ask_user_question({
 
 ## 清单更新
 
-创建文档后，更新对应的 `manifest.json`：
+创建文档后，更新对应的 `_manifest.json`：
 
 ```json
 ["existing-doc.md", "new-doc.md"]
 ```
 
 **位置**：
-- 表达式：`public/content/expressions/manifest.json`
-- 脚本：`public/content/scripts/manifest.json`
-- 预设：`public/content/presets/manifest.json`
-- 扩展：`public/content/extensions/manifest.json`
+- 表达式：`public/content/expressions/_manifest.json`
+- 脚本：`public/content/scripts/_manifest.json`
+- 预设：`public/content/presets/_manifest.json`
+- 扩展：`public/content/extensions/_manifest.json`
 
 ## 质量检查
 
