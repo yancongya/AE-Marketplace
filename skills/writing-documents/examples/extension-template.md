@@ -1,133 +1,98 @@
 ---
 title: 扩展名称
-iconEmoji: 🔌
 author: 烟囱鸭
-tags: [扩展, 插件, 工具]
-category: extensions
-description: 扩展 After Effects 功能
-updatedAt: 2026-02-05
+tags: [扩展, 工具, 增强功能]
+description: 简短副标题描述
+updatedAt: 2026-03-19
+isFavorite: false
+coverImage: https://example.com/cover.jpg
 ---
 
 ## 下载
 
-🔗 [下载扩展](https://github.com/yancongya/AE----/releases/download/v1.0.0/extension-name.zip)
+🔗 [下载扩展](https://github.com/yancongya/AE----/releases/download/v1.0.0/extension-name.zxp)
 
 **文件信息：**
 - 文件大小：2.5 MB
 - 版本：v1.0.0
-- 兼容性：AE CC 2020+
-- 类型：面板扩展
-- 语言：中文/英文
+- 兼容性：AE CC 2019+
+- 类型：扩展插件
 
-## 效果预览
+## 功能描述
 
-### 主界面
+[详细描述扩展的功能和价值]
 
-![主界面](./assets/main-ui.png)
+## 核心特性
 
-### 功能演示
+### 特性 1
 
-![功能演示](./assets/demo.gif)
+[详细说明特性 1 的功能和用法]
 
-## 使用场景
+### 特性 2
 
-- 场景 1：详细描述和应用效果
-- 场景 2：详细描述和应用效果
-- 场景 3：详细描述和应用效果
+[详细说明特性 2 的功能和用法]
 
-## 原理分析
+### 特性 3
 
-### 架构设计
+[详细说明特性 3 的功能和用法]
 
-[简单说明扩展的整体架构]
+## 安装方法
 
-### 集成方式
+### 方法 1：CC 扩展管理器
 
-[说明扩展如何与 After Effects 集成]
-
-### 数据交互
-
-[说明数据如何在扩展和 AE 之间流动]
-
-## 系统要求
-
-- 操作系统：Windows 10+ / macOS 10.14+
-- After Effects：CC 2020 或更高版本
-- 内存：建议 8GB 以上
-- 存储空间：50MB 可用空间
-
-## 安装教程
-
-### 方法 1：自动安装（推荐）
-
-1. 下载扩展包
-2. 双击安装程序
-3. 按提示完成安装
-4. 重启 After Effects
-
-![自动安装](./assets/auto-install.png)
+1. 打开 Creative Cloud 桌面应用程序
+2. 选择"Exchange"选项卡
+3. 搜索扩展名称
+4. 点击安装
 
 ### 方法 2：手动安装
 
-1. 下载扩展包
-2. 解压到 AE 扩展目录：
-   - Windows: `C:\Program Files\Adobe\Adobe After Effects [版本]\Support Files\Plug-ins\`
-   - macOS: `/Applications/Adobe After Effects [版本]/Plug-ins/`
+1. 下载 .zxp 文件
+2. 使用 ZXPInstaller 安装
 3. 重启 After Effects
 
-![手动安装](./assets/manual-install.png)
+## 使用方法
 
-## 使用教程
+### 界面介绍
 
-### 步骤 1：打开扩展
+![主界面](./assets/main-ui.png)
 
-1. 启动 After Effects
-2. 选择 Window → Extensions → 扩展名称
-3. 扩展面板将显示
+### 操作流程
 
-![打开扩展](./assets/open.png)
+1. 启动扩展：Window → 扩展名称
+2. 配置参数
+3. 应用功能
+4. 保存结果
 
-### 步骤 2：基本使用
+### 工作流程图
 
-1. 选择要处理的图层
-2. 在扩展面板中配置参数
-3. 点击应用按钮
-4. 查看效果并调整
+```mermaid
+graph TD
+    A[启动扩展] --> B[选择功能]
+    B --> C[配置参数]
+    C --> D[应用效果]
+    D --> E[保存结果]
+```
 
-![基本使用](./assets/basic-usage.png)
+## 界面展示
 
-### 步骤 3：高级功能
+![功能面板1](./assets/panel1.png)
+![功能面板2](./assets/panel2.png)
+![效果展示](./assets/result.png)
 
-[详细说明高级功能的使用方法]
+## 参数配置
 
-![高级功能](./assets/advanced.png)
+| 参数 | 说明 | 范围 | 默认值 |
+|------|------|------|--------|
+| 参数1 | 说明 | 0-100 | 50 |
+| 参数2 | 说明 | 列表 | 选项1 |
 
-## 功能特性
+## 快捷键
 
-### 核心功能
-
-| 功能 | 说明 | 快捷键 |
-|------|------|--------|
-| 功能 1 | 详细说明 | Ctrl+1 |
-| 功能 2 | 详细说明 | Ctrl+2 |
-
-### 高级功能
-
-- 高级功能 1：详细说明
-- 高级功能 2：详细说明
-
-## 配置说明
-
-### 基本配置
-
-- 配置项 1：详细说明
-- 配置项 2：详细说明
-
-### 高级配置
-
-[详细说明高级配置选项]
-
-![配置界面](./assets/config.png)
+| 快捷键 | 功能 |
+|--------|------|
+| Ctrl+1 | 功能1 |
+| Ctrl+2 | 功能2 |
 
 ## 注意事项
 
@@ -135,19 +100,27 @@ updatedAt: 2026-02-05
 
 ## 常见问题
 
-### Q: 安装后找不到扩展？
+### Q: 问题 1？
 
-**A:** 详细解答和解决方案
+**A:** 详细解答
 
-### Q: 扩展无法正常工作？
+### Q: 问题 2？
 
-**A:** 详细解答和解决方案
+**A:** 详细解答
+
+## 系统要求
+
+- 操作系统：Windows 10+ / macOS 10.14+
+- After Effects：CC 2019 或更高版本
+- 内存：8GB 以上推荐
+- 磁盘空间：100MB 可用空间
+
+## 相关资源
+
+- [官方文档](https://example.com/docs)
+- [视频教程](https://example.com/tutorial)
+- [社区讨论](https://example.com/community)
 
 ## 更新日志
 
-- v1.0.0 (2026-02-05)：初始版本
-
-## 相关扩展
-
-- [扩展名称 1](./another-extension.md)
-- [扩展名称 2](./another-extension-2.md)
+- v1.0.0 (2026-03-19)：初始版本

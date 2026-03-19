@@ -1,11 +1,11 @@
 ---
 title: 脚本名称
-iconEmoji: 📜
 author: 烟囱鸭
 tags: [脚本, 自动化, 工具]
-category: scripts
 description: 在 After Effects 中自动化重复任务
-updatedAt: 2026-02-05
+updatedAt: 2026-03-19
+isFavorite: false
+coverImage: https://example.com/cover.jpg
 ---
 
 ## 下载
@@ -137,4 +137,4 @@ graph LR
 
 ## 更新日志
 
-- v1.0.0 (2026-02-05)：初始版本
+- v1.0.0 (2026-03-19)：初始版本
