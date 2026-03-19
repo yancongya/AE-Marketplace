@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAdmin } from '@/contexts/AdminContext';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { clearContentCache } from '@/lib/content';
+import { X, Maximize2 } from 'lucide-react';
 
 interface TabCardProps {
   title: string;
@@ -35,7 +36,20 @@ export function TabCard({
 }: TabCardProps) {
   const { isAdmin } = useAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isTempDeleted, setIsTempDeleted] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const shouldBlockClickRef = useRef(false);
+
+  // 检测是否是电脑环境
+  useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
 
   const handleDelete = async () => {
     if (!isAdmin) {
@@ -111,6 +125,57 @@ export function TabCard({
     }
   };
 
+  const handleRedDotClick = (e: React.MouseEvent) => {
+    if (!isDesktop) return;  // 只有电脑环境才有功能
+
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      shouldBlockClickRef.current = true;  // 阻止点击
+
+      // 临时删除 - 粉碎消失效果
+      setIsTempDeleted(true);
+      toast.success('文章已临时隐藏，刷新页面后恢复');
+    } catch (error) {
+      console.error('红色圆点点击错误:', error);
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
+  const handleYellowDotClick = (e: React.MouseEvent) => {
+    if (!isDesktop) return;  // 只有电脑环境才有功能
+
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      shouldBlockClickRef.current = true;  // 阻止点击
+
+      // 打开模态窗口查看文章
+      setIsPreviewOpen(true);
+    } catch (error) {
+      console.error('黄色圆点点击错误:', error);
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
+  const handleGreenDotClick = (e: React.MouseEvent) => {
+    if (!isDesktop) return;  // 只有电脑环境才有功能
+
+    try {
+      e.preventDefault();
+      e.stopPropagation();
+      shouldBlockClickRef.current = true;  // 阻止点击
+
+      // 绿色圆点不做任何操作，让卡片默认行为生效（全屏打开）
+    } catch (error) {
+      console.error('绿色圆点点击错误:', error);
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   const handleLinkClick = (e: React.MouseEvent) => {
     try {
       if (shouldBlockClickRef.current) {
@@ -133,19 +198,31 @@ export function TabCard({
 
   const content = (
     <div
-      className="terminal-window card-hover cursor-pointer group flex flex-col min-h-[200px]"
+      className={`terminal-window card-hover cursor-pointer group flex flex-col min-h-[200px] ${
+        isTempDeleted ? 'shrink-disappear' : ''
+      }`}
       title={description}
+      style={isTempDeleted ? { display: 'none' } : {}}
     >
       <div className="terminal-header flex-shrink-0">
         <div className="flex items-center gap-2 group-hover:gap-2.5 transition-all duration-300">
           <span
-            className="terminal-dot terminal-dot-red"
+            className={`terminal-dot terminal-dot-red ${isDesktop ? 'cursor-pointer hover:scale-125' : ''}`}
+            onClick={handleRedDotClick}
             onContextMenu={handleRedDotRightClick}
-            title={isAdmin ? '右键删除此文件' : ''}
+            title={isDesktop ? '点击临时隐藏文章' : isAdmin ? '右键删除此文件' : ''}
             style={isAdmin ? { cursor: 'context-menu' } : {}}
           />
-          <span className="terminal-dot terminal-dot-yellow" />
-          <span className="terminal-dot terminal-dot-green" />
+          <span
+            className={`terminal-dot terminal-dot-yellow ${isDesktop ? 'cursor-pointer hover:scale-125' : ''}`}
+            onClick={handleYellowDotClick}
+            title={isDesktop ? '点击在模态窗口中查看' : ''}
+          />
+          <span
+            className={`terminal-dot terminal-dot-green ${isDesktop ? 'cursor-pointer hover:scale-125' : ''}`}
+            onClick={handleGreenDotClick}
+            title={isDesktop ? '点击全屏打开' : ''}
+          />
         </div>
       </div>
 
@@ -223,10 +300,106 @@ export function TabCard({
     </Dialog.Root>
   ) : null;
 
+  // 模态窗口预览
+  const previewDialog = (
+    <Dialog.Root open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[90vw] h-[85vh] max-w-6xl bg-background border border-border rounded-lg shadow-2xl overflow-hidden">
+          <div className="flex flex-col h-full">
+            {/* 模态窗口头部 */}
+            <div className="terminal-header flex items-center justify-between px-4 py-2">
+              <div className="flex items-center gap-2">
+                <span className="terminal-dot terminal-dot-red" />
+                <span className="terminal-dot terminal-dot-yellow" />
+                <span className="terminal-dot terminal-dot-green" />
+                <span className="ml-2 text-xs text-muted-foreground font-mono">{title}.md</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {to && (
+                  <Link
+                    to={to}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded bg-primary/10 hover:bg-primary/20 border border-primary/30 transition-colors"
+                    title="全屏打开"
+                  >
+                    <Maximize2 className="w-4 h-4 text-primary" />
+                  </Link>
+                )}
+                <button
+                  onClick={() => setIsPreviewOpen(false)}
+                  className="p-1.5 rounded hover:bg-secondary transition-colors"
+                  title="关闭"
+                >
+                  <X className="w-4 h-4 text-muted-foreground" />
+                </button>
+              </div>
+            </div>
+
+            {/* 模态窗口内容 */}
+            <div className="flex-1 overflow-y-auto p-6">
+              <h1 className="text-2xl font-bold mb-2 flex items-center gap-2">
+                {iconEmoji && <span>{iconEmoji}</span>}
+                {title}
+              </h1>
+              {subtitle && (
+                <p className="text-sm text-muted-foreground font-mono mb-4">{subtitle}</p>
+              )}
+              {tags && tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-primary/10 text-primary border border-primary/20"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {description && (
+                <p className="text-muted-foreground mb-6 pb-4 border-b border-border">
+                  {description}
+                </p>
+              )}
+              {author && (
+                <div className="text-xs text-muted-foreground mb-2">
+                  作者: <span className="font-mono">{author}</span>
+                </div>
+              )}
+              {updatedAt && (
+                <div className="text-xs text-muted-foreground mb-4">
+                  更新时间: <span className="font-mono">{updatedAt}</span>
+                </div>
+              )}
+              <div className="mt-6">
+                <p className="text-sm text-muted-foreground text-center">
+                  完整内容将在全屏模式下显示
+                </p>
+                {to && (
+                  <div className="text-center mt-4">
+                    <Link
+                      to={to}
+                      onClick={() => setIsPreviewOpen(false)}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                    >
+                      <Maximize2 className="w-4 h-4" />
+                      全屏查看完整内容
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+
   const wrappedContent = (
     <>
       {content}
       {deleteDialog}
+      {previewDialog}
     </>
   );
 
