@@ -20,6 +20,7 @@ export function HeroSection({ statsData: externalStatsData }: HeroSectionProps =
   const [statsData, setStatsData] = useState<StatsData | null>(null);
   const [typedText, setTypedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [lastUpdate, setLastUpdate] = useState<string>('');
   const { translations } = useI18n();
   const navigate = useNavigate();
   const isInitialized = useRef(false);
@@ -39,6 +40,20 @@ export function HeroSection({ statsData: externalStatsData }: HeroSectionProps =
         });
       });
     }
+
+    // 获取最新的 commit 时间
+    fetch('https://api.github.com/repos/yancongya/AE-Marketplace/commits?per_page=1')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data[0] && data[0].commit) {
+          const commitDate = data[0].commit.committer.date;
+          const relativeTime = formatRelativeTime(commitDate);
+          setLastUpdate(relativeTime);
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch last update:', err);
+      });
   }, [externalStatsData]);
 
   // Typing animation for title
@@ -480,6 +495,34 @@ export function HeroSection({ statsData: externalStatsData }: HeroSectionProps =
     return num.toLocaleString('en-US');
   };
 
+  const formatRelativeTime = (dateString: string) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(diffInSeconds / 3600);
+    const days = Math.floor(diffInSeconds / 86400);
+    const months = Math.floor(diffInSeconds / 2592000);
+    const years = Math.floor(diffInSeconds / 31536000);
+
+    const locale = localStorage.getItem('locale') || 'zh';
+
+    if (years > 0) {
+      return locale === 'zh' ? `${years} 年前` : `${years} year${years > 1 ? 's' : ''} ago`;
+    } else if (months > 0) {
+      return locale === 'zh' ? `${months} 个月前` : `${months} month${months > 1 ? 's' : ''} ago`;
+    } else if (days > 0) {
+      return locale === 'zh' ? `${days} 天前` : `${days} day${days > 1 ? 's' : ''} ago`;
+    } else if (hours > 0) {
+      return locale === 'zh' ? `${hours} 小时前` : `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (minutes > 0) {
+      return locale === 'zh' ? `${minutes} 分钟前` : `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else {
+      return locale === 'zh' ? '刚刚' : 'just now';
+    }
+  };
+
   if (!translations) return null;
 
   return (
@@ -542,6 +585,18 @@ export function HeroSection({ statsData: externalStatsData }: HeroSectionProps =
                   <div>{' */'}</div>
                 </div>
               </div>
+
+              {/* Last update time */}
+              {lastUpdate && (
+                <div className="p-3 sm:p-4 rounded-lg border border-border card-hover hover:border-primary/50 cursor-default animate-fade-in-up" style={{ animationDelay: '600ms' }}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-code-purple text-lg">{'//'}</span>
+                    <span className="text-muted-foreground text-sm sm:text-base font-mono">
+                      {translations.hero.lastUpdate.label}: <span className="text-foreground font-semibold">{lastUpdate}</span>
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

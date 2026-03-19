@@ -19,7 +19,11 @@
       "line2": "所有脚本采用开放的 ExtendScript 标准，一键安装"
     },
     "fileHeader": "skills.marketplace",
-    "fileComment": "// main.ts"
+    "fileComment": "// main.ts",
+    "lastUpdate": {
+      "label": "最近更新",
+      "ago": "前"
+    }
   },
   "about": {
     "leftPanel": {

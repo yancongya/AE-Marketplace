@@ -19,7 +19,11 @@
       "line2": "All scripts use the open ExtendScript standard, one-click installation"
     },
     "fileHeader": "skills.marketplace",
-    "fileComment": "// main.ts"
+    "fileComment": "// main.ts",
+    "lastUpdate": {
+      "label": "Last updated",
+      "ago": "ago"
+    }
   },
   "about": {
     "leftPanel": {
