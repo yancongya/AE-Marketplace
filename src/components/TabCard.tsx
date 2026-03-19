@@ -37,6 +37,7 @@ export function TabCard({
   const { isAdmin } = useAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isTempDeleted, setIsTempDeleted] = useState(false);
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
@@ -137,6 +138,11 @@ export function TabCard({
       // 临时删除 - 粉碎消失效果
       setIsTempDeleted(true);
       toast.success('文章已临时隐藏，刷新页面后恢复');
+
+      // 动画完成后（0.6秒）设置 display: none，让其他卡片补位
+      setTimeout(() => {
+        setIsAnimationComplete(true);
+      }, 600);
     } catch (error) {
       console.error('红色圆点点击错误:', error);
       e.preventDefault();
@@ -201,9 +207,10 @@ export function TabCard({
     <div
       className={`terminal-window card-hover cursor-pointer group flex flex-col min-h-[200px] ${
         isTempDeleted ? 'shrink-disappear' : ''
+      } ${
+        isAnimationComplete ? 'shrink-disappear-complete' : ''
       }`}
       title={description}
-      style={isTempDeleted ? { display: 'none' } : {}}
     >
       <div className="terminal-header flex-shrink-0">
         <div className="flex items-center gap-2 group-hover:gap-2.5 transition-all duration-300">

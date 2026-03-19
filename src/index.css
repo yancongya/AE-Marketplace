@@ -445,4 +445,15 @@
   .shrink-disappear {
     animation: shrinkDisappear 0.6s ease-in forwards;
   }
+
+  .shrink-disappear-complete {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    transition: all 0.1s ease;
+  }
 }
