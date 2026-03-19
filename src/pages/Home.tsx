@@ -1,16 +1,75 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { HeroSection, type StatsData } from '@/components/HeroSection';
 import { AboutSection } from '@/components/AboutSection';
 import { Footer } from '@/components/Footer';
 import { TabCard } from '@/components/TabCard';
 import { loadContent, type ContentItem } from '@/lib/content';
 import { useI18n } from '@/contexts/I18nContext';
+import { toast } from 'sonner';
 
 export function Home() {
   const [recentDocs, setRecentDocs] = useState<ContentItem[]>([]);
   const [statsData, setStatsData] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const { translations } = useI18n();
+
+  // 临时删除的卡片列表
+  const [tempDeletedSlugs, setTempDeletedSlugs] = useState<Set<string>>(new Set());
+
+  // FLIP 动画相关
+  const cardRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const isAnimatingRef = useRef(false);
+
+  // 处理临时删除，使用 FLIP 动画
+  const handleTempDelete = (itemSlug: string) => {
+    // 记录所有剩余卡片的初始位置（First）
+    const positions = new Map<string, { x: number; y: number }>();
+    cardRefs.current.forEach((element, slug) => {
+      if (slug !== itemSlug) {
+        const rect = element.getBoundingClientRect();
+        positions.set(slug, { x: rect.left, y: rect.top });
+      }
+    });
+
+    // 标记正在动画中
+    isAnimatingRef.current = true;
+
+    // 删除卡片
+    setTempDeletedSlugs(prev => new Set(prev).add(itemSlug));
+
+    // 等待 React 重新渲染，然后执行 FLIP 动画
+    setTimeout(() => {
+      // 获取所有卡片的新位置（Last）
+      cardRefs.current.forEach((element, slug) => {
+        if (positions.has(slug)) {
+          const oldPos = positions.get(slug)!;
+          const newPos = element.getBoundingClientRect();
+          const deltaX = oldPos.x - newPos.left;
+          const deltaY = oldPos.y - newPos.top;
+
+          // 应用反向 transform（Invert）
+          if (deltaX !== 0 || deltaY !== 0) {
+            element.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+            element.style.transition = 'none';
+
+            // 在下一帧移除 transform，让卡片平滑移动（Play）
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                element.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                element.style.transform = '';
+
+                // 动画完成后清理
+                setTimeout(() => {
+                  element.style.transition = '';
+                  isAnimatingRef.current = false;
+                }, 300);
+              });
+            });
+          }
+        }
+      });
+    }, 50);
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -41,15 +100,16 @@ export function Home() {
         return dateB - dateA;
       });
 
-      // 取前12篇
-      setRecentDocs(allDocs.slice(0, 12));
+      // 取前12篇，过滤掉临时删除的卡片
+      const filteredDocs = allDocs.filter(doc => !tempDeletedSlugs.has(doc.slug));
+      setRecentDocs(filteredDocs.slice(0, 12));
       setLoading(false);
     });
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [tempDeletedSlugs]); // 添加 tempDeletedSlugs 依赖
 
   return (
     <div className="animate-fade-in">
@@ -94,6 +154,15 @@ export function Home() {
                   to={`/${doc.category}/${doc.slug}`}
                   category={doc.category}
                   filename={`${doc.slug}.md`}
+                  onTempDelete={() => handleTempDelete(doc.slug)}
+                  registerCardRef={(slug, element) => {
+                    if (element) {
+                      cardRefs.current.set(slug, element);
+                    } else {
+                      cardRefs.current.delete(slug);
+                    }
+                  }}
+                  slug={doc.slug}
                 />
               ))}
             </div>
