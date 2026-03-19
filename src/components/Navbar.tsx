@@ -27,18 +27,28 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleReadyBadgeClick = () => {
-    if (import.meta.env.DEV) {
-      if (isAdmin) {
-        // 已登录时点击直接退出
-        handleLogout();
-      } else {
-        // 未登录时连续5次点击触发登录
-        const newCount = readyClickCount + 1;
-        setReadyClickCount(newCount);
+    if (isAdmin || user) {
+      // 已登录时连续5次点击触发退出
+      const newCount = readyClickCount + 1;
+      setReadyClickCount(newCount);
 
-        if (newCount >= 5) {
-          setReadyClickCount(0);
+      if (newCount >= 5) {
+        setReadyClickCount(0);
+        handleLogout();
+      }
+    } else {
+      // 未登录时连续5次点击触发登录
+      const newCount = readyClickCount + 1;
+      setReadyClickCount(newCount);
+
+      if (newCount >= 5) {
+        setReadyClickCount(0);
+        if (import.meta.env.DEV) {
+          // 开发环境：密码登录
           setIsPasswordDialogOpen(true);
+        } else {
+          // 生产环境：GitHub 登录
+          loginWithGitHub();
         }
       }
     }
@@ -56,7 +66,7 @@ export function Navbar() {
 
   const handleLogout = () => {
     logout();
-    toast.success('已退出管理员模式');
+    toast.success('已退出登录');
   };
 
   useEffect(() => {
@@ -93,7 +103,13 @@ export function Navbar() {
               <span
                 onClick={handleReadyBadgeClick}
                 className="flex items-center gap-1.5 px-2 py-1 rounded text-xs font-mono bg-secondary text-muted-foreground cursor-pointer"
-                title={isAdmin ? '点击退出管理员模式' : '连续点击5次进入管理员模式'}
+                title={
+                  user
+                    ? '连续点击5次退出登录'
+                    : import.meta.env.DEV
+                    ? '连续点击5次使用密码登录'
+                    : '连续点击5次使用 GitHub 登录'
+                }
               >
                 <span className="w-2 h-2 rounded-full bg-success" />
                 ready
@@ -160,24 +176,7 @@ export function Navbar() {
                   <LogOut className="w-4 h-4 text-muted-foreground" />
                 </button>
               </div>
-            ) : (
-              <button
-                onClick={loginWithGitHub}
-                className="flex items-center gap-2 px-3 py-1.5 rounded bg-primary/10 hover:bg-primary/20 border border-primary/30 transition-colors"
-                title="使用 GitHub 登录"
-              >
-                <Github className="w-4 h-4 text-primary" />
-                <span className="text-xs font-mono text-primary">GitHub</span>
-              </button>
-            )}
-            {import.meta.env.DEV && isAdmin && (
-              <div
-                className="p-2"
-                title="管理员模式已启用"
-              >
-                <Lock className="w-4 h-4 text-primary" />
-              </div>
-            )}
+            ) : null}
             <button
               onClick={toggleTheme}
               className="p-2 rounded hover:bg-muted transition-colors"
@@ -208,42 +207,44 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Admin Login Dialog */}
-      <Dialog.Root open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
-          <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md p-6 bg-background border border-border rounded-lg shadow-lg">
-            <Dialog.Title className="text-lg font-semibold mb-4">管理员登录</Dialog.Title>
-            <Dialog.Description className="text-sm text-muted-foreground mb-4">
-              请输入管理员密码以访问管理模式
-            </Dialog.Description>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handlePasswordSubmit();
-              }}
-              autoComplete="off"
-            >
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="输入密码"
-                className="mb-4"
+      {/* Password Login Dialog (开发环境) */}
+      {import.meta.env.DEV && (
+        <Dialog.Root open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+          <Dialog.Portal>
+            <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
+            <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md p-6 bg-background border border-border rounded-lg shadow-lg">
+              <Dialog.Title className="text-lg font-semibold mb-4">管理员登录</Dialog.Title>
+              <Dialog.Description className="text-sm text-muted-foreground mb-4">
+                请输入管理员密码以访问管理模式
+              </Dialog.Description>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handlePasswordSubmit();
+                }}
                 autoComplete="off"
-              />
-            </form>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsPasswordDialogOpen(false)}>
-                取消
-              </Button>
-              <Button onClick={handlePasswordSubmit}>
-                登录
-              </Button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+              >
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="输入密码"
+                  className="mb-4"
+                  autoComplete="off"
+                />
+              </form>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setIsPasswordDialogOpen(false)}>
+                  取消
+                </Button>
+                <Button onClick={handlePasswordSubmit}>
+                  登录
+                </Button>
+              </div>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      )}
 
       {/* Mobile Menu Dialog */}
       <Dialog.Root open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
