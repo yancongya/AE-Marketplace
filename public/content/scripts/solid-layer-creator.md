@@ -3,7 +3,6 @@ title: 纯色层创建器修改测试
 iconEmoji: 🎨
 author: 烟囱鸭
 tags: ["纯色层", "颜色", "UI工具"]
-category: scripts
 description: 功能强大的纯色层创建工具，支持自定义尺寸、颜色和预设管理
 updatedAt: 2026-03-17
 ---

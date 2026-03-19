@@ -79,6 +79,12 @@ function parseFrontmatter(text: string): { frontmatter: Record<string, any>; con
           frontmatter[key] = value.slice(1, -1).split(',').map((v: string) => v.trim().replace(/['"]/g, ''));
         } else if (value.startsWith('"') && value.endsWith('"')) {
           frontmatter[key] = value.slice(1, -1);
+        } else if (value === 'true') {
+          frontmatter[key] = true;
+        } else if (value === 'false') {
+          frontmatter[key] = false;
+        } else if (!isNaN(Number(value))) {
+          frontmatter[key] = Number(value);
         } else {
           frontmatter[key] = value;
         }
