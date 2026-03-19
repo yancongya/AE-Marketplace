@@ -19,7 +19,6 @@ interface TabCardProps {
   to?: string;
   category?: string;
   filename?: string;
-  content?: string;
 }
 
 export function TabCard({
@@ -33,8 +32,7 @@ export function TabCard({
   onClick,
   to,
   category,
-  filename,
-  content
+  filename
 }: TabCardProps) {
   const { isAdmin } = useAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -302,7 +300,7 @@ export function TabCard({
     </Dialog.Root>
   ) : null;
 
-  // 模态窗口预览
+  // 模态窗口预览 - 使用 iframe 加载完整文档页面
   const previewDialog = (
     <Dialog.Root open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
       <Dialog.Portal>
@@ -321,6 +319,7 @@ export function TabCard({
                 {to && (
                   <Link
                     to={to}
+                    onClick={() => setIsPreviewOpen(false)}
                     className="flex items-center gap-1 px-3 py-1.5 rounded bg-primary/10 hover:bg-primary/20 border border-primary/30 transition-colors"
                     title="全屏打开"
                   >
@@ -337,84 +336,19 @@ export function TabCard({
               </div>
             </div>
 
-            {/* 模态窗口内容 */}
-            <div className="flex-1 overflow-y-auto p-6">
-              {/* 文章标题 */}
-              <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                {iconEmoji && <span>{iconEmoji}</span>}
-                {title}
-              </h1>
-
-              {/* 文章正文内容 */}
-              {content && (
-                <div className="prose prose-invert max-w-none">
-                  {/* 简单渲染 markdown 内容 */}
-                  {content.split('\n').map((line, index) => {
-                    const trimmedLine = line.trim();
-
-                    // 跳过 frontmatter (--- 之间的内容)
-                    if (trimmedLine === '---') return null;
-
-                    // 处理标题
-                    if (trimmedLine.startsWith('#')) {
-                      const level = trimmedLine.match(/^#+/)?.[0].length || 1;
-                      const text = trimmedLine.replace(/^#+\s*/, '');
-                      const Tag = `h${Math.min(level, 6)}` as keyof JSX.IntrinsicElements;
-                      return (
-                        <Tag key={index} className={`font-bold ${level === 1 ? 'text-2xl mt-8 mb-4' : level === 2 ? 'text-xl mt-6 mb-3' : level === 3 ? 'text-lg mt-4 mb-2' : 'text-base mt-3 mb-2'}`}>
-                          {text}
-                        </Tag>
-                      );
-                    }
-
-                    // 处理代码块
-                    if (trimmedLine.startsWith('```')) {
-                      return null; // 跳过代码块标记
-                    }
-
-                    // 处理列表项
-                    if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
-                      const text = trimmedLine.replace(/^[-*]\s*/, '');
-                      return (
-                        <li key={index} className="ml-6 mb-2 list-disc">
-                          {text}
-                        </li>
-                      );
-                    }
-
-                    // 处理有序列表
-                    if (/^\d+\.\s/.test(trimmedLine)) {
-                      const text = trimmedLine.replace(/^\d+\.\s*/, '');
-                      return (
-                        <li key={index} className="ml-6 mb-2 list-decimal">
-                          {text}
-                        </li>
-                      );
-                    }
-
-                    // 处理空行
-                    if (!trimmedLine) {
-                      return <br key={index} />;
-                    }
-
-                    // 处理普通段落
-                    if (trimmedLine) {
-                      return (
-                        <p key={index} className="mb-4 leading-relaxed">
-                          {trimmedLine}
-                        </p>
-                      );
-                    }
-
-                    return null;
-                  })}
-                </div>
+            {/* 模态窗口内容 - 使用 iframe 加载完整文档 */}
+            <div className="flex-1 overflow-hidden">
+              {to && (
+                <iframe
+                  src={to}
+                  className="w-full h-full border-0"
+                  title={title}
+                />
               )}
-
-              {!content && (
-                <p className="text-muted-foreground text-center py-12">
-                  暂无内容
-                </p>
+              {!to && (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-muted-foreground">无法加载文档</p>
+                </div>
               )}
             </div>
           </div>

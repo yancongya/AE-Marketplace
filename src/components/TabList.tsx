@@ -157,7 +157,6 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
             author={item.author}
             updatedAt={item.updatedAt}
             tags={item.tags}
-            content={item.content}
             to={`/${category}/${item.slug}`}
             category={category}
             filename={`${item.slug}.md`}
