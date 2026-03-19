@@ -1,263 +1,227 @@
 ---
 name: writing-documents
-description: Create AE scripts documentation with interactive guidance
+description: Use when writing documentation with YAML frontmatter, markdown formatting, download links, or managing content manifests
 ---
 
 # 文档编写技能
 
-创建 AE 脚本、表达式、预设、扩展文档。
+## 触发条件
 
-## 交互式文档创建
+当用户需要创建或编辑以下类型的文档时使用此技能：
+- 表达式文档
+- 脚本文档
+- 预设文档
+- 扩展文档
 
-**工作流程**：通过对话式交互创建文档，每步提供选项。
+## 快速开始
 
----
+使用 `ask_user_question` 工具收集必要信息：
 
-## 第 1 步：确定文档类型
+### 1. 选择文档类型
+```typescript
+ask_user_question({
+  questions: [{
+    question: "要创建什么类型的文档？",
+    header: "文档类型",
+    options: [
+      { label: "表达式", description: "After Effects 表达式代码" },
+      { label: "脚本", description: "自动化脚本工具" },
+      { label: "预设", description: "动画效果预设" },
+      { label: "扩展", description: "AE 扩展插件" }
+    ],
+    multiSelect: false
+  }]
+})
+```
 
-**系统询问**："你要创建什么类型的文档？"
+### 2. 收集基本信息
+```typescript
+ask_user_question({
+  questions: [{
+    question: "文档标题是什么？",
+    header: "基本信息",
+    multiSelect: false
+  }, {
+    question: "是否需要封面图片？",
+    header: "封面",
+    options: [
+      { label: "需要", description: "提供封面图片 URL" },
+      { label: "不需要", description: "自动生成默认封面" }
+    ],
+    multiSelect: false
+  }]
+})
+```
 
-**选项**：
-- [ ] 脚本 - 自动化工具和脚本
-- [ ] 表达式 - AE 表达式和公式
-- [ ] 预设 - 动画和效果预设
-- [ ] 扩展 - 扩展插件和工具
+### 3. 可选功能
+```typescript
+ask_user_question({
+  questions: [{
+    question: "需要哪些额外功能？",
+    header: "额外功能",
+    options: [
+      { label: "流程图", description: "添加 Mermaid 流程图" },
+      { label: "代码示例", description: "添加代码块和说明" },
+      { label: "界面截图", description: "添加界面展示图片" },
+      { label: "视频教程", description: "添加视频教程链接" }
+    ],
+    multiSelect: true
+  }]
+})
+```
 
-**用户选择**：选择一个类型
+## 标准元数据
 
----
-
-## 第 2 步：基本信息
-
-**系统询问**："请提供以下信息："
-
-**必需信息**：
-- **标题**：文档标题（必填）
-- **作者**：作者名称（必填）
-- **标签**：相关标签（必填，多个用逗号分隔）
-- **描述**：简短描述（必填）
-
-**可选信息**：
-- **收藏**：是否设为收藏文章？（默认：否）
-- **封面**：是否添加封面图片？（默认：否，自动生成）
-
----
-
-## 第 3 步：内容结构
-
-**系统询问**："需要哪些内容部分？"
-
-**选项**（可多选）：
-- [ ] 下载链接
-- [ ] 使用场景
-- [ ] 功能特性
-- [ ] 使用教程
-- [ ] 效果展示
-- [ ] 常见问题
-- [ ] 更新日志
-
-**默认选择**：下载链接、使用场景、功能特性
-
----
-
-## 第 4 步：高级功能
-
-**系统询问**："需要以下功能吗？"
-
-**选项**：
-- [ ] 生成流程图（Mermaid）
-- [ ] 查找相关图片
-- [ ] 添加代码示例
-- [ ] 创建可视化图表
-- [ ] 添加相关文档链接
-
-**用户选择**：根据需要选择
-
----
-
-## 第 5 步：图片处理
-
-**如果选择了"查找相关图片"**：
-
-**系统询问**："需要什么类型的图片？"
-
-**选项**：
-- [ ] 效果截图
-- [ ] 界面截图
-- [ ] 功能示意图
-- [ ] 对比图
-- [ ] 流程图
-
-**系统执行**：
-- 根据标题和描述搜索相关图片
-- 提供 3-5 个候选图片
-- 让用户选择或提供自定义图片 URL
-
----
-
-## 第 6 步：图表生成
-
-**如果选择了"创建可视化图表"**：
-
-**系统询问**："需要什么类型的图表？"
-
-**选项**：
-- [ ] 流程图（graph TD）
-- [ ] 关系图（graph LR）
-- [ ] 时序图（sequenceDiagram）
-- [ ] 架构图（classDiagram）
-- [ ] 状态图（stateDiagram）
-
-**系统执行**：
-- 根据文档内容自动生成图表
-- 提供预览和修改选项
-
----
-
-## 第 7 步：相关文档
-
-**如果选择了"添加相关文档链接"**：
-
-**系统询问**："需要链接哪些相关文档？"
-
-**系统执行**：
-- 搜索同类别文档
-- 显示相关文档列表
-- 让用户选择要链接的文档
-
----
-
-## 第 8 步：预览和调整
-
-**系统询问**："文档已生成，需要调整吗？"
-
-**选项**：
-- [ ] 修改标题
-- [ ] 修改描述
-- [ ] 添加/删除内容部分
-- [ ] 调整图片
-- [ ] 修改图表
-- [ ] 完成
-
----
-
-## 第 9 步：保存
-
-**系统询问**："文档准备保存，确认信息："
-
-**显示**：
-- 文件名：自动生成（基于标题）
-- 保存位置：`public/content/{类型}/`
-- manifest.json：需要更新
-
-**选项**：
-- [ ] 确认保存
-- [ ] 返回修改
-- [ ] 取消
-
-**系统执行**：
-- 创建 Markdown 文件
-- 更新 manifest.json
-- 显示保存成功信息
-
----
-
-## 元数据格式
-
-生成的文档包含以下元数据：
+根据用户选择生成元数据：
 
 ```yaml
 ---
-title: 文档标题
-author: 作者
-tags: [标签1, 标签2]
-description: 简短描述
-updatedAt: YYYY-MM-DD
-isFavorite: false  # 可选
-coverImage: https://example.com/cover.jpg  # 可选
+title: {{标题}}
+author: 烟囱鸭
+tags: [{{标签}}]
+description: {{描述}}
+updatedAt: {{当前日期}}
+{{isFavorite ? 'isFavorite: true' : ''}}
+{{coverImage ? `coverImage: ${coverImage}` : ''}}
 ---
 ```
 
-## 快速模式
+**必填字段**：title, author, tags, description, updatedAt
+**可选字段**：isFavorite, coverImage
 
-**如果用户选择快速模式**：
+## 文档结构
 
-**系统询问**："提供标题和描述，其他使用默认值"
+根据文档类型使用对应模板：
 
-**执行**：
-- 自动生成元数据
-- 使用默认内容结构
-- 自动生成封面
-- 直接保存
+### 表达式文档
+```markdown
+## 功能描述
+## 使用方法
+## 参数说明
+## 效果演示
+## 常见问题
+```
 
----
+### 脚本文档
+```markdown
+## 下载
+## 使用场景
+## 功能特性
+## 使用教程
+## 注意事项
+```
 
-## 示例对话
+### 预设文档
+```markdown
+## 下载
+## 使用场景
+## 使用方法
+## 参数说明
+## 效果演示
+```
 
-**用户**：创建一个脚本文档
+### 扩展文档
+```markdown
+## 下载
+## 功能描述
+## 核心特性
+## 安装方法
+## 界面展示
+```
 
-**系统**：好的，我们来创建一个脚本文档。
+## 图片管理
 
-**系统**：请提供标题
-**用户**：色彩调色板
+**规则**：
+- 下载链接使用网络地址（HTTPS）
+- 本地图片使用相对路径 `./assets/filename.png`
+- 封面图片：可选，不设置则自动生成
 
-**系统**：请提供作者
-**用户**：烟囱鸭
+**交互询问**：
+```typescript
+ask_user_question({
+  questions: [{
+    question: "如何提供图片资源？",
+    header: "图片",
+    options: [
+      { label: "网络链接", description: "使用 GitHub 或其他图片托管服务" },
+      { label: "本地文件", description: "使用项目内的 assets 目录" },
+      { label: "暂不提供", description: "稍后补充图片" }
+    ],
+    multiSelect: false
+  }]
+})
+```
 
-**系统**：请提供标签（多个用逗号分隔）
-**用户**：颜色,调色板,工具
+## 清单更新
 
-**系统**：请提供简短描述
-**用户**：快速创建和管理色彩方案
+创建文档后，更新对应的 `manifest.json`：
 
-**系统**：需要添加封面图片吗？（是/否）
-**用户**：是
+```json
+["existing-doc.md", "new-doc.md"]
+```
 
-**系统**：需要哪些内容部分？（下载链接/使用场景/功能特性/使用教程/效果展示/常见问题/更新日志）
-**用户**：下载链接, 使用场景, 功能特性
+**位置**：
+- 表达式：`public/content/expressions/manifest.json`
+- 脚本：`public/content/scripts/manifest.json`
+- 预设：`public/content/presets/manifest.json`
+- 扩展：`public/content/extensions/manifest.json`
 
-**系统**：需要生成流程图吗？（是/否）
-**用户**：是
+## 质量检查
 
-**系统**：需要查找相关图片吗？（是/否）
-**用户**：是
+创建文档后，使用 ask_user_question 确认：
 
-**系统**：需要什么类型的图片？（效果截图/界面截图/功能示意图/对比图/流程图）
-**用户**：效果截图
+```typescript
+ask_user_question({
+  questions: [{
+    question: "文档是否需要以下检查？",
+    header: "质量检查",
+    options: [
+      { label: "元数据完整", description: "检查所有必需字段" },
+      { label: "链接有效", description: "检查下载链接和图片链接" },
+      { label: "格式正确", description: "检查 Markdown 格式" },
+      { label: "清单更新", description: "确认 manifest.json 已更新" }
+    ],
+    multiSelect: true
+  }]
+})
+```
 
-**系统**：正在搜索相关图片...找到 3 张候选图片，请选择：
-- [1] 图片 A
-- [2] 图片 B
-- [3] 图片 C
-- [4] 使用自定义 URL
+## 常见交互场景
 
-**用户**：1
+### 场景 1：快速创建简单文档
+1. 选择文档类型
+2. 输入标题和描述
+3. 选择"不需要封面"
+4. 选择"暂不提供图片"
+5. 生成基础文档
 
-**系统**：正在生成文档...已生成，需要调整吗？（修改标题/修改描述/添加内容/调整图片/修改图表/完成）
-**用户**：完成
+### 场景 2：创建完整文档
+1. 选择文档类型
+2. 输入标题、描述、作者
+3. 选择"需要封面"，提供 URL
+4. 选择"流程图"和"代码示例"
+5. 生成完整文档
+6. 更新 manifest.json
 
-**系统**：确认保存到 `public/content/scripts/color-palette.md`？（是/否）
-**用户**：是
+### 场景 3：更新现有文档
+1. 确认要更新的文档
+2. 询问更新哪些部分
+3. 修改对应内容
+4. 确认 manifest.json 是否需要更新
 
-**系统**：✅ 文档已保存！已更新 manifest.json。
+## 保存位置
 
----
+根据文档类型保存到对应目录：
+- 表达式：`public/content/expressions/{{slug}}.md`
+- 脚本：`public/content/scripts/{{slug}}.md`
+- 预设：`public/content/presets/{{slug}}.md`
+- 扩展：`public/content/extensions/{{slug}}.md`
 
 ## 注意事项
 
-- 文件名自动生成（基于标题，小写，连字符分隔）
-- manifest.json 自动更新
-- 图片使用相对路径 `./assets/`
-- 下载链接使用网络地址
-- 相关文档链接格式：`[文档名](./doc-name)`
-
----
-
-## 版本信息
-
-**v2.0 (2026-03-19)**：
-- 交互式文档创建
-- 简化流程
-- 添加选项支持
-- 支持自动生成封面
-- 支持收藏功能
+- ⚠️ 移除了 `iconEmoji` 字段
+- ⚠️ 移除了 `category` 字段
+- ✅ 添加了 `isFavorite` 字段
+- ✅ 添加了 `coverImage` 字段
+- ✅ 支持自动生成默认封面
+- ✅ 使用交互式问题收集信息
