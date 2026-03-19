@@ -681,14 +681,16 @@ const client_secret = process.env.GITHUB_CLIENT_SECRET || process.env.VITE_GITHU
 - 删除确认对话框
 - 删除成功后自动刷新
 - 错误处理优化
+- 统一首页和各页面的卡片样式
 
 **已提交记录**：
 - `a223f2f` - fix: 添加新创建的文档到 manifest
 - `467a14f` - fix: 修复所有 API 的 manifest 更新逻辑，正确处理 SHA 值
 - `862e343` - fix: 清理 manifest 中的无效文件，修复 SHA 值处理
-- `359c8d4` - fix: 改进删除功能，添加缓存清除机制
+- `359c8d4` - fix: 改进删除功能，添加缓存 清除机制
 - `659a3d6` - fix: 改进删除错误处理，文件不存在时也视为删除成功
 - `b787974` - fix: 为所有 Vercel API 添加 CORS 头支持
+- `65fb818` - fix: 统一首页和各页面的卡片网格布局样式
 
 ---
 

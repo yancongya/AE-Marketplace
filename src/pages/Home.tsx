@@ -90,6 +90,7 @@ export function Home() {
                   iconEmoji={doc.iconEmoji}
                   author={doc.author}
                   updatedAt={doc.updatedAt}
+                  tags={doc.tags}
                   to={`/${doc.category}/${doc.slug}`}
                   category={doc.category}
                   filename={`${doc.slug}.md`}
