@@ -139,10 +139,15 @@ export function TabCard({
       setIsTempDeleted(true);
       toast.success('文章已临时隐藏，刷新页面后恢复');
 
-      // 动画完成后（0.6秒）设置 display: none，让其他卡片补位
+      // 动画完成后（1.0秒）设置高度为0，让其他卡片平滑补位
       setTimeout(() => {
         setIsAnimationComplete(true);
-      }, 600);
+      }, 1000);
+
+      // 平滑过渡完成后（1.5秒）完全移除元素
+      setTimeout(() => {
+        // 这里可以添加额外的逻辑，比如通知父组件更新列表
+      }, 1500);
     } catch (error) {
       console.error('红色圆点点击错误:', error);
       e.preventDefault();
