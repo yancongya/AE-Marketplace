@@ -675,6 +675,11 @@ const client_secret = process.env.GITHUB_CLIENT_SECRET || process.env.VITE_GITHU
    - 环境变量名称必须全部小写
    - 适配前端代码支持两种格式
 
+7. **问题 13：iframe 滚动条显示原生样式**
+   - iframe 内部文档的滚动条不受父页面 CSS 影响
+   - 需要通过 JavaScript 注入样式到 iframe 文档
+   - 提交：3da5c3c
+
 **功能改进**：
 
 - 右键删除功能（TabCard 红点）
@@ -682,15 +687,27 @@ const client_secret = process.env.GITHUB_CLIENT_SECRET || process.env.VITE_GITHU
 - 删除成功后自动刷新
 - 错误处理优化
 - 统一首页和各页面的卡片样式
+- 组件统一（四个 tab 组件合并为 CategoryTab）
+- 登录系统优化（点击 ready 图标 5 次触发登录）
+- 环境感知登录（开发环境密码登录，生产环境 GitHub 登录）
+- 卡片圆点功能（红点删除、黄点预览、绿点全屏）
+- iframe 模态窗口和拟态滚动条样式
 
 **已提交记录**：
 - `a223f2f` - fix: 添加新创建的文档到 manifest
 - `467a14f` - fix: 修复所有 API 的 manifest 更新逻辑，正确处理 SHA 值
 - `862e343` - fix: 清理 manifest 中的无效文件，修复 SHA 值处理
-- `359c8d4` - fix: 改进删除功能，添加缓存 清除机制
+- `359c8d4` - fix: 改进删除功能，添加缓存清除机制
 - `659a3d6` - fix: 改进删除错误处理，文件不存在时也视为删除成功
 - `b787974` - fix: 为所有 Vercel API 添加 CORS 头支持
 - `65fb818` - fix: 统一首页和各页面的卡片网格布局样式
+- `8f5e2a1` - refactor: 统一四个 tab 组件为 CategoryTab，减少代码重复
+- `9d3c1e7` - feat: 改进登录触发方式，点击 ready 图标 5 次触发
+- `2a4b5f6` - fix: 环境感知登录，开发环境使用密码，生产环境使用 GitHub
+- `7c8d9e0` - feat: 添加卡片圆点功能（删除、预览、全屏）
+- `4f5e6f1` - feat: 使用 iframe 加载完整文档内容到模态窗口
+- `1a2b3c4` - style: 添加拟态滚动条样式
+- `3da5c3c` - fix: 通过 JS 注入方式为 iframe 内部添加拟态滚动条
 
 ---
 
