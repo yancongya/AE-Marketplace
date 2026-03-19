@@ -119,8 +119,13 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
       return matchesTag && matchesSearch && notTempDeleted;
     });
 
-    // 按更新时间降序排序（最新的在前）
+    // 新的排序逻辑：收藏优先，然后按更新时间降序排序（最新的在前）
     result.sort((a, b) => {
+      // 首先按收藏状态排序（收藏的在前）
+      if (a.isFavorite && !b.isFavorite) return -1;
+      if (!a.isFavorite && b.isFavorite) return 1;
+
+      // 然后按更新时间降序排序（最新的在前）
       const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
       const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
       return dateB - dateA;
@@ -181,6 +186,7 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
         filename={`${selectedItem.slug}.md`}
         category={category}
         slug={selectedItem.slug}
+        isFavorite={selectedItem.isFavorite}
       />
     );
   }
@@ -229,6 +235,7 @@ export function TabList<T extends ContentItem | PresetItem | ExtensionItem>({
               }
             }}
             slug={item.slug}
+            isFavorite={item.isFavorite}
           />
         ))}
         {/* 新建文档卡片（管理员模式） */}

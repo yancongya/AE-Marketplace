@@ -6,7 +6,7 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { clearContentCache } from '@/lib/content';
-import { X, Maximize2 } from 'lucide-react';
+import { X, Maximize2, Star } from 'lucide-react';
 
 interface TabCardProps {
   title: string;
@@ -23,6 +23,7 @@ interface TabCardProps {
   onTempDelete?: () => void; // 添加临时删除回调
   registerCardRef?: (slug: string, element: HTMLDivElement | null) => void; // 添加 ref 注册函数
   slug?: string; // 添加 slug
+  isFavorite?: boolean; // 添加收藏标记
 }
 
 export function TabCard({
@@ -39,7 +40,8 @@ export function TabCard({
   filename,
   onTempDelete,
   registerCardRef,
-  slug
+  slug,
+  isFavorite
 }: TabCardProps) {
   const { isAdmin } = useAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -225,6 +227,13 @@ export function TabCard({
       }`}
       title={description}
     >
+      {/* 收藏星星图标 - 绝对定位在右上角 */}
+      {isFavorite && (
+        <div className="absolute top-2 right-2 z-10 animate-scale-in" style={{ animationDelay: '0ms' }}>
+          <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
+        </div>
+      )}
+
       <div className="terminal-header flex-shrink-0">
         <div className="flex items-center gap-2 group-hover:gap-2.5 transition-all duration-300">
           <span

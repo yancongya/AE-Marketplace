@@ -10,6 +10,7 @@ export interface ContentItem {
   updatedAt?: string;
   content: string;
   date?: string;
+  isFavorite?: boolean;
 }
 
 export interface PresetItem {
@@ -25,6 +26,7 @@ export interface PresetItem {
   description: string;
   updatedAt?: string;
   content: string;
+  isFavorite?: boolean;
 }
 
 export interface ExtensionItem {
@@ -38,6 +40,7 @@ export interface ExtensionItem {
   description: string;
   updatedAt?: string;
   content: string;
+  isFavorite?: boolean;
 }
 
 function parseFrontmatter(text: string): { frontmatter: Record<string, any>; content: string } {

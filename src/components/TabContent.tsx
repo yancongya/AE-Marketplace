@@ -1,4 +1,4 @@
-import { ChevronLeft, Copy, Check, ExternalLink, List, X, ZoomIn, ZoomOut, Maximize, Edit, Save, RotateCcw } from 'lucide-react';
+import { ChevronLeft, Copy, Check, ExternalLink, List, X, ZoomIn, ZoomOut, Maximize, Edit, Save, RotateCcw, Star } from 'lucide-react';
 import type { ReactNode } from 'react';
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -182,22 +182,22 @@ mermaid.initialize({
     
       
     
-      interface TabContentProps { 
-  title: string;
-  icon?: ReactNode;
-  iconSrc?: string;
-  iconEmoji?: string;
-  subtitle?: string;
-  content: string;
-  onBack: () => void;
-  author?: string;
-  updatedAt?: string;
-  tags?: string[];
-  filename?: string;
-  category?: string;
-  slug?: string;
-}
-
+      interface TabContentProps {
+        title: string;
+        icon?: ReactNode;
+        iconSrc?: string;
+        iconEmoji?: string;
+        subtitle?: string;
+        content: string;
+        onBack: () => void;
+        author?: string;
+        updatedAt?: string;
+        tags?: string[];
+        filename?: string;
+        category?: string;
+        slug?: string;
+        isFavorite?: boolean; // 添加收藏标记
+      }
 interface Heading {
   id: string;
   text: string;
@@ -762,7 +762,7 @@ function TableOfContents({ headings }: { headings: Heading[] }) {
   );
 }
 
-export function TabContent({ 
+export function TabContent({
   title, 
   icon, 
   iconSrc,
@@ -775,9 +775,9 @@ export function TabContent({
   tags,
   filename,
   category,
-  slug: propSlug
-}: TabContentProps) {
-  const { translations } = useI18n();
+  slug: propSlug,
+  isFavorite: propIsFavorite
+}: TabContentProps) {  const { translations } = useI18n();
   const { isAdmin } = useAdmin();
   const location = useLocation();
   const navigate = useNavigate();
@@ -815,7 +815,8 @@ export function TabContent({
     updatedAt: displayUpdatedAt,
     content: displayContent,
     slug,
-    command: '' // 添加 command 属性
+    command: '', // 添加 command 属性
+    isFavorite: propIsFavorite || false // 添加收藏标记
   });
   const headings = useMemo(() => extractHeadings(content), [content]);
 
@@ -842,7 +843,8 @@ export function TabContent({
       updatedAt,
       content,
       slug,
-      command: ''
+      command: '',
+      isFavorite: propIsFavorite || false
     });
     window.location.hash = '';
   };
@@ -989,6 +991,23 @@ export function TabContent({
                         placeholder="📝"
                         className="w-16 sm:w-20 bg-muted/30 border border-border rounded px-3 py-2 text-xl sm:text-2xl text-center text-foreground focus:outline-none focus:border-primary"
                       />
+                    </div>
+
+                    {/* 收藏选项 */}
+                    <div className="space-y-2">
+                      <label className="text-xs sm:text-sm text-muted-foreground font-mono flex items-center gap-2 cursor-pointer">
+                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                        <span className="text-success">$</span> 收藏
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer bg-muted/30 border border-border rounded px-3 py-2 hover:bg-muted/50 transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={editData.isFavorite || false}
+                          onChange={(e) => handleChange('isFavorite', e.target.checked)}
+                          className="w-4 h-4 accent-yellow-400"
+                        />
+                        <span className="text-xs sm:text-sm text-foreground">设为收藏（收藏的文章会优先显示在列表和首页推荐中）</span>
+                      </label>
                     </div>
 
                     {/* 文档名（slug） */}

@@ -92,8 +92,13 @@ export function Home() {
         ...data.extensions.map(item => ({ ...item, category: 'extensions' }))
       ];
 
-      // 按更新日期降序排序
+      // 按收藏状态和更新日期排序
       allDocs.sort((a, b) => {
+        // 首先按收藏状态排序（收藏的在前）
+        if (a.isFavorite && !b.isFavorite) return -1;
+        if (!a.isFavorite && b.isFavorite) return 1;
+
+        // 然后按更新时间降序排序（最新的在前）
         const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
         const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
         return dateB - dateA;
@@ -162,6 +167,7 @@ export function Home() {
                     }
                   }}
                   slug={doc.slug}
+                  isFavorite={doc.isFavorite}
                 />
               ))}
             </div>
