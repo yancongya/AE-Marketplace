@@ -1,292 +1,212 @@
-<mxfile host="app.diagrams.net" modified="2026-03-19T00:00:00.000Z" agent="Claude" version="22.0">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36" version="26.0.16">
   <diagram name="AE Documents Skills Logic" id="skills-logic">
-    <mxGraphModel dx="1436" dy="902" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1400" math="0" shadow="0">
+    <mxGraphModel dx="3326" dy="959" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1400" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        
-        <!-- Title -->
-        <mxCell id="title" value="AE 文档生成技能流程图" style="text;html=1;strokeWidth=0;fillColor=none;fontSize=20;fontStyle=1;align=center;" vertex="1" parent="1">
+        <mxCell id="title" value="AE 文档生成技能流程图" style="text;html=1;strokeWidth=0;fillColor=none;fontSize=20;fontStyle=1;align=center;" parent="1" vertex="1">
           <mxGeometry x="700" y="20" width="400" height="40" as="geometry" />
         </mxCell>
-        
-        <!-- Swimlanes -->
-        <mxCell id="lane1" value="输入阶段" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="50" y="80" width="300" height="1280" as="geometry" />
+        <mxCell id="lane1" value="输入阶段" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#1A1A1A);" parent="1" vertex="1">
+          <mxGeometry x="-80" y="80" width="430" height="1280" as="geometry" />
         </mxCell>
-        
-        <mxCell id="lane2" value="Writing Documents&#xa;(从零开始)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="inputChoice" value="选择输入类型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="lane1" vertex="1">
+          <mxGeometry x="180" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="inputOptions" value="输入类型:&#xa;• 从零开始创建&#xa;• 多个文档&#xa;• 项目文件夹&#xa;• 一篇文章&#xa;• 一个链接" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=center;fontColor=light-dark(#000000,#000000);" parent="lane1" vertex="1">
+          <mxGeometry x="180" y="100" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="arrowInput" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;fontColor=light-dark(#000000,#000000);exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="lane1" source="inputChoice" target="inputOptions" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lane2" value="Writing Documents&#xa;(从零开始)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="350" y="80" width="500" height="1280" as="geometry" />
         </mxCell>
-        
-        <mxCell id="lane3" value="Generate Documents&#xa;(从已有内容)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="lane3" value="Generate Documents&#xa;(从已有内容)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="850" y="80" width="500" height="1280" as="geometry" />
         </mxCell>
-        
-        <mxCell id="lane4" value="共同处理" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="lane4" value="共同处理" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1350" y="80" width="400" height="1280" as="geometry" />
         </mxCell>
-        
-        <!-- Lane 1: Input Phase -->
-        <mxCell id="inputChoice" value="选择输入类型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
-          <mxGeometry x="100" y="100" width="200" height="40" as="geometry" />
-        </mxCell>
-        
-        <mxCell id="inputOptions" value="输入类型:&#xa;• 从零开始创建&#xa;• 多个文档&#xa;• 项目文件夹&#xa;• 一篇文章&#xa;• 一个链接" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
-          <mxGeometry x="100" y="160" width="200" height="100" as="geometry" />
-        </mxCell>
-        
-        <mxCell id="arrowInput" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;fontColor=light-dark(#000000,#000000);exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="inputChoice" target="inputOptions">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        
-        <!-- Lane 2: Writing Documents Flow -->
-        <mxCell id="wdStart" value="开始&#xa;创建文档" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdStart" value="开始&#xa;创建文档" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="450" y="120" width="180" height="50" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdStep1" value="步骤1:&#xa;选择文档类型" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdStep1" value="步骤1:&#xa;选择文档类型" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="450" y="200" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdTypeOptions" value="类型: 表达式/&#xa;脚本/预设/扩展" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdTypeOptions" value="类型: 表达式/&#xa;脚本/预设/扩展" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=center;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="630" y="200" width="120" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdStep2" value="步骤2:&#xa;收集基本信息" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdStep2" value="步骤2:&#xa;收集基本信息" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="450" y="280" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdBasicFields" value="字段:&#xa;• 标题&#xa;• 作者&#xa;• 标签&#xa;• 描述" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdBasicFields" value="字段:&#xa;• 标题&#xa;• 作者&#xa;• 标签&#xa;• 描述" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=center;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="630" y="265" width="120" height="80" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdStep3" value="步骤3:&#xa;内容结构" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdStep3" value="步骤3:&#xa;内容结构" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="450" y="390" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdContent" value="部分: 下载/&#xa;使用场景/&#xa;功能特性等" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdContent" value="部分: 下载/&#xa;使用场景/&#xa;功能特性等" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=center;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="630" y="375" width="120" height="70" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdStep4" value="步骤4:&#xa;高级功能" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdStep4" value="步骤4:&#xa;高级功能" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="450" y="500" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdAdvanced" value="高级: 流程图/&#xa;代码示例/&#xa;截图等" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdAdvanced" value="高级: 流程图/&#xa;代码示例/&#xa;截图等" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=center;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="630" y="485" width="120" height="70" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdStep5" value="步骤5:&#xa;预览调整" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdStep5" value="步骤5:&#xa;预览调整" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="450" y="600" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdQualityCheck" value="质量检查&#xa;• 元数据&#xa;• 链接&#xa;• 格式&#xa;• 清单" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="wdQualityCheck" value="质量检查&#xa;• 元数据&#xa;• 链接&#xa;• 格式&#xa;• 清单" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="450" y="680" width="180" height="70" as="geometry" />
         </mxCell>
-        
-        <!-- Lane 3: Generate Documents Flow -->
-        <mxCell id="gdStart" value="开始&#xa;生成文档" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdStart" value="开始&#xa;生成文档" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="950" y="120" width="180" height="50" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdStep1" value="步骤1:&#xa;输入类型" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdStep1" value="步骤1:&#xa;输入类型" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="950" y="200" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdInputTypes" value="类型:&#xa;• 多文档&#xa;• 项目文件夹&#xa;• 文章&#xa;• 链接" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdInputTypes" value="类型:&#xa;• 多文档&#xa;• 项目文件夹&#xa;• 文章&#xa;• 链接" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1130" y="185" width="120" height="70" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdStep2" value="步骤2:&#xa;内容提取" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdStep2" value="步骤2:&#xa;内容提取" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="950" y="300" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdExtraction" value="提取:&#xa;• 元数据&#xa;• 正文&#xa;• 结构" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdExtraction" value="提取:&#xa;• 元数据&#xa;• 正文&#xa;• 结构" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1130" y="285" width="120" height="80" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdStep3" value="步骤3:&#xa;智能整理" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdStep3" value="步骤3:&#xa;智能整理" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="950" y="420" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdOrganize" value="整理:&#xa;• 生成标题&#xa;• 提取标签&#xa;• 生成描述" style="rounded=0;whiteSpace=nowrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdOrganize" value="整理:&#xa;• 生成标题&#xa;• 提取标签&#xa;• 生成描述" style="rounded=0;whiteSpace=nowrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1130" y="410" width="120" height="70" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdStep4" value="步骤4:&#xa;生成草稿" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdStep4" value="步骤4:&#xa;生成草稿" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="950" y="530" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdDraft" value="草稿:&#xa;• 自动生成&#xa;• 使用模板&#xa;• 添加元数据" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdDraft" value="草稿:&#xa;• 自动生成&#xa;• 使用模板&#xa;• 添加元数据" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1130" y="520" width="120" height="70" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdStep5" value="步骤5:&#xa;规范检查" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdStep5" value="步骤5:&#xa;规范检查" style="rounded=1;whiteSpace=nowrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="950" y="650" width="150" height="40" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdQualityCheck" value="检查:&#xa;• 元数据&#xa;• 链接&#xa;• 格式&#xa;• 清单" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="gdQualityCheck" value="检查:&#xa;• 元数据&#xa;• 链接&#xa;• 格式&#xa;• 清单" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1130" y="640" width="120" height="70" as="geometry" />
         </mxCell>
-        
-        <!-- Lane 4: Common Processing -->
-        <mxCell id="commonQuality" value="规范检查&#xa;• 元数据完整&#xa;• 链接有效&#xa;• 格式正确&#xa;• 清单更新" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="commonQuality" value="规范检查&#xa;• 元数据完整&#xa;• 链接有效&#xa;• 格式正确&#xa;• 清单更新" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1400" y="850" width="250" height="70" as="geometry" />
         </mxCell>
-        
-        <mxCell id="commonSave" value="保存文档&#xa;• 创建 .md 文件&#xa;• 更新 _manifest.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="commonSave" value="保存文档&#xa;• 创建 .md 文件&#xa;• 更新 _manifest.json" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1400" y="960" width="250" height="60" as="geometry" />
         </mxCell>
-        
-        <mxCell id="end" value="完成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;fontStyle=1;fontColor=light-dark(#000000,#000000);" vertex="1" parent="1">
+        <mxCell id="end" value="完成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;fontStyle=1;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
           <mxGeometry x="1400" y="1070" width="250" height="50" as="geometry" />
         </mxCell>
-        
-        <!-- Writing Documents Arrows -->
-        <mxCell id="wdArrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" edge="1" parent="1" source="wdStart" target="wdStep1">
+        <mxCell id="wdArrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" parent="1" source="wdStart" target="wdStep1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdArrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" edge="1" parent="1" source="wdStep1" target="wdStep2">
+        <mxCell id="wdArrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" parent="1" source="wdStep1" target="wdStep2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdArrow3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" edge="1" parent="1" source="wdStep2" target="wdStep3">
+        <mxCell id="wdArrow3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" parent="1" source="wdStep2" target="wdStep3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdArrow4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" edge="1" parent="1" source="wdStep3" target="wdStep4">
+        <mxCell id="wdArrow4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" parent="1" source="wdStep3" target="wdStep4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdArrow5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" edge="1" parent="1" source="wdStep4" target="wdStep5">
+        <mxCell id="wdArrow5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" parent="1" source="wdStep4" target="wdStep5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdArrow6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" edge="1" parent="1" source="wdStep5" target="wdQualityCheck">
+        <mxCell id="wdArrow6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" parent="1" source="wdStep5" target="wdQualityCheck" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdArrow7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" edge="1" parent="1" source="wdQualityCheck" target="commonQuality">
+        <mxCell id="wdArrow7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9673a6;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#9673a6,#9673a6);" parent="1" source="wdQualityCheck" target="commonQuality" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <!-- Generate Documents Arrows -->
-        <mxCell id="gdArrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" edge="1" parent="1" source="gdStart" target="gdStep1">
+        <mxCell id="gdArrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" parent="1" source="gdStart" target="gdStep1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdArrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" edge="1" parent="1" source="gdStep1" target="gdStep2">
+        <mxCell id="gdArrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" parent="1" source="gdStep1" target="gdStep2" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdArrow3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" edge="1" parent="1" source="gdStep2" target="gdStep3">
+        <mxCell id="gdArrow3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" parent="1" source="gdStep2" target="gdStep3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdArrow4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" edge="1" parent="1" source="gdStep3" target="gdStep4">
+        <mxCell id="gdArrow4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" parent="1" source="gdStep3" target="gdStep4" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdArrow5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" edge="1" parent="1" source="gdStep4" target="gdStep5">
+        <mxCell id="gdArrow5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" parent="1" source="gdStep4" target="gdStep5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdArrow6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" edge="1" parent="1" source="gdStep5" target="gdQualityCheck">
+        <mxCell id="gdArrow6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" parent="1" source="gdStep5" target="gdQualityCheck" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdArrow7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" edge="1" parent="1" source="gdQualityCheck" target="commonQuality">
+        <mxCell id="gdArrow7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#82b366;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#82b366,#82b366);" parent="1" source="gdQualityCheck" target="commonQuality" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <!-- Common Arrows -->
-        <mxCell id="commonArrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#6c8ebf,#6c8ebf);" edge="1" parent="1" source="commonQuality" target="commonSave">
+        <mxCell id="commonArrow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#6c8ebf,#6c8ebf);" parent="1" source="commonQuality" target="commonSave" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="commonArrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#6c8ebf,#6c8ebf);" edge="1" parent="1" source="commonSave" target="end">
+        <mxCell id="commonArrow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#6c8ebf,#6c8ebf);" parent="1" source="commonSave" target="end" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <!-- Input to Skills -->
-        <mxCell id="inputToWd" value="从零创建" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#666666,#666666);" edge="1" parent="1" source="inputOptions" target="wdStart">
+        <mxCell id="inputToWd" value="从零创建" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0;entryDx=0;entryDy=0;fontColor=light-dark(#666666,#666666);" parent="1" source="inputOptions" target="wdStart" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="inputToGd" value="从已有内容" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#666666,#666666);" edge="1" parent="1" source="inputOptions" target="gdStart">
+        <mxCell id="inputToGd" value="从已有内容" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#666666;fontSize=11;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#666666,#666666);" parent="1" source="inputOptions" target="gdStart" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <!-- Side Arrows for Options -->
-        <mxCell id="wdSide1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d6b656,#d6b656);" edge="1" parent="1" source="wdStep1" target="wdTypeOptions">
+        <mxCell id="wdSide1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d6b656,#d6b656);" parent="1" source="wdStep1" target="wdTypeOptions" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdSide2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d6b656,#d6b656);" edge="1" parent="1" source="wdStep2" target="wdBasicFields">
+        <mxCell id="wdSide2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d6b656,#d6b656);" parent="1" source="wdStep2" target="wdBasicFields" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdSide3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d6b656,#d6b656);" edge="1" parent="1" source="wdStep3" target="wdContent">
+        <mxCell id="wdSide3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d6b656,#d6b656);" parent="1" source="wdStep3" target="wdContent" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="wdSide4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d6b656,#d6b656);" edge="1" parent="1" source="wdStep4" target="wdAdvanced">
+        <mxCell id="wdSide4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d6b656,#d6b656);" parent="1" source="wdStep4" target="wdAdvanced" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdSide1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d79b00,#d79b00);" edge="1" parent="1" source="gdStep1" target="gdInputTypes">
+        <mxCell id="gdSide1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d79b00,#d79b00);" parent="1" source="gdStep1" target="gdInputTypes" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdSide2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d79b00,#d79b00);" edge="1" parent="1" source="gdStep2" target="gdExtraction">
+        <mxCell id="gdSide2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d79b00,#d79b00);" parent="1" source="gdStep2" target="gdExtraction" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdSide3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d79b00,#d79b00);" edge="1" parent="1" source="gdStep3" target="gdOrganize">
+        <mxCell id="gdSide3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d79b00,#d79b00);" parent="1" source="gdStep3" target="gdOrganize" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <mxCell id="gdSide4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d79b00,#d79b00);" edge="1" parent="1" source="gdStep4" target="gdDraft">
+        <mxCell id="gdSide4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=light-dark(#d79b00,#d79b00);" parent="1" source="gdStep4" target="gdDraft" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        
-        <!-- Legend -->
-        <mxCell id="legendTitle" value="图例" style="text;html=1;strokeWidth=0;fillColor=none;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+        <mxCell id="legendTitle" value="图例" style="text;html=1;strokeWidth=0;fillColor=none;fontSize=14;fontStyle=1;align=center;" parent="1" vertex="1">
           <mxGeometry x="50" y="50" width="100" height="30" as="geometry" />
         </mxCell>
-        
-        <mxCell id="legend1" value="输入阶段" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="50" y="90" width="100" height="25" as="geometry" />
+        <mxCell id="legend1" value="输入阶段" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+          <mxGeometry x="-70" y="105" width="100" height="25" as="geometry" />
         </mxCell>
-        
-        <mxCell id="legend2" value="Writing Documents" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="50" y="125" width="130" height="25" as="geometry" />
+        <mxCell id="legend2" value="Writing Documents" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+          <mxGeometry x="-70" y="140" width="130" height="25" as="geometry" />
         </mxCell>
-        
-        <mxCell id="legend3" value="Generate Docs" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="50" y="160" width="110" height="25" as="geometry" />
+        <mxCell id="legend3" value="Generate Docs" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+          <mxGeometry x="-70" y="175" width="110" height="25" as="geometry" />
         </mxCell>
-        
-        <mxCell id="legend4" value="共同处理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="50" y="195" width="100" height="25" as="geometry" />
+        <mxCell id="legend4" value="共同处理" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+          <mxGeometry x="-70" y="210" width="100" height="25" as="geometry" />
         </mxCell>
-        
-        <mxCell id="legend5" value="主流程" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="50" y="230" width="100" height="25" as="geometry" />
+        <mxCell id="legend5" value="主流程" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+          <mxGeometry x="-70" y="245" width="100" height="25" as="geometry" />
         </mxCell>
-        
-        <mxCell id="legend6" value="选项/字段" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="50" y="265" width="100" height="25" as="geometry" />
+        <mxCell id="legend6" value="选项/字段" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+          <mxGeometry x="-70" y="280" width="100" height="25" as="geometry" />
         </mxCell>
-        
-        <mxCell id="legend7" value="质量检查" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="50" y="300" width="100" height="25" as="geometry" />
+        <mxCell id="legend7" value="质量检查" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+          <mxGeometry x="-70" y="315" width="100" height="25" as="geometry" />
         </mxCell>
-        
-        <mxCell id="legend8" value="保存操作" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="50" y="335" width="100" height="25" as="geometry" />
+        <mxCell id="legend8" value="保存操作" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+          <mxGeometry x="-70" y="350" width="100" height="25" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
