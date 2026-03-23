@@ -21,16 +21,22 @@ description: Use when writing documentation with YAML frontmatter, markdown form
 
 ```mermaid
 graph TD
-    A[需要创建文档?] --> B{文档类型?}
-    B -->|表达式| C[参考 expressions.md]
-    B -->|脚本| D[参考 scripts.md]
-    B -->|预设| E[参考 presets.md]
-    B -->|扩展| F[参考 extensions.md]
-    C --> G[创建文档]
-    D --> G
-    E --> G
-    F --> G
-    G --> H[更新 _manifest.json]
+    A[需要创建文档?] --> B[收集项目信息]
+    B --> C{文档类型?}
+    C -->|表达式| D[参考 expressions.md]
+    C -->|脚本| E[参考 scripts.md]
+    C -->|预设| F[参考 presets.md]
+    C -->|扩展| G[参考 extensions.md]
+    D --> H[预检查图片资源]
+    E --> H
+    F --> H
+    H --> I{图片完整?}
+    I -->|是| J[复制并重命名图片]
+    I -->|否| K[记录缺失图片]
+    J --> L[创建文档]
+    K --> L
+    L --> M[更新 _manifest.json]
+    M --> N[质量检查]
 ```
 
 ## 标准元数据（必须）
@@ -108,12 +114,64 @@ public/content/
 
 ### 1. 图片路径
 
-**规则：** 图片使用相对路径 `./assets/filename.png`
-
+**规则 A - 文档内图片引用（相对路径）：**
 ```markdown
 ✅ ![描述](./assets/image.png)
 ❌ ![描述](/path/to/image.png)
 ```
+
+**规则 B - 封面图片元数据（绝对路径，以 /content 开头）：**
+
+```yaml
+---
+title: 文档标题
+coverImage: /content/scripts/assets/my-script-cover.png
+---
+```
+
+**⚠️ 重要：**
+- 封面图片路径必须使用 `/content/{类型}/assets/{文件名}` 格式
+- 不能使用 `./assets/xxx.png` 或 `assets/xxx.png`，否则图片无法显示
+- 前端会将此路径直接作为 img src 使用
+
+### 2. 封面图片命名规范
+
+**规则：** 使用 `{slug}-cover.{ext}` 格式，避免同名冲突
+
+```yaml
+# ✅ 正确示例
+coverImage: /content/scripts/assets/auto-tinify-cover.png
+coverImage: /content/scripts/assets/shape-morpher-cover.png
+coverImage: /content/presets/animation-cover.webp
+
+# ❌ 错误示例（容易与其他文档冲突）
+coverImage: ./assets/cover.png
+coverImage: ./assets/cover.jpg
+```
+
+**命名格式：**
+- 文档内图片：`{slug}-{用途}.{ext}`（如 `auto-tinify-main.jpg`、`auto-tinify-logpanel.jpg`）
+- 封面图片：`{slug}-cover.{ext}`（如 `auto-tinify-cover.png`）
+
+### 3. 图片资源预检查
+
+**创建文档前必须：**
+
+1. **检查项目是否有 assets 目录**
+   - 在项目根目录查找 `assets` 文件夹
+   - 常见位置：`{项目}/assets`、`{项目}/docs/assets`、`{项目}/source/assets`
+
+2. **列出所有可用图片**
+   - 记录所有图片文件名
+   - 确认需要的图片都已存在
+
+3. **复制图片到正确位置**
+   - 从项目 assets 复制到 `public/content/{类型}/assets/`
+   - 重命名时添加 slug 前缀避免冲突
+
+**常见缺失图片导致的问题：**
+- 文档中引用了 `logpanel.jpg` 但图片不存在 → 显示为破损图片
+- 封面图片路径格式错误 → 显示为缺失
 
 ### 2. 下载链接
 
@@ -149,10 +207,13 @@ public/content/
 
 ## 质量检查（必须）
 
-- [ ] 元数据包含所有 7 个必需字段（title, iconEmoji, author, tags, category, description, updatedAt）
+- [ ] 元数据包含所有必需字段（title, author, tags, description, updatedAt）
+- [ ] 如有封面图片，`coverImage` 使用 `/content/xxx/assets/xxx` 格式（以 /content 开头）
+- [ ] 封面图片命名使用 `{slug}-cover.{ext}` 格式，避免同名冲突
 - [ ] 文件保存在正确的 `public/content/{模块类型}/` 目录
 - [ ] 下载链接使用网络地址
-- [ ] 图片使用相对路径 `./assets/`
+- [ ] 文档内图片使用相对路径 `./assets/`
+- [ ] 文档中引用的所有图片文件都存在于 assets 目录
 - [ ] 已更新对应的 `_manifest.json`
 
 ## 参考示例
