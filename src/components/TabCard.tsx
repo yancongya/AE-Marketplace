@@ -142,21 +142,31 @@ export function TabCard({
     }
 
     try {
-      // 获取 GitHub token
+      // 开发模式下不需要 GitHub token
+      const isDev = import.meta.env.DEV;
       const accessToken = localStorage.getItem('github_access_token');
-      if (!accessToken) {
-        toast.error('请先登录 GitHub');
-        return;
-      }
 
-      const response = await fetch('/api/admin/delete', {
+      const fetchOptions: RequestInit = {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ category, filename }),
-      });
+      };
+
+      // 生产模式下需要 GitHub token
+      if (!isDev) {
+        if (!accessToken) {
+          toast.error('请先登录 GitHub');
+          return;
+        }
+        fetchOptions.headers = {
+          ...fetchOptions.headers,
+          'Authorization': `Bearer ${accessToken}`,
+        };
+      }
+
+      const response = await fetch('/api/admin/delete', fetchOptions);
 
       const result = await response.json();
 
