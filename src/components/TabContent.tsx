@@ -821,7 +821,11 @@ export function TabContent({
   slug: propSlug,
   isFavorite: propIsFavorite,
   coverImage: propCoverImage
-}: TabContentProps) {  const { translations } = useI18n();
+}: TabContentProps) {
+  // 使用 propCoverImage 作为封面图片
+  const coverImage = propCoverImage;
+  
+  const { translations } = useI18n();
   const { isAdmin } = useAdmin();
   const location = useLocation();
   const navigate = useNavigate();
@@ -1212,6 +1216,25 @@ export function TabContent({
                   {tags.map((tag, index) => (
                     <span key={`${tag}-${index}`} className={`px-2.5 py-1 rounded-full text-xs font-mono border ${getTagColor(index)}`}>{tag}</span>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* 封面图片 */}
+            {coverImage && (
+              <div className="terminal-window">
+                <div className="terminal-header">
+                  <span className="terminal-dot terminal-dot-red" />
+                  <span className="terminal-dot terminal-dot-yellow" />
+                  <span className="terminal-dot terminal-dot-green" />
+                  <span className="ml-2 text-xs text-muted-foreground font-mono">封面</span>
+                </div>
+                <div className="p-0">
+                  <img 
+                    src={coverImage} 
+                    alt={title} 
+                    className="w-full h-auto rounded-b-lg object-cover max-h-[400px]"
+                  />
                 </div>
               </div>
             )}
