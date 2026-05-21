@@ -5,12 +5,14 @@ tags: [图片压缩, AE脚本, PS脚本, 工具, Tinify]
 description: 支持 After Effects 和 Photoshop 的图片压缩工具，通过 Tinify API 智能压缩，支持多 Key 轮换、批量处理
 updatedAt: 2026-05-21
 isFavorite: true
-coverImage: /content/scripts/assets/auto-tinify-cover.png
+coverImage: /content/scripts/assets/auto-tinify/auto-tinify-cover.png
 ---
 
 ## 简介
 
 Auto_Tinify 是一款支持 After Effects 和 Photoshop 的图片压缩工具，通过 Tinify API 提供高效、智能的图片压缩服务。支持批量压缩、多 API Key 轮换、图层导出压缩，压缩率高达 70% 且画质几乎无损。
+
+🌐 [产品官网](https://yancongya.github.io/auto_tinify/) | 📦 [GitHub](https://github.com/yancongya/auto_tinify)
 
 ## 功能特性
 
@@ -25,10 +27,10 @@ Auto_Tinify 是一款支持 After Effects 和 Photoshop 的图片压缩工具，
 
 ### 安装
 
-**方法 1：kbar 安装（推荐）**
+**方法 1：kkbar 安装（推荐）**
 
-1. 安装 [kbar](https://kbar.itycon.cn/) 脚本管理器
-2. 搜索 `Auto_Tinify`，点击安装
+1. 安装 [kkbar](https://kkbar.itycon.cn/) 脚本管理器
+2. 在 kkbar 中调用 `Auto_Tinify` 即可使用
 
 **方法 2：手动安装**
 
@@ -79,11 +81,23 @@ Auto_Tinify 是一款支持 After Effects 和 Photoshop 的图片压缩工具，
 
 ### 主界面
 
-![主界面](./assets/main.jpg)
+<img src="./assets/auto-tinify/main.jpg" width="600" alt="主界面">
+
+### API Key 设置
+
+<img src="./assets/auto-tinify/keysettings.jpg" width="600" alt="API Key 设置">
+
+### 路径设置
+
+<img src="./assets/auto-tinify/pathsettings.jpg" width="600" alt="路径设置">
 
 ### 日志面板
 
-![日志面板](./assets/logpanel.jpg)
+<img src="./assets/auto-tinify/logpanel.jpg" width="600" alt="日志面板">
+
+### 关于页面
+
+<img src="./assets/auto-tinify/abaut.jpg" width="600" alt="关于页面">
 
 ## 常见问题
 
@@ -121,3 +135,22 @@ A: 复制脚本同目录的 `auto_tinify_config.txt` 即可
 
 - 新增多 API Key 轮换
 - 剩余次数追踪
+
+## 支持作者
+
+如果这个脚本对你有帮助，欢迎请作者喝杯咖啡 ☕️
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="./assets/auto-tinify/微信.jpg" width="200" alt="微信收款码"><br>
+        <b>微信</b>
+      </td>
+      <td align="center">
+        <img src="./assets/auto-tinify/支付宝.jpg" width="200" alt="支付宝收款码"><br>
+        <b>支付宝</b>
+      </td>
+    </tr>
+  </table>
+</div>

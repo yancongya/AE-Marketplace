@@ -82,7 +82,7 @@ isFavorite: false
 
 #### 界面预览
 
-![主界面](./assets/main.jpg)
+![主界面](./assets/solid-layer-creator/main.jpg)
 
 这是脚本的主界面，包含名称设置、尺寸设置、颜色选择和操作按钮四个主要区域。
 
@@ -93,7 +93,7 @@ isFavorite: false
 3. 点击 `+` 按钮保存当前名称为预设
 4. 点击 `-` 按钮删除选中的名称预设
 
-![名称设置演示](./assets/name_settings.gif)
+![名称设置演示](./assets/solid-layer-creator/name_settings.gif)
 
 ### 步骤 4：设置尺寸
 
@@ -115,7 +115,7 @@ isFavorite: false
 3. 点击 `+` 按钮保存当前尺寸为自定义预设
 4. 点击 `-` 按钮删除选中的尺寸预设
 
-![尺寸设置演示](./assets/size_settings.gif)
+![尺寸设置演示](./assets/solid-layer-creator/size_settings.gif)
 
 ### 步骤 5：选择颜色
 
@@ -140,9 +140,9 @@ isFavorite: false
   - 恢复所有彩色块到AE标准标签色
   - 灰度色块保持不变
 
-![颜色设置演示](./assets/color_settings.gif)
+![颜色设置演示](./assets/solid-layer-creator/color_settings.gif)
 
-![颜色面板详情](./assets/color.jpg)
+![颜色面板详情](./assets/solid-layer-creator/color.jpg)
 
 ### 步骤 6：创建图层
 
@@ -166,7 +166,7 @@ isFavorite: false
 
 #### 操作提示
 
-![确定按钮悬浮提示](./assets/sample.jpg)
+![确定按钮悬浮提示](./assets/solid-layer-creator/sample.jpg)
 
 鼠标悬停在"确定"按钮上时，会显示操作提示：左键创建普通纯色层，右键创建参考图层。
 

@@ -7,6 +7,45 @@ description: Use when creating documentation for AE scripts, plugins, expression
 
 基于 Diátaxis 框架，AE 文档主要采用 **How-to Guide**（操作指南）和 **Reference**（参数参考）两种类型。
 
+## 工作流程
+
+用户提供项目后，按以下流程生成文档：
+
+```
+1. 读取项目 README.md（主要信息来源）
+2. 如需要，读取其他相关文档（docs/、更新日志.md 等）
+3. 扫描 assets/public 等目录，识别图片素材
+4. 复制图片到文档对应的 assets/{{slug}}/ 目录
+5. 根据分析结果生成文档
+6. 引用图片素材
+```
+
+## 信息来源
+
+### 主要来源
+
+- `README.md` - 项目说明、功能特性、使用方法
+
+### 辅助来源
+
+- `更新日志.md` / `CHANGELOG.md` - 版本历史
+- `docs/` - 详细文档
+- `LICENSE` - 许可证信息
+
+### 图片素材
+
+扫描以下目录，复制到文档对应的 assets 目录：
+
+| 源目录 | 说明 |
+|--------|------|
+| `assets/` | 素材目录 |
+| `public/` | 公共资源 |
+| `images/` | 图片目录 |
+| `screenshots/` | 截图目录 |
+| `logo/` | Logo 目录 |
+
+**复制目标：** `public/content/{{类型}}/assets/{{slug}}/`
+
 ## 核心原则
 
 1. **简洁**：用最少的话说清楚
@@ -31,6 +70,8 @@ coverImage: {{封面图片路径}}
 
 2-3 句话说明：这是什么、解决什么问题、适用场景。
 
+🌐 [产品官网](url) | 📦 [GitHub](url)
+
 ## 功能特性
 
 - 特性 1：具体描述
@@ -42,6 +83,11 @@ coverImage: {{封面图片路径}}
 ### 安装/导入
 
 简要说明如何安装或导入到 AE。
+
+**安装方法规范：**
+
+- kkbar 安装：在 kkbar 中**调用**脚本（不是搜索）
+- 手动安装：复制到脚本目录，重启软件
 
 ### 基本使用
 
@@ -76,33 +122,67 @@ A: 解答。
 ## 更新日志（可选）
 
 - v1.0：初始版本
+
+## 支持作者（可选）
+
+如果这个脚本对你有帮助，欢迎请作者喝杯咖啡 ☕️
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="./assets/{{slug}}/微信.jpg" width="200" alt="微信收款码"><br>
+        <b>微信</b>
+      </td>
+      <td align="center">
+        <img src="./assets/{{slug}}/支付宝.jpg" width="200" alt="支付宝收款码"><br>
+        <b>支付宝</b>
+      </td>
+    </tr>
+  </table>
+</div>
 ```
 
 ## 资源规范
 
 ### 图片资源
 
-**存放位置：** `public/content/{{类型}}/assets/`
+**存放位置：** `public/content/{{类型}}/assets/{{slug}}/`
 
-| 类型 | 目录 |
-|------|------|
-| 脚本 | `public/content/scripts/assets/` |
-| 表达式 | `public/content/expressions/assets/` |
-| 预设 | `public/content/presets/assets/` |
-| 扩展 | `public/content/extensions/assets/` |
+| 类型 | 目录示例 |
+|------|----------|
+| 脚本 | `public/content/scripts/assets/auto-tinify/` |
+| 表达式 | `public/content/expressions/assets/expression-name/` |
+| 预设 | `public/content/presets/assets/preset-name/` |
+| 扩展 | `public/content/extensions/assets/extension-name/` |
+
+**整理原则：**
+
+- 每个文档的图片存放在独立的子目录中
+- 目录名称与文档 slug 保持一致
+- 避免将图片直接放在 assets 根目录下
 
 **引用方式：**
 
 ```markdown
-<!-- 本地图片：相对路径 -->
-![描述](./assets/filename.png)
+<!-- 本地图片：相对路径（统一宽度 600px） -->
+<img src="./assets/{{slug}}/filename.png" width="600" alt="描述">
 
 <!-- 网络图片：HTTPS 地址 -->
-![描述](https://example.com/image.png)
+<img src="https://example.com/image.png" width="600" alt="描述">
 
 <!-- 封面图片：frontmatter 中指定 -->
-coverImage: /content/scripts/assets/cover.png
+coverImage: /content/scripts/assets/{{slug}}/cover.png
 ```
+
+**图片宽度规范：**
+
+| 图片类型 | 宽度 |
+|----------|------|
+| 界面截图 | 600px |
+| GIF 动图 | 600px |
+| 收款码 | 200px |
+| 封面图 | 自适应 |
 
 ### 下载链接
 
