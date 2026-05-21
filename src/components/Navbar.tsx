@@ -195,6 +195,15 @@ export function Navbar() {
               <Globe className="w-3.5 h-3.5" />
               <span>{locale.toUpperCase()}</span>
             </button>
+            <a
+              href="https://github.com/yancongya/AE-Marketplace"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded hover:bg-muted transition-colors"
+              title="GitHub 仓库"
+            >
+              <Github className="w-4 h-4 text-muted-foreground" />
+            </a>
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}

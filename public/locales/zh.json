@@ -103,6 +103,7 @@
     "online": "在线",
     "version": "v0.1.0",
     "copyright": "© 2026 不隶属于 Adobe",
+    "emailCopied": "邮箱已复制到剪切板",
     "resourcesList": {
       "social": {
         "bilibili": "B站",
@@ -111,6 +112,7 @@
         "email": "邮箱"
       },
       "docs": {
+        "kkbar": "Kkbar 脚本管理器",
         "aescripts": "AE Scripts 官网",
         "adobeDocs": "Adobe AE 官方文档",
         "motionscript": "MotionScript 教程",

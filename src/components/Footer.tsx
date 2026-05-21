@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, FileText, Folder, BookMarked, FileCheck, Youtube, Github, Mail, Camera } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useI18n } from '@/contexts/I18nContext';
+import { toast } from 'sonner';
 
 interface ResourceLink {
   key: string;
@@ -16,6 +17,16 @@ interface ResourcesData {
 export function Footer() {
   const { translations } = useI18n();
   const [resources, setResources] = useState<ResourcesData>({ social: [], docs: [] });
+
+  // 复制邮箱到剪切板
+  const copyEmailToClipboard = async (email: string) => {
+    try {
+      await navigator.clipboard.writeText(email);
+      toast.success(translations?.footer.emailCopied || '邮箱已复制到剪切板');
+    } catch {
+      toast.error('复制失败');
+    }
+  };
 
   useEffect(() => {
     fetch('/resources.json')
@@ -50,6 +61,8 @@ export function Footer() {
         return Camera;
       case 'email':
         return Mail;
+      case 'kkbar':
+        return BookMarked;
       case 'aescripts':
         return BookOpen;
       case 'adobeDocs':
@@ -91,6 +104,23 @@ export function Footer() {
               {resources.social.map((link, index) => {
                 const Icon = getIcon(link.key);
                 const title = translations?.footer.resourcesList?.social?.[link.key as keyof typeof translations.footer.resourcesList.social] || link.key;
+                
+                // 邮箱链接特殊处理：点击复制到剪切板
+                if (link.key === 'email') {
+                  const email = link.href.replace('mailto:', '');
+                  return (
+                    <li key={index}>
+                      <button 
+                        onClick={() => copyEmailToClipboard(email)}
+                        className="flex items-center gap-2 text-sm text-gray-400 hover:text-blue-400 transition-colors"
+                      >
+                        <Icon className="w-4 h-4" />
+                        {title}
+                      </button>
+                    </li>
+                  );
+                }
+                
                 return (
                   <li key={index}>
                     <a 

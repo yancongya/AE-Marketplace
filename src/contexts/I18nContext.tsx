@@ -102,6 +102,7 @@ interface FooterTranslations {
   online: string;
   version: string;
   copyright: string;
+  emailCopied: string;
   resourcesList: {
     social: {
       bilibili: string;
@@ -110,6 +111,7 @@ interface FooterTranslations {
       email: string;
     };
     docs: {
+      kkbar: string;
       aescripts: string;
       adobeDocs: string;
       motionscript: string;

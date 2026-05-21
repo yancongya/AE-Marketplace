@@ -103,6 +103,7 @@
     "online": "online",
     "version": "v0.1.0",
     "copyright": "© 2026 Not affiliated with Adobe",
+    "emailCopied": "Email copied to clipboard",
     "resourcesList": {
       "social": {
         "bilibili": "Bilibili",
@@ -111,6 +112,7 @@
         "email": "Email"
       },
       "docs": {
+        "kkbar": "Kkbar Script Manager",
         "aescripts": "AE Scripts Official",
         "adobeDocs": "Adobe AE Documentation",
         "motionscript": "MotionScript Tutorial",

@@ -210,8 +210,8 @@ export function HeroSection({ statsData: externalStatsData }: HeroSectionProps =
       const centerX = width / 2;
       const centerY = height / 2;
       
-      // Better theme detection - check if light class is present
-      const isDarkMode = !document.documentElement.classList.contains('light');
+      // Better theme detection - check if dark class is present
+      const isDarkMode = document.documentElement.classList.contains('dark');
       
       // Adjust margin for mobile - more aggressive for small screens
       const isMobile = width < 640;

@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { clearContentCache } from '@/lib/content';
 import { X, Maximize2, Star } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import { CoverTemplate } from './CoverTemplate';
 
 interface TabCardProps {
   title: string;
@@ -43,82 +45,70 @@ export function TabCard({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const shouldBlockClickRef = useRef(false);
+  const coverTemplateRef = useRef<HTMLDivElement>(null);
+  const [isCoverLoading, setIsCoverLoading] = useState(false);
+
+  // 封面缓存（内存缓存）
+  const coverCache = useRef<Map<string, string>>(new Map());
+
+  // 生成缓存键
+  const getCacheKey = (title: string, description?: string, category?: string) => {
+    return `${title}|${description || ''}|${category || ''}`;
+  };
 
   // 生成默认封面
-  const generateDefaultCover = (title: string, description?: string) => {
-    // 使用 Canvas 生成封面（高清尺寸 640x360，720p 的一半）
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 640;
-    canvas.height = 360;
+  const generateDefaultCover = async (): Promise<string | null> => {
+    if (!coverTemplateRef.current) return null;
 
-    if (!ctx) return null;
+    const cacheKey = getCacheKey(title, description, category);
 
-    // 绘制背景
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-    gradient.addColorStop(0, '#1e3a5f');
-    gradient.addColorStop(1, '#0d1b2a');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // 绘制网格线
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < canvas.width; i += 20) {
-      ctx.beginPath();
-      ctx.moveTo(i, 0);
-      ctx.lineTo(i, canvas.height);
-      ctx.stroke();
-    }
-    for (let i = 0; i < canvas.height; i += 20) {
-      ctx.beginPath();
-      ctx.moveTo(0, i);
-      ctx.lineTo(canvas.width, i);
-      ctx.stroke();
+    // 检查缓存
+    const cachedCover = coverCache.current.get(cacheKey);
+    if (cachedCover) {
+      return cachedCover;
     }
 
-    // 绘制边框
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-    ctx.lineWidth = 4;  // 边框也加粗
-    ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+    try {
+      const canvas = await html2canvas(coverTemplateRef.current, {
+        width: 640,
+        height: 360,
+        scale: 2, // 高清
+        useCORS: true,
+        backgroundColor: null,
+      });
 
-    // 绘制标题（字体大小也相应增大）
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 36px monospace';  // 从 18px 增加到 36px
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+      const coverUrl = canvas.toDataURL('image/png');
 
-    // 截断标题
-    const maxTitleLength = 25;
-    const displayTitle = title.length > maxTitleLength
-      ? title.substring(0, maxTitleLength) + '...'
-      : title;
+      // 存入缓存
+      coverCache.current.set(cacheKey, coverUrl);
 
-    // 绘制标题（稍微向上）
-    ctx.fillText(displayTitle, canvas.width / 2, canvas.height / 2 - 30);
-
-    // 绘制描述（标题下方，字体大小也相应增大）
-    if (description && description.length > 0) {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-      ctx.font = '24px monospace';  // 从 12px 增加到 24px
-      const maxDescLength = 40;
-      const displayDesc = description.length > maxDescLength
-        ? description.substring(0, maxDescLength) + '...'
-        : description;
-      ctx.fillText(displayDesc, canvas.width / 2, canvas.height / 2 + 30);
+      return coverUrl;
+    } catch (error) {
+      console.error('Failed to generate cover:', error);
+      return null;
     }
-
-    return canvas.toDataURL();
   };
 
   const [defaultCover, setDefaultCover] = useState<string | null>(null);
 
   useEffect(() => {
     if (!coverImage) {
-      const generatedCover = generateDefaultCover(title, description);
-      setDefaultCover(generatedCover);
+      const cacheKey = getCacheKey(title, description, category);
+
+      // 检查缓存
+      const cachedCover = coverCache.current.get(cacheKey);
+      if (cachedCover) {
+        setDefaultCover(cachedCover);
+        return;
+      }
+
+      setIsCoverLoading(true);
+      generateDefaultCover().then(generatedCover => {
+        setDefaultCover(generatedCover);
+        setIsCoverLoading(false);
+      });
     }
-  }, [title, description, coverImage]);
+  }, [title, description, coverImage, category]);
 
   // 检测是否是电脑环境
   useEffect(() => {
@@ -329,7 +319,9 @@ export function TabCard({
       </div>
 
       {/* 封面图片区域 */}
-      {(coverImage || defaultCover) ? (
+      {isCoverLoading ? (
+        <div className="terminal-cover w-full flex-shrink-0 animate-pulse bg-muted" />
+      ) : (coverImage || defaultCover) ? (
         <div className="terminal-cover w-full flex-shrink-0">
           <img
             src={coverImage || defaultCover || ''}
@@ -523,6 +515,15 @@ export function TabCard({
 
   const wrappedContent = (
     <>
+      {/* 隐藏的封面模板用于生成封面 */}
+      <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
+        <CoverTemplate
+          ref={coverTemplateRef}
+          title={title}
+          description={description}
+          category={category}
+        />
+      </div>
       {cardContent}
       {deleteDialog}
       {previewDialog}
